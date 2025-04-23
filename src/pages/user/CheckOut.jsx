@@ -1,0 +1,340 @@
+import React, { useState } from "react";
+import useCartStore from "../../store/cartStore";
+import { useNavigate } from "react-router-dom";
+import { FaMotorcycle, FaShuttleVan, FaLock } from "react-icons/fa";
+import toast from "react-hot-toast";
+
+const CheckOut = () => {
+  const cartItems = useCartStore((state) => state.cartItems);// get values from zustand store
+  const getTotalCost = useCartStore((state) => state.getTotalCost); // get values from zustand store
+  const clearCart = useCartStore((state)=> state.clearCart); // clear cart
+  const navigate = useNavigate();// for routing
+  const [showModal,setShowModal]=useState(false);
+
+  const handlePlaceOrder = () => {
+    setShowModal(true);// opens confirmation page
+  };
+
+  const confirmOrder=()=>{
+    setShowModal(false);
+    toast.success("Order placed successfully!");
+    clearCart();
+    navigate("/");
+  }
+
+  const orderCancelled = ()=>{
+    setShowModal(false);
+    toast.success('Order cancelled')
+    clearCart();
+    navigate('/adverts');
+  }
+
+  // Calculation breakdowns
+  const subtotal = getTotalCost();
+  const discount = 0; // You can add logic later
+  const deliveryCharge = 15;
+  const estimatedTax = parseFloat((subtotal * 0.155).toFixed(2));
+  const total = subtotal - discount + deliveryCharge + estimatedTax;
+
+  return (
+    <div className="min-h-screen pt-32 px-6 md:px-20 bg-gray-100/40">
+      <h2 className="text-[25px] md:text-6xl  font-bold mb-8 text-[#561256] text-center">
+        Checkout
+      </h2>
+
+      <div className="flex flex-col lg:flex-row gap-10">
+        {/* ==========================
+            📝 LEFT SIDE: FORM
+        =========================== */}
+        <form className="w-full lg:w-2/3 space-y-8 bg-white p-4 rounded-lg">
+          {/* Personal Details */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">Personal Details</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-1 text-sm font-medium text-gray-700">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Kwame"
+                  className="w-full border border-gray-300 rounded px-4 py-2"
+                />
+              </div>
+              <div>
+                <label className="block mb-1 text-sm font-medium text-gray-700">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Nkrumah"
+                  className="w-full border border-gray-300 rounded px-4 py-2"
+                />
+              </div>
+              <div>
+                <label className="block mb-1 text-sm font-medium text-gray-700">
+                  Your Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="nkrumah@example.com"
+                  className="w-full border border-gray-300 rounded px-4 py-2"
+                />
+              </div>
+              <div>
+                <label className="block mb-1 text-sm font-medium text-gray-700">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  placeholder="+233 501234xxxx"
+                  className="w-full border border-gray-300 rounded px-4 py-2"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Delivery Details */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">Delivery Details</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <label className="block mb-1 text-sm font-medium text-gray-700">
+                  Full Address
+                </label>
+                <textarea
+                  type="text"
+                  placeholder="123 Main St, Apartment 4B"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md outline-none h-28 resize-none"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block mb-1 text-sm font-medium text-gray-700">
+                  Country
+                </label>
+                <select
+                  name=""
+                  className="w-full border border-gray-300 rounded px-4 py-2"
+                >
+                  <option value="" defaultChecked>
+                    {" "}
+                    Ghana
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label className="block mb-1 text-sm font-medium text-gray-700">
+                  Zip-Code
+                </label>
+                <input
+                  type="text"
+                  placeholder="00233"
+                  className="w-full border border-gray-300 rounded px-4 py-2"
+                />
+              </div>
+              <div>
+                <label className="block mb-1 text-sm font-medium text-gray-700">
+                  City
+                </label>
+                <select className="w-full border border-gray-300 rounded px-4 py-2">
+                  <option>Select a city</option>
+                  <option>Accra</option>
+                  <option>Kumasi</option>
+                  <option>Tamale</option>
+                  <option>Sunyani</option>
+                  <option>Cape Coast</option>
+                  <option>Koforidua</option>
+                  <option>Bolgatanga</option>
+                  <option>Wa</option>
+                  <option>Ho</option>
+                  <option>Sekondi-Takoradi</option>
+                  <option>Damongo</option>
+                  <option>Techiman</option>
+                  <option>Goaso</option>
+                  <option>Sefwi Wiawso</option>
+                  <option>Nalerigu</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Shipping Method */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">Delivery Method</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+              <div className="w-full border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300">
+                <label className="flex items-center gap-4 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="shipping"
+                    className="accent-[#67216D] w-5 h-5"
+                  />
+                  <FaMotorcycle className="text-2xl text-[#67216D]" />
+                  <span className="text-gray-800 font-medium">
+                    Delivery by Motorcycle
+                  </span>
+                </label>
+              </div>
+
+              <div className="w-full border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300">
+                <label className="flex items-center gap-4 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="shipping"
+                    className="accent-[#67216D] w-5 h-5"
+                  />
+                  <FaShuttleVan className="text-2xl text-[#67216D]" />
+                  <span className="text-gray-800 font-medium">
+                    Delivery by Courier Van
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Method */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">Payment Method</h3>
+            <div className="grid grid-cols-1 gap-4">
+              {/* <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="payment"
+                  className="accent-purple-700"
+                />
+                <FaCcVisa className="text-xl text-blue-600" />
+                <FaCcMastercard className="text-xl text-red-600" />
+                <span>Credit / Debit Card</span>
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input
+                  type="text"
+                  placeholder="Card Number"
+                  className="border border-gray-300 rounded px-4 py-2"
+                />
+                <input
+                  type="text"
+                  placeholder="Expiry Date"
+                  className="border border-gray-300 rounded px-4 py-2"
+                />
+                <input
+                  type="text"
+                  placeholder="CVC/CVV"
+                  className="border border-gray-300 rounded px-4 py-2"
+                />
+              </div> */}
+
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="payment"
+                  className="accent-purple-700"
+                />
+                <span>Mobile Money</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="payment"
+                  className="accent-purple-700"
+                />
+                <span>Cash on Delivery</span>
+              </label>
+
+              <div className="flex items-center gap-2 bg-[#f5005612] text-[#F50057] text-sm p-6 rounded">
+                <FaLock />
+                <span>
+                  We adhere entirely to the data security standards of the
+                  payment industry.
+                </span>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        {/* ==========================
+            📦 RIGHT SIDE: ORDER SUMMARY
+        =========================== */}
+        <div className="w-full lg:w-1/3 h-auto bg-white p-4 rounded-lg shadow-md">
+          <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
+          <ul className="divide-y mb-4">
+            {cartItems.map((item) => (
+              <li key={item._id} className="py-3 flex justify-between">
+                <span>
+                  {item.title} x {item.quantity}
+                </span>
+                <span>GHC{(item.price * item.quantity).toFixed(2)}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="space-y-2 text-sm text-gray-700 mb-6">
+            <div className="flex justify-between">
+              <span>Sub Total:</span>
+              <span>GHC{subtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Discount:</span>
+              <span>GHC{discount.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Delivery Charge:</span>
+              <span>GHC{deliveryCharge.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Estimated Tax (15.5%):</span>
+              <span>GHC{estimatedTax.toFixed(2)}</span>
+            </div>
+            <div className="border-t pt-3 flex justify-between font-bold text-lg">
+              <span>Total Amount:</span>
+              <span>GHC{total.toFixed(2)}</span>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+            <button
+              onClick={() => navigate("/adverts")}
+              className="w-full md:w-auto px-6 border border-[#67216D] text-[#67216D] py-3 rounded-md hover:bg-purple-50 transition-all cursor-pointer"
+            >
+              Back to Shop
+            </button>
+            <button
+              onClick={handlePlaceOrder}
+              className="w-full md:w-auto bg-[#67216D] text-white px-5 py-3 rounded-md hover:bg-[#7B2A79] transition-all duration-300 cursor-pointer"
+            >
+              Confirm Order
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* confirmation modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/30  z-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md text-center">
+            <h2 className="text-xl font-bold mb-4 text-gray-800">
+              Confirm Your Order
+            </h2>
+            <p className="mb-6 text-sm text-gray-600">
+              Are you sure you want to place this order? Once confirmed, it
+              cannot be undone.
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={orderCancelled}
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmOrder}
+                className="px-4 py-2 rounded bg-[#67216D] text-white hover:bg-[#7B2A79] transition-all"
+              >
+                Yes, Place Order
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CheckOut;
