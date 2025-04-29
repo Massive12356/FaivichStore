@@ -86,7 +86,7 @@ const About = () => {
         className="w-full px-6 py-12"
         style={{
           backgroundImage:
-            "linear-gradient(to bottom, #C1D0DE, #F0E9B9, #FBCBC9, #FF9E8D)",
+            "linear-gradient(to bottom, #C1D0DE, #F0E9B9, #FBCBC9, #FF9F8E)",
         }}
       >
         {/* Subtitle */}

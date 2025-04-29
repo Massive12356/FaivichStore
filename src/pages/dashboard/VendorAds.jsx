@@ -102,7 +102,9 @@ const VendorAds = () => {
                   {product.name}
                 </h3>
                 <p className="text-sm text-gray-500">{product.description}</p>
-                <p className="text-sm text-[#FF6C2F] mt-2">{product.price}</p>
+                <p className="text-sm text-[#FF6C2F] mt-2">
+                  GH{"\u20B5"} {product.price}
+                </p>
               </div>
               <div className="flex items-center gap-3 mt-4">
                 <Link to={"/dashboard/singleAd/:id"}>
@@ -175,7 +177,7 @@ const VendorAds = () => {
                       {product.description}
                     </td>
                     <td className="p-4 text-sm text-[#FF6C2F]">
-                      {product.price}
+                      GH{"\u20B5"} {product.price}
                     </td>
                     <td className="p-4 flex gap-3 items-center justify-center mt-5">
                       <Link to={"/dashboard/singleAd/:id"}>

@@ -133,7 +133,9 @@ const Orders = () => {
                   <td className="p-4">{order.id}</td>
                   <td className="p-4">{order.createdAt}</td>
                   <td className="p-4">{order.customer}</td>
-                  <td className="p-4 text-[#FF6C2F]">${order.total}</td>
+                  <td className="p-4 text-[#FF6C2F]">
+                    GH{"\u20B5"} {order.total}
+                  </td>
                   <td className="p-4">
                     {order.products.reduce(
                       (total, product) => total + product.quantity,

@@ -41,7 +41,7 @@ const NavBar = () => {
   return (
     <header
       className={`w-full fixed top-0 left-0 z-50 font-[play] transition-all duration-300 ${
-        scrolled ? "backdrop-blur-md bg-white/60 shadow-md" : "bg-transparent"
+        scrolled ? "backdrop-blur-md bg-white/60 shadow-md" : "bg-white"
       }`}
     >
       <div className="w-full md:h-15 flex justify-between items-center px-4 py-3 md:px-10 relative">
@@ -81,9 +81,17 @@ const NavBar = () => {
           </NavLink>
         </nav>
 
-        {/* === Brand Logo === */}
-        <div className="text-lg md:text-[50px] font-bold logo text-[#561256]">
-          Faivich
+        {/* === Brand Logo & Admin Link === */}
+        <div className="flex flex-col items-start">
+          <div className="text-lg md:text-[50px] font-bold logo text-[#561256]">
+            Faivich
+          </div>
+          <NavLink
+            to="/login"
+            className="text-[11px] text-blue-950 hover:underline italic mt-1 block md:absolute md:top-1 md:right-0 md:p-4 md:mt-0"
+          >
+            Admin
+          </NavLink>
         </div>
 
         {/* === Icons Section === */}
@@ -310,14 +318,6 @@ const NavBar = () => {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Admin login */}
-        <NavLink
-          to="/login"
-          className="absolute z-[70] top-5 right-75 md:top-1 md:right-0 text-[11px] p-4 text-blue-950 hover:underline italic"
-        >
-          Admin
-        </NavLink>
       </div>
 
       {/* Mobile search input field */}

@@ -19,7 +19,7 @@ const CheckOut = () => {
     setShowModal(false);
     toast.success("Order placed successfully!");
     clearCart();
-    navigate("/");
+    navigate("/adverts");
   }
 
   const orderCancelled = ()=>{

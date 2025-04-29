@@ -73,7 +73,7 @@ const SingleOrderDetails = () => {
             <Detail label="Customer" value={order.customer} />
             <Detail label="Created At" value={order.createdAt} />
             <Detail label="Payment Method" value={order.paymentMethod} />
-            <Detail label="Total" value={`GHC${order.total}`} />
+            <Detail label="Total" value={`GH${"\u20B5"} ${order.total}`} />
 
             {/* Payment status dropdown */}
             <div>
@@ -113,7 +113,7 @@ const SingleOrderDetails = () => {
               {order.products?.length > 0 ? (
                 order.products.map((item, index) => (
                   <li key={index}>
-                    {item.name} — Quantity: {item.quantity} — GHC{item.price}
+                    {item.name} — Quantity: {item.quantity} — GH{"\u20B5"} {item.price}
                   </li>
                 ))
               ) : (

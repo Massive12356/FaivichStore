@@ -1,9 +1,14 @@
 import React from 'react'
 import {Link} from 'react-router'
+import HeroSection from '../../components/HeroSection'
+import MovingTextBlocks from '../../components/MovingTextBlocks'
 
 const Landing = () => {
   return (
-    <div>Landing</div>
+    <div>
+      <HeroSection/>
+      <MovingTextBlocks/>
+    </div>
   )
 }
 

@@ -8,7 +8,7 @@ import Features from "../../components/Features";
 const categories = [
   "All",
   "Healthcare",
-  "Cleaning Agents/Detergents",
+  "Cleaning Agents/Detergents", //  
   "Skincare/Cosmetics",
 ];
 
@@ -158,7 +158,7 @@ const Adverts = () => {
               <h2 className="text-lg font-bold">{item.title}</h2>
               <div className="flex items-center justify-center gap-2 mt-2">
                 <span className="text-lg font-semibold">
-                  GHC{item.price.toFixed(2)}
+                  GH{"\u20B5"} {item.price.toFixed(2)}
                 </span>
               </div>
             </div>

@@ -149,7 +149,7 @@ const CreateAd = () => {
           </label>
           <input
             type="text"
-            placeholder="e.g. GHC45"
+            placeholder="e.g. GH₵ 45"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"

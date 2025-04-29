@@ -1,11 +1,39 @@
-import React from "react";
+import React,{ useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
-import  toast  from "react-hot-toast";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaTwitter,
+  FaArrowUp,
+} from "react-icons/fa";
+import toast from "react-hot-toast";
 import logo2 from "../assets/logo2.png";
 
 const Footer = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Show button on scroll
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+
   return (
     <motion.footer
       initial={{ opacity: 0, y: 50 }}
@@ -14,15 +42,19 @@ const Footer = () => {
       viewport={{ once: true }}
       className="bg-[#4A235A] text-white pt-10 pb-4 px-6 md:px-10 font-[play]"
     >
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 items-start">
+      <div className="w-full flex flex-col md:flex-row flex-wrap items-start justify-between gap-6">
         {/* 🟣 Brand & Subscribe */}
-        <div className="space-y-4">
-          <img src={logo2} alt="image logo" className="md:w-40 w-30" />
+        <div className="w-full md:w-1/4 space-y-4 text-center md:text-left">
+          <img
+            src={logo2}
+            alt="image logo"
+            className="mx-auto md:mx-0 md:w-40 w-30"
+          />
           <p className="text-sm">
             Subscribe to get the latest offers, updates, and product drops.
           </p>
           <form
-            className=" w-full flex items-center gap-2"
+            className="w-full flex flex-col sm:flex-row items-center gap-2"
             onSubmit={(e) => {
               e.preventDefault();
               toast.success("Thank you for subscribing!");
@@ -38,57 +70,45 @@ const Footer = () => {
             <motion.button
               whileTap={{ scale: 0.96 }}
               type="submit"
-              className="bg-[#F50057] text-white px-4 py-2 rounded-md hover:bg-[#513E5F] transition cursor-pointer"
+              className="bg-[#F50057] text-white px-4 py-2 rounded-md hover:bg-[#513E5F] transition cursor-pointer w-full sm:w-auto"
             >
               Subscribe
             </motion.button>
           </form>
-          <div className="flex gap-4 text-xl">
+          <div className="flex justify-center md:justify-start gap-4 text-xl">
             <a
               href="https://www.instagram.com/faivichworld/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaInstagram
-                title="Visit Instagram"
-                className="hover:scale-110 transition hover:text-[#F50057]"
-              />
+              <FaInstagram className="hover:scale-110 transition hover:text-[#F50057]" />
             </a>
             <a
               href="https://www.facebook.com/people/faivichworld/100088610420065/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaFacebook
-                title="Visit Facebook"
-                className="hover:scale-110 transition hover:text-[#F50057]"
-              />
+              <FaFacebook className="hover:scale-110 transition hover:text-[#F50057]" />
             </a>
             <a
               href="https://gh.linkedin.com/company/faivich"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaLinkedin
-                title="Visit LinkedIn"
-                className="hover:scale-110 transition hover:text-[#F50057]"
-              />
+              <FaLinkedin className="hover:scale-110 transition hover:text-[#F50057]" />
             </a>
             <a
               href="https://twitter.com/faivichworld"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FaTwitter
-                title="Visit Twitter"
-                className="hover:scale-110 transition hover:text-[#F50057]"
-              />
+              <FaTwitter className="hover:scale-110 transition hover:text-[#F50057]" />
             </a>
           </div>
         </div>
 
-        {/* 🔗 Navigation */}
-        <div className="space-y-4">
+        {/* 🔗 Quick Links */}
+        <div className="w-full md:w-1/5 space-y-4 text-center md:text-left mt-6 md:mt-0">
           <h4 className="text-lg font-semibold text-gray-400">Quick Links</h4>
           <ul className="space-y-2 text-sm">
             <li>
@@ -115,7 +135,7 @@ const Footer = () => {
         </div>
 
         {/* 🧾 Legal */}
-        <div className="space-y-4">
+        <div className="w-full md:w-1/5 space-y-4 text-center md:text-left mt-6 md:mt-0">
           <h4 className="text-lg font-semibold text-gray-400">Legal</h4>
           <ul className="space-y-2 text-sm">
             <li>
@@ -142,9 +162,9 @@ const Footer = () => {
         </div>
 
         {/* 📞 Contact */}
-        <div className="space-y-4">
+        <div className="w-full md:w-1/4 space-y-4 text-center md:text-left mt-6 md:mt-0">
           <h4 className="text-lg font-semibold text-gray-400">Contact</h4>
-          <ul className="space-y-2 text-sm">
+          <ul className="text-sm space-y-2 whitespace-nowrap">
             <li>📍 PMB CT 101 Cantonments, Accra-Ghana</li>
             <li>📌 GICEL, SCC - Weija, Accra-Ghana</li>
             <li>📞 +233 (0) 208365929 / +233 (0) 540746898</li>
@@ -157,6 +177,19 @@ const Footer = () => {
       <div className="mt-8 flex flex-col sm:flex-row justify-center items-center border-t border-gray-600 pt-4 text-sm text-center">
         <p>&copy; {new Date().getFullYear()} Faivich. All rights reserved.</p>
       </div>
+
+      {isVisible && (
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 z-50 bg-[#F50057] text-white p-3 rounded-full shadow-lg hover:bg-[#513E5F] transition duration-300"
+          aria-label="Back to Top"
+        >
+          {" "}
+          <FaArrowUp size={18} />
+        </motion.button>
+      )}
     </motion.footer>
   );
 };
