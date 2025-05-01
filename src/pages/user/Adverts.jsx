@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaShoppingBag } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link,useLocation } from "react-router-dom";
 import mockProducts from "../../data/mockProducts";
 import Features from "../../components/Features";
 
@@ -18,6 +18,19 @@ const Adverts = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState(null); // Track clicked card
+  const location = useLocation();
+
+  // Read initial category from query param if present
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const categoryFromURL = params.get("category");
+
+    if (categoryFromURL && categories.includes(categoryFromURL)) {
+      setSelectedCategory(categoryFromURL);
+      setCurrentPage(1);
+      setSelectedCardId(null);
+    }
+  }, [location.search]);
 
   const filteredProducts =
     selectedCategory === "All"

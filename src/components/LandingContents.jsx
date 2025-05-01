@@ -1,0 +1,181 @@
+import React from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import {
+  FaShoppingBag,
+  FaTruck,
+  FaCertificate,
+  FaHeadset,
+  FaTags,
+} from "react-icons/fa";
+import mockProducts from "../data/mockProducts";
+import TestimonialSlider from "./TestimonialSlider";
+import person from "../images/person.jpg";
+
+const LandingContents = () => {
+  const products = mockProducts.slice(0, 3); // Only 3 products
+
+  return (
+    <motion.div
+      className="w-full"
+      style={{ background: "linear-gradient(135deg, #C6D2DA, #F0E8B9)" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
+      {/* Promotional Feature Section */}
+      <motion.section
+        className="w-full bg-transparent py-20 px-6 md:px-12 lg:px-20"
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+          <motion.div
+            className="flex-1 text-left"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <h2 className="text-4xl text-[#561256] md:text-5xl text-center font-extrabold mb-6">
+              Premium Products for Your Body, Health & Home
+            </h2>
+            <p className="text-base md:text-lg leading-relaxed text-gray-700 max-w-xl mb-10">
+              Our team of experts has carefully curated a premium range of
+              products, from nourishing healthcare essentials to luxurious
+              skincare and cosmetics, as well as powerful cleaning agents and
+              detergents for your home.
+              <br className="hidden md:block" />
+              <br />
+              Experience top-tier quality across all categories — all at
+              affordable prices — and enjoy the confidence of looking great,
+              feeling healthy, and living in a sparkling clean environment.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-[#561256]">
+              <div className="flex items-start gap-4">
+                <FaTruck className="text-2xl mt-1" />
+                <p className="font-bold text-base">24/7 Delivery</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <FaCertificate className="text-2xl mt-1" />
+                <p className="font-bold text-base">Original Product</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <FaHeadset className="text-2xl mt-1" />
+                <p className="font-bold text-base">Instant Support</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <FaTags className="text-2xl mt-1" />
+                <p className="font-bold text-base">Affordable</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="flex-1"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+          >
+            <img
+              src={person}
+              alt="Beauty skincare showcase"
+              className="w-full h-[600px] rounded-2xl shadow-xl object-cover"
+            />
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Shop by Categories Section */}
+      <motion.section
+        className="py-24 px-4 md:px-20"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="text-center mb-16">
+          <h2
+            className="text-4xl md:text-6xl font-extrabold mb-5"
+            style={{ color: "#561256" }}
+          >
+            Shop by Categories
+          </h2>
+          <p
+            className="text-lg md:text-xl font-medium max-w-2xl mx-auto"
+            style={{ color: "#561256" }}
+          >
+            Explore our wide range of high-quality products across healthcare,
+            skincare & cosmetics, and home cleaning essentials. Find exactly
+            what your body, beauty, and home need — all in one place.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          {products.map((item, index) => (
+            <motion.div
+              key={item.id || index}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              className="relative bg-white rounded-lg overflow-hidden shadow-lg group cursor-pointer"
+            >
+              <div className="absolute top-3 left-3 z-10 text-xs px-3 py-1 rounded-full shadow text-[#14245F] bg-white font-semibold">
+                {item.category || "Featured"}
+              </div>
+
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full h-72 object-cover bg-white p-4 rounded-lg"
+              />
+
+              <div
+                className="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold p-4
+          transition-all duration-300 opacity-0 sm:group-hover:opacity-100"
+              >
+                <Link to={`/adverts?category=${encodeURIComponent(item.category)}`}>
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center justify-between py-3 px-5 bg-[#f50056cf] cursor-pointer rounded-lg"
+                  >
+                    <FaShoppingBag className="mr-3" />
+                    Shop Now
+                  </motion.button>
+                </Link>
+              </div>
+
+              <div className="p-4 text-center text-[#14245F] font-[play]">
+                <h2 className="text-lg font-bold">{item.name}</h2>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  {item.price && (
+                    <span className="text-lg font-semibold">
+                      GH₵ {Number(item.price).toFixed(2)}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Testimonial Section */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        <TestimonialSlider />
+      </motion.section>
+    </motion.div>
+  );
+};
+
+export default LandingContents;

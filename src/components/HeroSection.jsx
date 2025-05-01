@@ -59,7 +59,7 @@ const HeroSection = () => {
           />
 
           {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-black opacity-40"></div>
+          <div className="absolute inset-0 bg-black/75"></div>
         </motion.div>
       </AnimatePresence>
 
@@ -71,7 +71,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 40 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight max-w-4xl"
+          className="text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-2 leading-tight max-w-4xl"
         >
           {slides[current].title}
         </motion.h1>
@@ -82,7 +82,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-          className="text-white text-md md:text-lg mb-8 max-w-2xl"
+          className="text-white text-md md:text-[20px] mb-8 max-w-2xl"
         >
           {slides[current].description}
         </motion.p>
