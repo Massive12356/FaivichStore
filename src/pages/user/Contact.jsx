@@ -41,7 +41,7 @@ const Contact = () => {
         className="w-full flex flex-col items-center text-[#67216D]"
       >
         <h2 className="text-4xl md:text-6xl font-bold  mb-4">Contact Us</h2>
-        <p className="text-sm md:text-lg max-w-4xl mx-auto mb-10 leading-relaxed text-center">
+        <p className="text-sm md:text-lg max-w-4xl mx-auto mb-10 leading-relaxed text-center text-gray-700">
           Reach out to us with your inquiries, feedback, or requests. We're here
           to assist you. Contact us via phone, email, or our contact form. Our
           dedicated support team is available around the clock to answer your

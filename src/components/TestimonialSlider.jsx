@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight, FaQuoteLeft,FaQuoteRight } from "react-icons/fa";
+import {
+  FaStar,
+  FaChevronLeft,
+  FaChevronRight,
+  FaQuoteLeft,
+  FaQuoteRight,
+} from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import testimonials from "../data/testimonials";
 
@@ -20,9 +26,7 @@ const TestimonialSlider = () => {
   const swipePower = (offset, velocity) => Math.abs(offset) * velocity;
 
   return (
-    <section
-      className="py-24 px-4 md:px-20 relative overflow-hidden"
-    >
+    <section className="py-24 px-4 md:px-20 relative overflow-hidden">
       <div className="text-center mb-10">
         <h2 className="text-4xl md:text-5xl font-extrabold text-[#561256] mb-4">
           What Our Customers Are Saying
@@ -77,6 +81,19 @@ const TestimonialSlider = () => {
             <span className="text-sm text-gray-500">
               {testimonials[index].location}
             </span>
+
+            <div className="flex justify-center mt-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <FaStar
+                  key={i}
+                  className={`text-lg ${
+                    i < testimonials[index].rating
+                      ? "text-[#F50056]"
+                      : "text-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
           </motion.div>
         </AnimatePresence>
 

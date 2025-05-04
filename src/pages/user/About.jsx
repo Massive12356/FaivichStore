@@ -14,12 +14,13 @@ import {
   FaWind,
   FaSeedling,
   FaBalanceScale,
+  FaAward,
 } from "react-icons/fa";
-import { Link } from "react-router-dom"; // if you're linking to a products page
+import { Link } from "react-router-dom";
+import ExperienceBadge from "../../components/ExperienceBadge";
 
 const About = () => {
   return (
-    // Use flex-col so last child (section) can expand to fill remaining space
     <div className="min-h-screen flex flex-col bg-[#F0F4E9] pt-40">
       {/* Animated Heading and Description */}
       <motion.div
@@ -29,7 +30,7 @@ const About = () => {
         className="text-center text-[#561256] font-[play] mb-10 px-6"
       >
         <h1 className="text-4xl md:text-6xl font-bold mb-4">Our Story</h1>
-        <p className="text-lg max-w-4xl mx-auto">
+        <p className="text-lg max-w-4xl mx-auto text-gray-700">
           Faivich Enterprise is a manufacturing and distribution company
           specializing in producing high-quality cleaning agents/detergents,
           skincare/cosmetics, and healthcare products. Faivich is dedicated to
@@ -39,6 +40,7 @@ const About = () => {
           for homes, businesses, and industries.
         </p>
       </motion.div>
+
       {/* Image container */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -46,7 +48,7 @@ const About = () => {
         transition={{ delay: 0.6, duration: 0.8 }}
         className="w-full flex flex-col md:flex-row items-center justify-around gap-6 px-6 mb-10"
       >
-        {/* First Image Block with hover transition */}
+        {/* First Image Block */}
         <div className="w-full md:w-[45%] h-[500px] relative group overflow-hidden rounded-lg">
           <img
             src={health1}
@@ -60,7 +62,7 @@ const About = () => {
           />
         </div>
 
-        {/* Second Image Block with hover transition */}
+        {/* Second Image Block */}
         <div className="w-full md:w-[45%] h-[500px] relative group overflow-hidden rounded-lg">
           <img
             src={cosmetic1}
@@ -77,7 +79,8 @@ const About = () => {
 
       {/* Spacer to fill available space before gradient */}
       <div className="flex-grow" />
-      {/* Gradient Footer Section that fills remaining space */}
+
+      {/* Gradient Footer Section */}
       <motion.section
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -108,7 +111,9 @@ const About = () => {
             <h3 className="text-xl font-semibold mb-2">
               Cleaning Agents & Detergents
             </h3>
-            <p>Eco-conscious and powerful formulations for a healthier home.</p>
+            <p className="text-gray-700">
+              Eco-conscious and powerful formulations for a healthier home.
+            </p>
           </motion.div>
 
           {/* Skincare */}
@@ -121,7 +126,7 @@ const About = () => {
           >
             <FaHeart className="text-5xl mb-4" />
             <h3 className="text-xl font-semibold mb-2">Skincare & Cosmetics</h3>
-            <p>
+            <p className="text-gray-700">
               Skin-loving, dermatologist-tested products that radiate beauty.
             </p>
           </motion.div>
@@ -138,20 +143,21 @@ const About = () => {
             <h3 className="text-xl font-semibold mb-2">
               Healthcare Essentials
             </h3>
-            <p>Everyday medical needs and wellness tools at your fingertips.</p>
+            <p className="text-gray-700">
+              Everyday medical needs and wellness tools at your fingertips.
+            </p>
           </motion.div>
         </div>
 
         {/* Final Section: Image + Text */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-          {/* Parallax Image Section */}
+          {/* Parallax Image */}
           <div className="w-full md:w-[45%] h-[600px] overflow-hidden relative rounded-lg">
             <div className="sticky top-20 h-full w-full ">
-              {/* Parallax-style zoom on scroll */}
               <motion.img
                 src={cleaning7}
                 alt="Why Choose Us"
-                className="w-full h-full object-cover brightness-[.7] "
+                className="w-full h-full object-cover brightness-[.7]"
                 style={{ scale: 1 }}
                 whileInView={{ scale: 1.1 }}
                 transition={{ duration: 1 }}
@@ -170,7 +176,7 @@ const About = () => {
             <h3 className="text-2xl md:text-3xl font-bold mb-4">
               Why Choose Faivich
             </h3>
-            <ul className="list-disc pl-6 space-y-2 mb-6">
+            <ul className="list-disc pl-6 space-y-2 mb-6 text-gray-700">
               <li>Trusted Products</li>
               <li>Cruelty-Free & Eco-Friendly</li>
               <li>Affordable Premium Quality</li>
@@ -179,7 +185,7 @@ const About = () => {
             </ul>
             <div className="mb-4">
               <h4 className="text-xl font-semibold">Our Mission</h4>
-              <p>
+              <p className="text-gray-700">
                 "To provide affordable, high-quality, and eco-friendly cleaning
                 and skincare products, empowering customers through sustainable
                 consumption while adhering to best-known manufacturing practices
@@ -188,7 +194,7 @@ const About = () => {
             </div>
             <div>
               <h4 className="text-xl font-semibold">Our Vision</h4>
-              <p>
+              <p className="text-gray-700">
                 "To become the leading brand synonymous with eco-friendly
                 cleaning and skincare solutions of high-quality in West Africa,
                 ensuring a positive environmental impact through responsible
@@ -206,14 +212,11 @@ const About = () => {
           className="w-full px-6 py-12"
         >
           <div className="max-w-5xl mx-auto text-[#561256] font-[play] text-center">
-            {/* Section Title */}
             <h3 className="text-3xl md:text-4xl font-bold mb-12">
               No chemical detergents & synthetic lathering agents
             </h3>
 
-            {/* Grid of Benefits */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-              {/* Row 1 */}
               <div className="flex items-center justify-center gap-3 text-lg">
                 <FaSmile className="text-2xl text-[#561256]" />
                 Soft skin feel
@@ -226,8 +229,6 @@ const About = () => {
                 <FaWind className="text-2xl text-[#561256]" />
                 Best fragrance
               </div>
-
-              {/* Row 2 */}
               <div className="flex items-center justify-center gap-3 text-lg">
                 <FaLeaf className="text-2xl text-[#561256]" />
                 Freshness explored
@@ -242,7 +243,6 @@ const About = () => {
               </div>
             </div>
 
-            {/* Call to Action Button */}
             <Link
               to="/adverts"
               className="inline-block bg-[#561256] hover:bg-[#6d1975] text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition-transform transform hover:scale-105"
@@ -252,6 +252,9 @@ const About = () => {
           </div>
         </motion.section>
       </motion.section>
+
+      {/* Fixed Flyer Badge */}
+      <ExperienceBadge />
     </div>
   );
 };

@@ -17,6 +17,8 @@ const UpdateAd = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
+  const [ingredients, setIngredients] = useState("");
+  const [usageInstructions, setUsageInstructions] = useState("");
 
   // State for image previews and actual files
   const [images, setImages] = useState([]);
@@ -80,7 +82,7 @@ const UpdateAd = () => {
           className=" flex w-ful justify-end mb-5"
         >
           <button
-            title="Back to All Products Page"
+            title="back to Published Products Page"
             className="text-[#4A235A] hover:text-[#513E5F] transition-colors duration-200 flex items-center gap-2 cursor-pointer"
           >
             <FiArrowLeft size={24} />
@@ -143,6 +145,30 @@ const UpdateAd = () => {
             onChange={(e) => setDescription(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 h-28 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
+          />
+        </div>
+
+        <div>
+          <label className="block text-[#777186] font-semibold mb-1 font-[play]">
+            Ingredients
+          </label>
+          <textarea
+            placeholder="List the key ingredients used in this product"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2 h-24 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
+          />
+        </div>
+
+        <div>
+          <label className="block text-[#777186] font-semibold mb-1 font-[play]">
+            Usage Instructions
+          </label>
+          <textarea
+            placeholder="Explain how the product should be used"
+            value={usageInstructions}
+            onChange={(e) => setUsageInstructions(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2 h-24 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
           />
         </div>
 
@@ -232,7 +258,7 @@ const UpdateAd = () => {
           {/* Cancel Button */}
           <Link to={"/dashboard/vendorAds"}>
             <motion.button
-              title="Cancel & back to All Products Page"
+              title="Cancel & back to Published Products Page"
               whileTap={{ scale: 0.95 }}
               type="button"
               className="flex items-center gap-2 bg-red-300 text-[#9d0505] px-7 py-2 rounded-lg font-[play] font-semibold cursor-pointer"
@@ -244,7 +270,7 @@ const UpdateAd = () => {
 
           {/* Submit Button */}
           <motion.button
-            title="Update Product Details"
+            title="Update Published Product Details"
             whileTap={{ scale: 0.95 }}
             type="submit"
             className="flex items-center gap-2 bg-[#4A235A] hover:bg-[#513E5F] text-white px-7 py-2 rounded-lg font-[play] font-semibold cursor-pointer"

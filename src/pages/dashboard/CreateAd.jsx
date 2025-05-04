@@ -6,28 +6,23 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 
 const CreateAd = () => {
-
-  // State hooks for form fields
   const [productName, setProductName] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [description, setDescription] = useState("");
+  const [ingredients, setIngredients] = useState("");
+  const [usageInstructions, setUsageInstructions] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-
-  // State for image previews and actual files
   const [images, setImages] = useState([]);
   const [files, setFiles] = useState([]);
 
-  // Handles image file selection and preview generation
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     const previewURLs = selectedFiles.map((file) => URL.createObjectURL(file));
-
     setImages((prev) => [...prev, ...previewURLs]);
     setFiles((prev) => [...prev, ...selectedFiles]);
   };
 
-  // Removes an image preview and corresponding file
   const removeImage = (index) => {
     const newImages = [...images];
     const newFiles = [...files];
@@ -37,24 +32,24 @@ const CreateAd = () => {
     setFiles(newFiles);
   };
 
-  // Handles form submission and resets all fields
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Example log – replace this with API call
     console.log({
       productName,
       shortDescription,
       description,
+      ingredients,
+      usageInstructions,
       price,
       category,
       files,
     });
 
-    // Reset all form fields and image previews
     setProductName("");
     setShortDescription("");
     setDescription("");
+    setIngredients("");
+    setUsageInstructions("");
     setPrice("");
     setCategory("");
     setImages([]);
@@ -69,7 +64,6 @@ const CreateAd = () => {
       transition={{ type: "spring", stiffness: 100, damping: 25 }}
       className="p-5 md:p-10 bg-[#F9F7F7] min-h-screen font-[play]"
     >
-      {/* Back Button */}
       <Link to={"/dashboard/vendorAds"}>
         <motion.div
           whileTap={{ scale: 0.9 }}
@@ -85,7 +79,6 @@ const CreateAd = () => {
         </motion.div>
       </Link>
 
-      {/* Form Heading */}
       <div className="flex items-center gap-3 mb-8">
         <MdPostAdd size={30} className="text-[#FF6C2F]" />
         <h1 className="text-2xl md:text-3xl font-bold text-[#67216D] font-[play]">
@@ -93,12 +86,10 @@ const CreateAd = () => {
         </h1>
       </div>
 
-      {/* Product Form */}
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-xl p-6 space-y-6"
       >
-        {/* Product Name */}
         <div>
           <label className="block text-[#777186] font-semibold mb-1 font-[play]">
             Product Name
@@ -113,7 +104,6 @@ const CreateAd = () => {
           />
         </div>
 
-        {/* Short Description */}
         <div>
           <label className="block text-[#777186] font-semibold mb-1 font-[play]">
             Short Description
@@ -128,13 +118,12 @@ const CreateAd = () => {
           />
         </div>
 
-        {/* Full Description */}
         <div>
           <label className="block text-[#777186] font-semibold mb-1 font-[play]">
             Description
           </label>
           <textarea
-            placeholder="Detailed description"
+            placeholder="Detailed description of the product and its purpose"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 h-28 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
@@ -142,7 +131,30 @@ const CreateAd = () => {
           />
         </div>
 
-        {/* Price */}
+        <div>
+          <label className="block text-[#777186] font-semibold mb-1 font-[play]">
+            Ingredients
+          </label>
+          <textarea
+            placeholder="List the key ingredients used in this product"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2 h-24 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
+          />
+        </div>
+
+        <div>
+          <label className="block text-[#777186] font-semibold mb-1 font-[play]">
+            Usage Instructions
+          </label>
+          <textarea
+            placeholder="Explain how the product should be used"
+            value={usageInstructions}
+            onChange={(e) => setUsageInstructions(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2 h-24 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
+          />
+        </div>
+
         <div>
           <label className="block text-[#777186] font-semibold mb-1 font-[play]">
             Price
@@ -157,7 +169,6 @@ const CreateAd = () => {
           />
         </div>
 
-        {/* Category Dropdown */}
         <div>
           <label className="block text-[#777186] font-semibold mb-1 font-[play]">
             Category
@@ -175,7 +186,6 @@ const CreateAd = () => {
           </select>
         </div>
 
-        {/* Image Upload Section */}
         <div>
           <label className="block text-[#777186] font-semibold mb-2 font-[play]">
             Upload Product Images
@@ -199,7 +209,6 @@ const CreateAd = () => {
             </label>
           </div>
 
-          {/* Image Previews */}
           <div className="flex flex-wrap gap-3 mt-4">
             {images.map((img, index) => (
               <div
@@ -223,9 +232,7 @@ const CreateAd = () => {
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex justify-end gap-4 mt-6">
-          {/* Cancel Button */}
           <Link to={"/dashboard/vendorAds"}>
             <motion.button
               title="Cancel & Back to All Products"
@@ -238,7 +245,6 @@ const CreateAd = () => {
             </motion.button>
           </Link>
 
-          {/* Submit Button */}
           <motion.button
             title="Publish A New Product"
             whileTap={{ scale: 0.95 }}

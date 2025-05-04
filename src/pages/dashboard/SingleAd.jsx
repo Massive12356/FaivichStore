@@ -13,8 +13,12 @@ const product = {
   shortDescription: "Effective cleaning solution for homes and offices.",
   description:
     "A powerful cleaning solution designed for both home and office use. It cleans surfaces efficiently, leaving them spotless. ".repeat(
-      30
+      2
     ),
+  ingredients:
+    "Water, Sodium Hypochlorite, Surfactants, Fragrance, Preservatives",
+  usage:
+    "Apply directly to the surface and wipe clean with a damp cloth. For tougher stains, let sit for a few minutes before wiping.",
   price: "$20",
   category: "Cleaning",
   images: [img1, img2, img3, img4],
@@ -120,17 +124,37 @@ const SingleAd = () => {
 
           <div>
             <h3 className="text-lg font-semibold text-[#777186]">
-              Short Description
+              Why You'll Love This Product
             </h3>
             <p className="text-md text-[#555]">{product.shortDescription}</p>
           </div>
 
           <div>
             <h3 className="text-lg font-semibold text-[#777186]">
-              Full Description
+              What Makes This Product Special?
             </h3>
             <p className="text-md text-[#555] whitespace-pre-line leading-relaxed">
               {product.description}
+            </p>
+          </div>
+
+          {/* Key Ingredients */}
+          <div>
+            <h3 className="text-lg font-semibold text-[#777186]">
+              Key Ingredients
+            </h3>
+            <p className="text-md text-[#555] whitespace-pre-line leading-relaxed">
+              {product.ingredients}
+            </p>
+          </div>
+
+          {/* How to Use */}
+          <div>
+            <h3 className="text-lg font-semibold text-[#777186]">
+              Simple Steps to Get the Best Results
+            </h3>
+            <p className="text-md text-[#555] whitespace-pre-line leading-relaxed">
+              {product.usage}
             </p>
           </div>
 

@@ -6,7 +6,7 @@ import { FiMenu } from "react-icons/fi";
 import { FiSearch } from "react-icons/fi"; // Importing search icon
 import ProfPic from '../assets/mintah.jpeg'
 
-const DashNavBar = ({ profileImage, onLogout, setSidebarOpen }) => {
+const DashNavBar = ({ profileImage, setSidebarOpen }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
 
@@ -82,16 +82,15 @@ const DashNavBar = ({ profileImage, onLogout, setSidebarOpen }) => {
                     <FaUserEdit className="mr-2 " />
                     Update Picture
                   </Link>
+
+                  <Link to={'/'}>
                   <div
                     className="flex items-center px-4 py-2 hover:bg-gray-100 text-red-600 cursor-pointer font-[play]"
-                    onClick={() => {
-                      setIsProfileOpen(false);
-                      onLogout();
-                    }}
-                  >
+                    >
                     <FaSignOutAlt className="mr-2" />
                     Logout
                   </div>
+                    </Link>
                 </div>
               </motion.div>
             )}

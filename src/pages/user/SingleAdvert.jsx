@@ -9,10 +9,15 @@ import toast from "react-hot-toast";
 const sampleProduct = {
   _id: "123", // Required to uniquely identify products in cart
   title: "Hydrating Skincare Serum",
-  shortDesc: "Gentle and effective serum for all skin types.",
+  shortDesc:
+    "Gentle and effective serum for all skin types, providing deep hydration and a healthy glow.",
   longDesc:
-    "This deeply hydrating serum is formulated with botanical extracts and peptides...",
+    "Our Hydrating Skincare Serum is a luxurious, deeply moisturizing formula designed to replenish and revitalize dry, dull skin. This serum is packed with powerful botanical extracts, peptides, and antioxidants to deeply hydrate and protect the skin. The lightweight texture absorbs quickly without leaving any greasy residue, leaving your skin feeling refreshed and nourished. Ideal for daily use, it works to restore the skin's natural moisture balance, giving you a radiant, smooth complexion. Whether you're dealing with dehydration or looking to give your skin a boost, this serum is the perfect addition to your skincare routine.",
   price: 129.99,
+  ingredients:
+    "Water, Glycerin, Hyaluronic Acid, Aloe Vera, Vitamin E, Rose Extract, Green Tea Extract, Peptides, Witch Hazel, Jojoba Oil, Shea Butter",
+  usage:
+    "Apply a few drops to clean, dry skin after cleansing and toning. Gently massage the serum into your face and neck using upward circular motions. Use morning and evening for best results. Follow with your favorite moisturizer to lock in hydration.",
   images: [
     "/src/images/cosmetics2.jpg",
     "/src/images/cosmetics7.jpg",
@@ -21,20 +26,18 @@ const sampleProduct = {
   ],
 };
 
-const SingleAdvert = () => {
-  // 🖼️ Track which product image is currently selected
-  const [selectedImage, setSelectedImage] = useState(sampleProduct.images[0]);
 
-  // 🔢 Track the quantity of items the user wants to purchase
+const SingleAdvert = () => {
+  const [selectedImage, setSelectedImage] = useState(sampleProduct.images[0]);
   const [quantity, setQuantity] = useState(1);
 
   // 🛒 Add product to cart using Zustand store
   const addToCart = () => {
-    useCartStore.getState().addToCart(sampleProduct, quantity); // ✅ Correctly pass quantity as second parameter
+    useCartStore.getState().addToCart(sampleProduct, quantity);
     toast.success(`${sampleProduct.title} added to cart!`);
   };
 
-  // 🔁 Function to increase or decrease quantity, preventing less than 1
+  // 🔁 Function to increase or decrease quantity
   const handleQty = (type) => {
     if (type === "dec" && quantity > 1) setQuantity(quantity - 1);
     if (type === "inc") setQuantity(quantity + 1);
@@ -52,20 +55,16 @@ const SingleAdvert = () => {
           "linear-gradient(to bottom, #C1D0DE, #F0E9B9, #FBCBC9)",
       }}
     >
-      {/* ============================== */}
-      {/* 🖼️ Product Image & Details */}
-      {/* ============================== */}
       <div className="flex flex-col lg:flex-row gap-8">
         {/* 🔳 Left Section: Thumbnails + Main Image */}
         <div className="flex flex-col-reverse lg:flex-row w-full lg:w-1/2 gap-4">
-          {/* 📸 Thumbnails */}
           <div className="flex lg:flex-col gap-4 max-h-[500px] overflow-x-auto lg:overflow-y-auto scrollbar-hide">
             {sampleProduct.images.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={`Thumbnail ${index + 1}`}
-                onClick={() => setSelectedImage(img)} // 🖱️ Click to select
+                onClick={() => setSelectedImage(img)}
                 className={`w-16 h-16 object-cover rounded cursor-pointer border-2 ${
                   selectedImage === img
                     ? "border-[#67216D]"
@@ -75,7 +74,6 @@ const SingleAdvert = () => {
             ))}
           </div>
 
-          {/* 🖼️ Main Image Preview */}
           <div className="flex-1 rounded-lg shadow-lg p-4 flex items-center justify-center h-[500px]">
             <img
               src={selectedImage}
@@ -101,7 +99,6 @@ const SingleAdvert = () => {
           {/* 🔢 Quantity Selector + Add to Cart */}
           {/* ============================== */}
           <div className="flex items-center gap-4 mb-6">
-            {/* ➖➕ Quantity Control */}
             <div className="flex items-center border border-[#67216D] rounded">
               <button
                 onClick={() => handleQty("dec")}
@@ -118,7 +115,6 @@ const SingleAdvert = () => {
               </button>
             </div>
 
-            {/* 🛒 Add to Cart Button */}
             <motion.button
               whileTap={{ scale: 0.95 }}
               className="bg-[#67216D] text-white px-6 py-2 rounded-lg shadow hover:bg-[#813E8C] cursor-pointer"
@@ -131,9 +127,27 @@ const SingleAdvert = () => {
           {/* ============================== */}
           {/* 📃 Product Full Description */}
           {/* ============================== */}
+          <div className="text-gray-700 leading-relaxed mb-6">
+            <h3 className="text-lg font-semibold mb-2">
+              What Makes This Product Special?
+            </h3>
+            <p>{sampleProduct.longDesc}</p>
+          </div>
+
+          {/* ============================== */}
+          {/* 🧴 Ingredients Section */}
+          {/* ============================== */}
+          <div className="text-gray-700 leading-relaxed mb-6">
+            <h3 className="text-lg font-semibold mb-2">Key Ingredients</h3>
+            <p>{sampleProduct.ingredients}</p>
+          </div>
+
+          {/* ============================== */}
+          {/* 📝 Usage Instructions Section */}
+          {/* ============================== */}
           <div className="text-gray-700 leading-relaxed">
-            <h3 className="text-lg font-semibold mb-2">Product Description</h3>
-            <p>{sampleProduct.longDesc.repeat(20)}</p>
+            <h3 className="text-lg font-semibold mb-2">How to Use</h3>
+            <p>{sampleProduct.usage}</p>
           </div>
         </div>
       </div>

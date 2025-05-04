@@ -182,7 +182,7 @@ const VendorAds = () => {
                     <td className="p-4 flex gap-3 items-center justify-center mt-5">
                       <Link to={"/dashboard/singleAd/:id"}>
                         <motion.button
-                          title="View Product"
+                          title="View Published  Product"
                           whileTap={{ scale: 0.95 }}
                           className="text-green-500 cursor-pointer hover:text-[#67216D]"
                         >
@@ -191,7 +191,7 @@ const VendorAds = () => {
                       </Link>
                       <Link to={"/dashboard/UpdateAd/:id"}>
                         <motion.button
-                          title="Edit product"
+                          title="Edit Published product"
                           whileTap={{ scale: 0.95 }}
                           className="text-[#FF6C2F] cursor-pointer hover:text-[#67216D]"
                         >
@@ -199,7 +199,7 @@ const VendorAds = () => {
                         </motion.button>
                       </Link>
                       <motion.button
-                        title="Delete Product"
+                        title="Delete Published  Product"
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleDelete(product)}
                         className="text-red-500 hover:text-[#67216D] cursor-pointer"

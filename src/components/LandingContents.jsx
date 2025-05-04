@@ -7,10 +7,12 @@ import {
   FaCertificate,
   FaHeadset,
   FaTags,
+  FaArrowRight,
 } from "react-icons/fa";
 import mockProducts from "../data/mockProducts";
 import TestimonialSlider from "./TestimonialSlider";
 import person from "../images/person.jpg";
+import ShopByCategories from "./ShopByCategories";
 
 const LandingContents = () => {
   const products = mockProducts.slice(0, 3); // Only 3 products
@@ -91,6 +93,19 @@ const LandingContents = () => {
       </motion.section>
 
       {/* Shop by Categories Section */}
+      <ShopByCategories/>
+
+      {/* Testimonial Section */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        <TestimonialSlider />
+      </motion.section>
+
+      {/* Our Products Section */}
       <motion.section
         className="py-24 px-4 md:px-20"
         initial={{ opacity: 0, y: 50 }}
@@ -98,25 +113,40 @@ const LandingContents = () => {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <div className="text-center mb-16">
-          <h2
-            className="text-4xl md:text-6xl font-extrabold mb-5"
-            style={{ color: "#561256" }}
-          >
-            Shop by Categories
+        <div className="mb-10 text-center max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-[#561256] mb-3">
+            Our Products
           </h2>
-          <p
-            className="text-lg md:text-xl font-medium max-w-2xl mx-auto"
-            style={{ color: "#561256" }}
-          >
-            Explore our wide range of high-quality products across healthcare,
-            skincare & cosmetics, and home cleaning essentials. Find exactly
-            what your body, beauty, and home need — all in one place.
+          <p className="text-md md:text-lg text-gray-700 max-w-2xl mx-auto">
+            Discover some of our best-selling skincare, healthcare, and cleaning
+            essentials—carefully selected to support your beauty, wellness, and
+            lifestyle goals.
           </p>
         </div>
 
+        <div className="flex justify-end items-center mb-6 group">
+          <motion.div whileHover="hover">
+            <Link
+              to="/adverts"
+              className="flex items-center text-[#f50056cf] font-semibold transition duration-300"
+            >
+              See all products
+              <motion.span
+                className="ml-2 inline-block font-bold"
+                variants={{
+                  hover: { rotate: -25 },
+                  initial: { rotate: 0 },
+                }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <FaArrowRight />
+              </motion.span>
+            </Link>
+          </motion.div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {products.map((item, index) => (
+          {mockProducts.slice(0, 6).map((item, index) => (
             <motion.div
               key={item.id || index}
               initial={{ opacity: 0, y: 40 }}
@@ -126,20 +156,17 @@ const LandingContents = () => {
               className="relative bg-white rounded-lg overflow-hidden shadow-lg group cursor-pointer"
             >
               <div className="absolute top-3 left-3 z-10 text-xs px-3 py-1 rounded-full shadow text-[#14245F] bg-white font-semibold">
-                {item.category || "Featured"}
+                {item.description || "Product"}
               </div>
 
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-full h-72 object-cover bg-white p-4 rounded-lg"
+                className="w-full h-72 object-cover bg-white p-1 rounded-lg"
               />
 
-              <div
-                className="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold p-4
-          transition-all duration-300 opacity-0 sm:group-hover:opacity-100"
-              >
-                <Link to={`/adverts?category=${encodeURIComponent(item.category)}`}>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold p-4 transition-all duration-300 opacity-0 sm:group-hover:opacity-100">
+                <Link to={`/adverts/${item.id}`}>
                   <motion.button
                     whileTap={{ scale: 0.95 }}
                     className="flex items-center justify-between py-3 px-5 bg-[#f50056cf] cursor-pointer rounded-lg"
@@ -151,7 +178,7 @@ const LandingContents = () => {
               </div>
 
               <div className="p-4 text-center text-[#14245F] font-[play]">
-                <h2 className="text-lg font-bold">{item.name}</h2>
+                <h2 className="text-lg font-bold">{item.title}</h2>
                 <div className="flex items-center justify-center gap-2 mt-2">
                   {item.price && (
                     <span className="text-lg font-semibold">
@@ -163,16 +190,6 @@ const LandingContents = () => {
             </motion.div>
           ))}
         </div>
-      </motion.section>
-
-      {/* Testimonial Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7 }}
-      >
-        <TestimonialSlider />
       </motion.section>
     </motion.div>
   );

@@ -95,7 +95,7 @@ const Adverts = () => {
             ? "Explore Our Product "
             : selectedCategory}
         </h1>
-        <p className="text-[18px] md:text-lg max-w-xl mx-auto">
+        <p className="text-[18px] md:text-lg max-w-xl mx-auto text-gray-700">
           {getSubText()}
         </p>
       </div>
@@ -143,7 +143,7 @@ const Adverts = () => {
             <img
               src={item.image}
               alt={item.title}
-              className="w-full h-56 object-cover bg-white p-4 rounded-lg"
+              className="w-full h-56 object-cover bg-white p-1 rounded-lg"
             />
 
             {/* Overlay */}
