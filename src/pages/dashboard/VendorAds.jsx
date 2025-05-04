@@ -95,7 +95,7 @@ const VendorAds = () => {
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full h-32 object-contain rounded-md mb-4"
+                className="w-full h-32 object-cover rounded-md mb-4"
               />
               <div className="flex-grow text-center">
                 <h3 className="text-lg font-bold text-[#283144]">
@@ -109,7 +109,7 @@ const VendorAds = () => {
               <div className="flex items-center gap-3 mt-4">
                 <Link to={"/dashboard/singleAd/:id"}>
                   <motion.button
-                    title="view Product"
+                    title="view Published Product"
                     whileTap={{ scale: 0.95 }}
                     className="text-green-500 hover:text-[#67216D] cursor-pointer"
                   >
@@ -118,7 +118,7 @@ const VendorAds = () => {
                 </Link>
                 <Link to={"/dashboard/updateAd/:id"}>
                   <motion.button
-                    title="Edit Product"
+                    title="Edit Published Product"
                     whileTap={{ scale: 0.95 }}
                     className="text-[#FF6C2F] hover:text-[#67216D] cursor-pointer"
                   >
@@ -126,7 +126,7 @@ const VendorAds = () => {
                   </motion.button>
                 </Link>
                 <motion.button
-                  title="Delete Product"
+                  title="Delete Published Product"
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleDelete(product)}
                   className="text-red-500 hover:text-[#67216D] cursor-pointer"

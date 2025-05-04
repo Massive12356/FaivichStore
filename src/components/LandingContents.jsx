@@ -12,6 +12,7 @@ import {
 import mockProducts from "../data/mockProducts";
 import TestimonialSlider from "./TestimonialSlider";
 import person from "../images/person.jpg";
+import person1 from '../images/person1.jpg'
 import ShopByCategories from "./ShopByCategories";
 
 const LandingContents = () => {
@@ -93,7 +94,7 @@ const LandingContents = () => {
       </motion.section>
 
       {/* Shop by Categories Section */}
-      <ShopByCategories/>
+      <ShopByCategories />
 
       {/* Testimonial Section */}
       <motion.section
@@ -189,6 +190,64 @@ const LandingContents = () => {
               </div>
             </motion.div>
           ))}
+        </div>
+      </motion.section>
+
+      {/*Cosmetics  Promotional Feature Section */}
+      <motion.section
+        className="w-full bg-transparent py-20 px-6 md:px-12 lg:px-20"
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+          <motion.div
+            className="flex-1"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+          >
+            <img
+              src={person1}
+              alt="Beauty skincare showcase"
+              className="w-full h-[600px] rounded-2xl shadow-xl object-cover"
+            />
+          </motion.div>
+
+          <motion.div
+            className="flex-1 text-left"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <h2 className="text-4xl text-[#561256] md:text-5xl text-center font-extrabold mb-6">
+              Luxurious Cosmetics for Radiant Skin & Timeless Beauty
+            </h2>
+            <p className="text-base md:text-lg leading-relaxed text-gray-700 max-w-xl mb-10">
+              Discover our expertly curated selection of premium cosmetic
+              products designed to enhance your natural beauty. From nourishing
+              skincare to glow-boosting oils and flawless makeup essentials, we
+              bring you only the finest in self-care.
+              <br className="hidden md:block" />
+              <br />
+              Feel confident, look radiant, and indulge in beauty rituals that
+              elevate your everyday routine — all at prices that celebrate you.
+            </p>
+
+            <div className="w-full flex items-center justify-center">
+              <Link to={"/adverts"}>
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  className="px-6 py-3 rounded-md bg-[#67216D] text-white text-base md:text-lg font-semibold shadow-md hover:bg-[#501452] hover:scale-105 transition-all cursor-pointer"
+                >
+                  Explore Our Shop
+                </motion.button>
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </motion.section>
     </motion.div>

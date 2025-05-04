@@ -98,14 +98,14 @@ const TestimonialSlider = () => {
         </AnimatePresence>
 
         {/* Arrows Outside Card */}
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 -ml-8 md:-ml-12 z-10">
+        <div className="absolute top-1/2 left-4 md:left-0 -translate-y-1/2 -ml-8 md:-ml-12 z-10">
           <FaChevronLeft
             size={28}
             onClick={prev}
             className="text-[#561256] cursor-pointer hover:scale-110 transition-transform"
           />
         </div>
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 -mr-8 md:-mr-12 z-10">
+        <div className="absolute top-1/2 right-4 md:right-0 -translate-y-1/2 -mr-8 md:-mr-12 z-10">
           <FaChevronRight
             size={28}
             onClick={next}

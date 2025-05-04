@@ -61,6 +61,8 @@ const Contact = () => {
             faivichenterprise@gmail.com
           </p>
         </motion.div>
+
+        
         <motion.div
           variants={itemVariants}
           className="bg-white md:p-15 p-5 rounded-lg shadow-md text-center"
