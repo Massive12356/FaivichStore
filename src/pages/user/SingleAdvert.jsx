@@ -19,10 +19,10 @@ const sampleProduct = {
   usage:
     "Apply a few drops to clean, dry skin after cleansing and toning. Gently massage the serum into your face and neck using upward circular motions. Use morning and evening for best results. Follow with your favorite moisturizer to lock in hydration.",
   images: [
-    "/src/images/cosmetics2.jpg",
-    "/src/images/cosmetics7.jpg",
-    "/src/images/cosmetic9.jpg",
-    "/src/images/cosmetics10.jpg",
+    "/images/cosmetics2.jpg",
+    "/images/cosmetics7.jpg",
+    "/images/cosmetic9.jpg",
+    "/images/cosmetics10.jpg",
   ],
 };
 
