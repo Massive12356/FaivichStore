@@ -19,6 +19,7 @@ import About from './pages/user/About';
 import SingleAdvert from './pages/user/SingleAdvert';
 import FaqSection from './components/FaqSection';
 import CheckOut from './pages/user/CheckOut';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   
@@ -61,6 +62,7 @@ function App() {
 
       {/* routes management */}
       <BrowserRouter>
+      <ScrollToTop/>
         <Routes>
           {/* navigation for users */}
           <Route path='/' element={<RootLayout/>}>
