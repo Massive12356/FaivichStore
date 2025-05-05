@@ -21,7 +21,6 @@ const sampleProduct = {
   images: [
     "/images/cosmetics2.jpg",
     "/images/cosmetics7.jpg",
-    "/images/cosmetic9.jpg",
     "/images/cosmetics10.jpg",
   ],
 };
