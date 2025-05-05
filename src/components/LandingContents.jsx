@@ -8,15 +8,19 @@ import {
   FaHeadset,
   FaTags,
   FaArrowRight,
+  FaBroom,
+  FaRecycle,
+  FaHandsWash,
+  FaStar,
 } from "react-icons/fa";
 import mockProducts from "../data/mockProducts";
 import TestimonialSlider from "./TestimonialSlider";
 import person from "../images/person.jpg";
-import person1 from '../images/person1.jpg'
+import person1 from '../images/person1.jpg';
+import cleaningImage from '../images/cleanPro.jpg'
 import ShopByCategories from "./ShopByCategories";
 
 const LandingContents = () => {
-  const products = mockProducts.slice(0, 3); // Only 3 products
 
   return (
     <motion.div
@@ -246,6 +250,75 @@ const LandingContents = () => {
                   Explore Our Shop
                 </motion.button>
               </Link>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Cleaning Products Feature Section */}
+      <motion.section
+        className="w-full bg-transparent py-20 px-6 md:px-12 lg:px-20"
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row-reverse items-center gap-16">
+          {/* Image Section */}
+          <motion.div
+            className="flex-1"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+          >
+            <img
+              src={cleaningImage}
+              alt="Cleaning product showcase"
+              className="w-full h-[600px] rounded-2xl shadow-xl object-cover"
+            />
+          </motion.div>
+
+          {/* Text Section */}
+          <motion.div
+            className="flex-1 text-left"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <h2 className="text-4xl text-[#561256] md:text-5xl text-left font-extrabold mb-6">
+              Spotless Solutions for a Healthier Home
+            </h2>
+            <p className="text-base md:text-lg leading-relaxed text-gray-700 max-w-2xl mb-10">
+              Our collection of high-performance cleaning agents and detergents
+              is designed to leave your home sparkling clean and bacteria-free.
+              Whether it's for your kitchen, bathroom, or living space — our
+              products get the job done with ease.
+              <br className="hidden md:block" />
+              <br />
+              Discover tough-on-dirt, safe-on-surfaces solutions, and enjoy
+              freshness like never before.
+            </p>
+
+            {/* Grid Layout for Features */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-[#561256]">
+              <div className="flex items-start gap-4">
+                <FaBroom className="text-2xl mt-1" />
+                <p className="font-bold text-lg">Deep Cleaning Agents</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <FaRecycle className="text-2xl mt-1" />
+                <p className="font-bold text-lg">Eco-Friendly Ingredients</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <FaHandsWash className="text-2xl mt-1" />
+                <p className="font-bold text-lg">Safe for Hands & Surfaces</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <FaStar className="text-2xl mt-1" />
+                <p className="font-bold text-lg">Long-lasting Freshness</p>
+              </div>
             </div>
           </motion.div>
         </div>
