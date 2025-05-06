@@ -30,7 +30,7 @@ const ExperienceBadge = () => {
 
   return (
     <motion.div
-      className="fixed top-28 right-4 z-50 bg-gradient-to-r from-[#f50057] to-[#f500568d] text-white shadow-lg flex items-center overflow-hidden cursor-default"
+      className="fixed top-80 md:top-28 right-4 z-50 bg-gradient-to-r from-[#f50057] to-[#f500568d] text-white shadow-lg flex items-center overflow-hidden cursor-default"
       initial={false}
       animate={{
         width: badgeWidth,
