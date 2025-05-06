@@ -114,7 +114,7 @@ const HeroSection = () => {
         </button>
       </div>
 
-      <div className="absolute md:top-1/2 top-100 right-1 md:left-4  transform -translate-y-1/2 z-20">
+      <div className="absolute md:top-1/2 top-100 right-1 md:right-4  transform -translate-y-1/2 z-20">
         <button
           onClick={nextSlide}
           className="bg-white p-2 rounded-full shadow-md hover:bg-gray-200 transition"
