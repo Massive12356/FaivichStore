@@ -6,13 +6,6 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 
 const CreateAd = () => {
-  const [productName, setProductName] = useState("");
-  const [shortDescription, setShortDescription] = useState("");
-  const [description, setDescription] = useState("");
-  const [ingredients, setIngredients] = useState("");
-  const [usageInstructions, setUsageInstructions] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
   const [images, setImages] = useState([]);
   const [files, setFiles] = useState([]);
 
@@ -34,24 +27,7 @@ const CreateAd = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({
-      productName,
-      shortDescription,
-      description,
-      ingredients,
-      usageInstructions,
-      price,
-      category,
-      files,
-    });
-
-    setProductName("");
-    setShortDescription("");
-    setDescription("");
-    setIngredients("");
-    setUsageInstructions("");
-    setPrice("");
-    setCategory("");
+    
     setImages([]);
     setFiles([]);
   };
@@ -97,8 +73,7 @@ const CreateAd = () => {
           <input
             type="text"
             placeholder="Enter product name"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
+            
             className="w-full border rounded-lg px-4 py-2 placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
           />
@@ -111,8 +86,7 @@ const CreateAd = () => {
           <input
             type="text"
             placeholder="A short summary"
-            value={shortDescription}
-            onChange={(e) => setShortDescription(e.target.value)}
+            
             className="w-full border rounded-lg px-4 py-2 placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
           />
@@ -124,8 +98,7 @@ const CreateAd = () => {
           </label>
           <textarea
             placeholder="Detailed description of the product and its purpose"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            
             className="w-full border rounded-lg px-4 py-2 h-28 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
           />
@@ -137,8 +110,7 @@ const CreateAd = () => {
           </label>
           <textarea
             placeholder="List the key ingredients used in this product"
-            value={ingredients}
-            onChange={(e) => setIngredients(e.target.value)}
+            
             className="w-full border rounded-lg px-4 py-2 h-24 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
           />
         </div>
@@ -149,8 +121,7 @@ const CreateAd = () => {
           </label>
           <textarea
             placeholder="Explain how the product should be used"
-            value={usageInstructions}
-            onChange={(e) => setUsageInstructions(e.target.value)}
+            
             className="w-full border rounded-lg px-4 py-2 h-24 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
           />
         </div>
@@ -162,8 +133,7 @@ const CreateAd = () => {
           <input
             type="text"
             placeholder="e.g. GH₵ 45"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            
             className="w-full border rounded-lg px-4 py-2 placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
           />
@@ -174,8 +144,6 @@ const CreateAd = () => {
             Category
           </label>
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 text-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
           >

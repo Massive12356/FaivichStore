@@ -8,18 +8,9 @@ import {
   FiEdit,
 } from "react-icons/fi";
 import { MdPostAdd } from "react-icons/md";
-import {Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const UpdateAd = () => {
-  // State hooks for form fields
-  const [productName, setProductName] = useState("");
-  const [shortDescription, setShortDescription] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
-  const [ingredients, setIngredients] = useState("");
-  const [usageInstructions, setUsageInstructions] = useState("");
-
   // State for image previews and actual files
   const [images, setImages] = useState([]);
   const [files, setFiles] = useState([]);
@@ -46,25 +37,6 @@ const UpdateAd = () => {
   // Handles form submission and resets all fields
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Example log – replace this with API call
-    console.log({
-      productName,
-      shortDescription,
-      description,
-      price,
-      category,
-      files,
-    });
-
-    // Reset all form fields and image previews
-    setProductName("");
-    setShortDescription("");
-    setDescription("");
-    setPrice("");
-    setCategory("");
-    setImages([]);
-    setFiles([]);
   };
 
   return (
@@ -112,8 +84,6 @@ const UpdateAd = () => {
           <input
             type="text"
             placeholder="Enter product name"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
           />
@@ -127,8 +97,6 @@ const UpdateAd = () => {
           <input
             type="text"
             placeholder="A short summary"
-            value={shortDescription}
-            onChange={(e) => setShortDescription(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
           />
@@ -141,8 +109,6 @@ const UpdateAd = () => {
           </label>
           <textarea
             placeholder="Detailed description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 h-28 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
           />
@@ -154,8 +120,6 @@ const UpdateAd = () => {
           </label>
           <textarea
             placeholder="List the key ingredients used in this product"
-            value={ingredients}
-            onChange={(e) => setIngredients(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 h-24 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
           />
         </div>
@@ -166,8 +130,6 @@ const UpdateAd = () => {
           </label>
           <textarea
             placeholder="Explain how the product should be used"
-            value={usageInstructions}
-            onChange={(e) => setUsageInstructions(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 h-24 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
           />
         </div>
@@ -180,8 +142,6 @@ const UpdateAd = () => {
           <input
             type="text"
             placeholder="e.g. GHC45"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
           />
@@ -193,8 +153,6 @@ const UpdateAd = () => {
             Category
           </label>
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
             className="w-full border rounded-lg px-4 py-2 text-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
             required
           >

@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation,useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   FiHome,
@@ -13,17 +13,28 @@ import logo from '../assets/logo.png'
 
 const menuItems = [
   { name: "Dashboard", path: "/dashboard", icon: <FiHome /> },
-  { name: "Published Products", path: "/dashboard/vendorAds", icon: <FiBox /> },
   { name: "Add New Product ", path: "/dashboard/createAd", icon: <FiPlus /> },
+  { name: "Published Products", path: "/dashboard/vendorAds", icon: <FiBox /> },
   { name: "Orders", path: "/dashboard/orders", icon: <FiFileText /> },
 ];
 
 const SideBar = ({ isOpen, setIsOpen }) => {
+  const navigate = useNavigate();
   const location = useLocation();
+  const [showModal, setShowModal] = useState(false);
 
-  const handleLogout = () => {
-    console.log("Logged out");
+  const handleLogout1 = () => {
+    setShowModal(true);
   };
+
+  const handleLogout2 = () => {
+    setShowModal(false);
+    navigate('/');
+  };
+  const cancelDelete = ()=>{
+    navigate('/dashboard')
+    setShowModal(false);
+  }
 
   return (
     <>
@@ -45,7 +56,7 @@ const SideBar = ({ isOpen, setIsOpen }) => {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div className="w-20 md:w-35 ">
-            <img src={logo}  alt="logo" className="rounded-lg" />
+            <img src={logo} alt="logo" className="rounded-lg" />
           </div>
           {/* <h1 className="text-xl font-bold font-[play]">Dashboard</h1> */}
           <button
@@ -84,22 +95,52 @@ const SideBar = ({ isOpen, setIsOpen }) => {
             );
           })}
 
-          {/* Logout */}
-          <Link to={'/'}>
           <motion.div
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-4 cursor-pointer p-2 rounded-md hover:bg-[#561256] transition-all mt-8"
             onClick={() => {
-              handleLogout();
+              handleLogout1();
               setIsOpen(false);
             }}
-            >
+          >
             <FiLogOut className="text-xl" />
             <span className="text-lg">Logout</span>
           </motion.div>
-            </Link>
         </div>
       </div>
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-50 p-5">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-lg p-6 max-w-sm w-full"
+          >
+            <h3 className="text-lg font-bold text-[#283144] mb-4">
+              Are you sure you want to Log Out?
+            </h3>
+            <div className="flex justify-end gap-4">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={cancelDelete}
+                className="bg-gray-300 text-[#283144] px-4 py-2 rounded-lg"
+              >
+                Cancel
+              </motion.button>
+              <Link to={"/"}>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleLogout2}
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Yes, Log Out
+                </motion.button>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </>
   );
 };

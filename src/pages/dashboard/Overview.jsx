@@ -116,7 +116,7 @@ const Overview = () => {
                 tooltipVisible.totalItems ? "block" : "hidden"
               } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
             >
-              This shows the total number of products currently in your store.
+              This shows the total number of published products currently in your store.
             </div>
           </div>
         </motion.div>
@@ -202,7 +202,7 @@ const Overview = () => {
                 tooltipVisible.dailyPurchases ? "block" : "hidden"
               } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
             >
-              This shows the number of successful purchases made today.
+              This shows the number of successful purchases made Daily.
             </div>
           </div>
         </motion.div>

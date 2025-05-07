@@ -24,7 +24,7 @@ const LandingContents = () => {
 
   return (
     <motion.div
-      className="w-full overflow-auto"
+      className="w-full overflow-x-hidden"
       style={{ background: "linear-gradient(135deg, #C6D2DA, #F0E8B9)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

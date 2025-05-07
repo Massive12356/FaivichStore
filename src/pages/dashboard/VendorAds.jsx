@@ -51,9 +51,12 @@ const VendorAds = () => {
 
   return (
     <div className="px-4 py-6 bg-[#F9F7F7]">
-      <h1 className="text-3xl font-bold text-[#67216D] mb-6 font-[play]">
-        Your Ads
+      <h1 className=" text-2xl  md:text-3xl font-bold text-[#67216D] mb-4 font-[play]">
+        Your Published Products
       </h1>
+      <p className=" text-[15px]  md:text-[20px] text-gray-700 mb-4 font-[play]">
+        You can VIEW, EDIT and DELETE your published Products here
+      </p>
 
       <div className="sticky top-0 z-10 bg-white p-4 shadow-md flex justify-between items-center">
         <div className=" w-20 md:w-40 flex gap-4">
