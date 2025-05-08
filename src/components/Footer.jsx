@@ -51,7 +51,7 @@ const Footer = () => {
             className="mx-auto md:mx-0 md:w-40 w-30"
           /> */}
 
-          <h1 className="text-2xl md:text-5xl font-bold text-[#fdc500]">
+          <h1 className="text-3xl md:text-5xl font-bold text-[#fdc500]">
             Faivich
           </h1>
           <p className="text-sm">
