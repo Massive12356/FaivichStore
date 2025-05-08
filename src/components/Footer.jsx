@@ -45,11 +45,15 @@ const Footer = () => {
       <div className="w-full flex flex-col md:flex-row flex-wrap items-start justify-between gap-6">
         {/* 🟣 Brand & Subscribe */}
         <div className="w-full md:w-1/4 space-y-4 text-center md:text-left">
-          <img
+          {/* <img
             src={logo2}
             alt="image logo"
             className="mx-auto md:mx-0 md:w-40 w-30"
-          />
+          /> */}
+
+          <h1 className="text-2xl md:text-5xl font-bold text-[#fdc500]">
+            Faivich
+          </h1>
           <p className="text-sm">
             Subscribe to get the latest offers, updates, and product drops.
           </p>
