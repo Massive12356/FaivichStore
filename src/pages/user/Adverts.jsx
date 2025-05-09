@@ -1,14 +1,14 @@
-import React, { useState,useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { motion } from "framer-motion";
-import { FaShoppingBag } from "react-icons/fa";
-import { Link,useLocation , useOutletContext} from "react-router-dom";
-import mockProducts from "../../data/mockProducts";// replaced by backend API
+import { FaShoppingBag, FaRegSadTear } from "react-icons/fa";
+import { Link, useLocation, useOutletContext,useNavigate } from "react-router-dom";
+import mockProducts from "../../data/mockProducts"; // replaced by backend API
 import Features from "../../components/Features";
 
 const categories = [
   "All",
   "Healthcare",
-  "Cleaning Agents/Detergents", //  
+  "Cleaning Agents/Detergents", //
   "Skincare/Cosmetics",
 ];
 
@@ -19,8 +19,9 @@ const Adverts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState(null); // Track clicked card
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const { searchQuery } = useOutletContext(); // Access searchQuery passed from RootLayout
+  const { searchQuery, setSearchQuery } = useOutletContext(); // Access searchQuery passed from RootLayout
 
   // Read initial category from query param if present
   useEffect(() => {
@@ -37,16 +38,16 @@ const Adverts = () => {
   const filteredProducts = mockProducts.filter((product) => {
     const matchesCategory =
       selectedCategory === "All" || product.category === selectedCategory;
-      
-      const query = searchQuery?.toLowerCase() || '';
+
+    const query = searchQuery?.toLowerCase() || "";
     const matchesSearch =
       !query ||
       product.title.toLowerCase().includes(query.toLowerCase()) ||
-      product.description?.toLowerCase().includes(query);
+      product.description?.toLowerCase().includes(query) ||
+      product.category?.toLowerCase().includes(query);
 
     return matchesCategory && matchesSearch;
   });
-  
 
   const getSubText = () => {
     switch (selectedCategory) {
@@ -90,6 +91,11 @@ const Adverts = () => {
   const handleCardClick = (id) => {
     setSelectedCardId((prev) => (prev === id ? null : id)); // Toggle on/off
   };
+
+  const searchAgain = ()=>{
+    setSearchQuery('');
+    navigate('/adverts');
+  }
 
   return (
     <div
@@ -136,58 +142,84 @@ const Adverts = () => {
 
       {/* PRODUCT GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-        {paginatedProducts.map((item) => (
-          <motion.div
-            key={item.id}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: item.id * 0.05 }}
-            onClick={() => handleCardClick(item.id)}
-            className="relative bg-white rounded-lg overflow-hidden shadow-lg group cursor-pointer"
-          >
-            {/* Description Badge */}
-            <div className="absolute top-3 left-3 z-10 text-xs px-3 py-1 rounded-full shadow text-[#14245F] bg-white font-semibold">
-              {item.description}
-            </div>
+        {paginatedProducts.length === 0 ? (
+          <div className="w-full flex justify-center items-center min-h-[300px] text-center text-[#561256] font-[play] col-span-full">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto">
+              {/* Icon and Title */}
+              <div className="mb-4">
+                <FaRegSadTear className="mx-auto text-4xl text-[#561256]" />
+                <h2 className="text-2xl md:text-4xl font-semibold text-[#561256] mt-4 mb-2">
+                  No results found
+                </h2>
+              </div>
 
-            {/* Product Image */}
-            <img
-              src={item.image}
-              alt={item.title}
-              className="w-full h-56 object-cover bg-white p-1 rounded-lg"
-            />
+              {/* Description */}
+              <p className="text-md text-gray-700 mb-6">
+                Sorry, we couldn’t find any products that match your search or
+                selected category. Try refining your search or explore our other
+                collections.
+              </p>
 
-            {/* Overlay */}
-            <div
-              className={`
-                absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold p-4 
-                transition-all duration-300
-                ${selectedCardId === item.id ? "opacity-100" : "opacity-0"} 
-                sm:opacity-0 sm:group-hover:opacity-100
-              `}
-            >
-              <Link to={`/adverts/${item.id}`}>
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  className="flex items-center justify-between py-3 px-5 bg-[#f50056cf] cursor-pointer rounded-lg"
-                >
-                  <FaShoppingBag className="mr-3" />
-                  Shop Now
-                </motion.button>
+              {/* Action Button */}
+              <Link
+                onClick={searchAgain}
+                className="inline-block py-2 px-6 text-white bg-[#561256] rounded-lg shadow-md hover:bg-[#4a103d] transition-all duration-300"
+              >
+                Search Again
               </Link>
             </div>
-
-            {/* Product Title and Price */}
-            <div className="p-4 text-center text-[#14245F] font-[play]">
-              <h2 className="text-lg font-bold">{item.title}</h2>
-              <div className="flex items-center justify-center gap-2 mt-2">
-                <span className="text-lg font-semibold">
-                  GH{"\u20B5"} {item.price.toFixed(2)}
-                </span>
+          </div>
+        ) : (
+          paginatedProducts.map((item) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: item.id * 0.05 }}
+              onClick={() => handleCardClick(item.id)}
+              className="relative bg-white rounded-lg overflow-hidden shadow-lg group cursor-pointer"
+            >
+              {/* Description Badge */}
+              <div className="absolute top-3 left-3 z-10 text-xs px-3 py-1 rounded-full shadow text-[#14245F] bg-white font-semibold">
+                {item.description}
               </div>
-            </div>
-          </motion.div>
-        ))}
+
+              {/* Product Image */}
+              <img
+                src={item.image}
+                alt={item.title}
+                className="w-full h-56 object-cover bg-white p-1 rounded-lg"
+              />
+
+              {/* Overlay */}
+              <div
+                className={`absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold p-4 transition-all duration-300 ${
+                  selectedCardId === item.id ? "opacity-100" : "opacity-0"
+                } sm:opacity-0 sm:group-hover:opacity-100`}
+              >
+                <Link to={`/adverts/${item.id}`}>
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center justify-between py-3 px-5 bg-[#f50056cf] cursor-pointer rounded-lg"
+                  >
+                    <FaShoppingBag className="mr-3" />
+                    Shop Now
+                  </motion.button>
+                </Link>
+              </div>
+
+              {/* Product Title and Price */}
+              <div className="p-4 text-center text-[#14245F] font-[play]">
+                <h2 className="text-lg font-bold">{item.title}</h2>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <span className="text-lg font-semibold">
+                    GH{"\u20B5"} {item.price.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          ))
+        )}
       </div>
 
       {/* PAGINATION */}

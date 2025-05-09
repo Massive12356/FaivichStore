@@ -123,7 +123,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
         {/* === Icons Section === */}
         <div className="flex items-center gap-4">
           {/* Search */}
-            <form>
+            
           <div className="relative flex items-center">
 
             <FiSearch
@@ -138,7 +138,6 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
               className="hidden md:inline-block ml-2 px-3 py-1 border border-[#561256] rounded-md text-sm text-[#14245F] focus:outline-none"
               />
           </div>
-              </form>
 
           {/* === Cart Icon + Badge === */}
           <div className="relative">
