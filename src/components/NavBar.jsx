@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink} from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import {
   FiSearch,
   FiShoppingCart,
@@ -12,11 +12,18 @@ import img1 from "../images/cosmetics2.jpg";
 // 🛒 Zustand store for cart state management
 import useCartStore from "../store/cartStore";
 
-const NavBar = () => {
+const NavBar = ({ setIsBlurred, setSearchQuery }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showCartDropdown, setShowCartDropdown] = useState(false);
+  const [query, setQuery]= useState("");
+
+  // function to handling Searching
+  const handleSearchChange = (e) =>{
+    setQuery(e.target.value);
+    setSearchQuery(e.target.value); // Pass search query up to parent component
+  }
 
   // Zustand store values
   const cart = useCartStore((state) => state.cartItems);
@@ -37,6 +44,25 @@ const NavBar = () => {
     "text-[#14245F] hover:text-[#404E7B] transition-colors duration-300";
   const ActiveNavLink =
     "text-[white] bg-[#14245F] hover:text-gray-100 px-4 py-1 duration-300 rounded-lg";
+
+  // function to toggle the blur mode when the user clicks on the menu icon
+  const toggleMenuIcon = () => {
+    setShowMobileMenu((prev) => {
+      const newState = !prev;
+      setIsBlurred(newState);
+
+      return newState;
+    });
+  };
+
+  // prevent scrolling when the menu is openned
+  useEffect(() => {
+    if (showMobileMenu) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [showMobileMenu]);
 
   return (
     <header
@@ -97,17 +123,22 @@ const NavBar = () => {
         {/* === Icons Section === */}
         <div className="flex items-center gap-4">
           {/* Search */}
+            <form>
           <div className="relative flex items-center">
+
             <FiSearch
               onClick={() => setShowSearch((prev) => !prev)}
               className="cursor-pointer text-xl md:text-2xl text-[#14245F]"
-            />
+              />
             <input
               type="text"
+              value={query}
+              onChange={handleSearchChange}
               placeholder="Search Products..."
               className="hidden md:inline-block ml-2 px-3 py-1 border border-[#561256] rounded-md text-sm text-[#14245F] focus:outline-none"
-            />
+              />
           </div>
+              </form>
 
           {/* === Cart Icon + Badge === */}
           <div className="relative">
@@ -272,7 +303,7 @@ const NavBar = () => {
           <div className="md:hidden">
             <FiMoreVertical
               className="text-xl text-[#14245F] cursor-pointer"
-              onClick={() => setShowMobileMenu((prev) => !prev)}
+              onClick={toggleMenuIcon}
             />
           </div>
         </div>
@@ -285,33 +316,45 @@ const NavBar = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
-              className="absolute top-full w-[60%] h-[200px] right-4 mt-2 bg-white shadow-md rounded-lg flex flex-col items-center justify-around px-4 py-2 z-50 md:hidden"
+              className="absolute top-full w-[60%] h-[300px] right-4 mt-2 bg-white shadow-md rounded-lg flex flex-col items-center justify-around px-4 py-2 z-40 md:hidden"
             >
               <NavLink
                 to="/"
                 className={navLinkClasses}
-                onClick={() => setShowMobileMenu(false)}
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  setIsBlurred(false);
+                }}
               >
                 Home
               </NavLink>
               <NavLink
                 to="/about"
                 className={navLinkClasses}
-                onClick={() => setShowMobileMenu(false)}
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  setIsBlurred(false);
+                }}
               >
                 About
               </NavLink>
               <NavLink
                 to="/adverts"
                 className={navLinkClasses}
-                onClick={() => setShowMobileMenu(false)}
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  setIsBlurred(false);
+                }}
               >
                 Shop
               </NavLink>
               <NavLink
                 to="/contact"
                 className={navLinkClasses}
-                onClick={() => setShowMobileMenu(false)}
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  setIsBlurred(false);
+                }}
               >
                 Contact
               </NavLink>
@@ -332,6 +375,8 @@ const NavBar = () => {
           >
             <input
               type="text"
+              value={query}
+              onChange={handleSearchChange}
               placeholder="Search products..."
               className="w-full h-full px-4 py-3 border border-[#561256] rounded-md text-[#14245F] focus:outline-none"
             />

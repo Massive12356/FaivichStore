@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
@@ -21,6 +21,51 @@ import cleaningImage from '../images/cleanPro.jpg'
 import ShopByCategories from "./ShopByCategories";
 
 const LandingContents = () => {
+  const [activeCardIndex, setActiveCardIndex] = useState(null);
+  const cardRefs = useRef([]);
+  const timeoutRef = useRef([]);
+
+  // close the over on outside click
+  useEffect(()=>{
+    const handleClickOutside = (event)=>{
+      if ( activeCardIndex !== null && 
+        cardRefs.current[activeCardIndex] &&
+        !cardRefs.current[activeCardIndex].contains(event.target)
+      ) {
+        setActiveCardIndex(null);
+        clearTimeout(timeoutRef.current);
+      }
+    };
+
+    document.addEventListener("mousedown",handleClickOutside);
+    return () => document.removeEventListener("mousedown",handleClickOutside);
+  }, [activeCardIndex]);
+
+  // clean up timeout on unmount 
+  useEffect(() =>{
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
+
+  const handleCardClick = (index) =>{
+    const isMobile = window.innerWidth < 768;
+
+    // toggle logic
+    if(index === activeCardIndex) {
+      setActiveCardIndex(null);
+      clearTimeout(timeoutRef.current);
+    }else {
+      setActiveCardIndex(index);
+      clearTimeout(timeoutRef.current);
+
+      // Auto hide after 5s on mobile
+      if (isMobile) {
+        timeoutRef.current = setTimeout(()=>{
+          setActiveCardIndex(null);
+        },5000);
+      }
+    }
+    
+  };
 
   return (
     <motion.div
@@ -150,10 +195,13 @@ const LandingContents = () => {
           </motion.div>
         </div>
 
+        {/* product  Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {mockProducts.slice(0, 6).map((item, index) => (
             <motion.div
               key={item.id || index}
+              ref={(el) => (cardRefs.current[index] = el)}
+              onClick={() => handleCardClick(index)}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -170,7 +218,10 @@ const LandingContents = () => {
                 className="w-full h-72 object-cover bg-white p-1 rounded-lg"
               />
 
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold p-4 transition-all duration-300 opacity-0 sm:group-hover:opacity-100">
+              {/* Hover/Active Overlay */}
+              <div
+                className={`absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold p-4 transition-all duration-300 ${ activeCardIndex ===index ? "opacity-100" :"opacity-0"} sm:group-hover:opacity-100`}
+              >
                 <Link to={`/adverts/${item.id}`}>
                   <motion.button
                     whileTap={{ scale: 0.95 }}

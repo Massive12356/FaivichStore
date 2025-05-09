@@ -1,7 +1,7 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useContext } from "react";
 import { motion } from "framer-motion";
 import { FaShoppingBag } from "react-icons/fa";
-import { Link,useLocation } from "react-router-dom";
+import { Link,useLocation , useOutletContext} from "react-router-dom";
 import mockProducts from "../../data/mockProducts";// replaced by backend API
 import Features from "../../components/Features";
 
@@ -20,6 +20,8 @@ const Adverts = () => {
   const [selectedCardId, setSelectedCardId] = useState(null); // Track clicked card
   const location = useLocation();
 
+  const { searchQuery } = useOutletContext(); // Access searchQuery passed from RootLayout
+
   // Read initial category from query param if present
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -32,10 +34,19 @@ const Adverts = () => {
     }
   }, [location.search]);
 
-  const filteredProducts =
-    selectedCategory === "All"
-      ? mockProducts
-      : mockProducts.filter((product) => product.category === selectedCategory);
+  const filteredProducts = mockProducts.filter((product) => {
+    const matchesCategory =
+      selectedCategory === "All" || product.category === selectedCategory;
+      
+      const query = searchQuery?.toLowerCase() || '';
+    const matchesSearch =
+      !query ||
+      product.title.toLowerCase().includes(query.toLowerCase()) ||
+      product.description?.toLowerCase().includes(query);
+
+    return matchesCategory && matchesSearch;
+  });
+  
 
   const getSubText = () => {
     switch (selectedCategory) {
