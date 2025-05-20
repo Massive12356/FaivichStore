@@ -1,16 +1,20 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { FaShoppingBag, FaRegSadTear } from "react-icons/fa";
 import { Link, useLocation, useOutletContext,useNavigate } from "react-router-dom";
-import mockProducts from "../../data/mockProducts"; // replaced by backend API
+// import mockProducts from "../../data/mockProducts";
 import Features from "../../components/Features";
+import useProductStore from '../../store/productStore' // zustand Product store
+import ProductSkeletonGrid from '../../components/ProductSkeletonGrid'
 
-const categories = [
-  "All",
-  "Healthcare",
-  "Cleaning Agents/Detergents", //
-  "Skincare/Cosmetics",
-];
+// const categories = [
+//   "All",
+//   "Healthcare",
+//   "Cleaning Agents/Detergents", //
+//   "Skincare/Cosmetics",
+// ];
+
+
 
 const PRODUCTS_PER_PAGE = 30;
 
@@ -21,7 +25,18 @@ const Adverts = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const {products, isLoading} = useProductStore();
+  console.log(products)
+
   const { searchQuery, setSearchQuery } = useOutletContext(); // Access searchQuery passed from RootLayout
+
+  const categories = useMemo(() => {
+    const allCategories = products.flatMap((product) =>
+      product.category.map((cat) => cat.name)
+    );
+    const uniqueCategories = [...new Set(allCategories)];
+    return ["All", ...uniqueCategories];
+  }, [products]);
 
   // Read initial category from query param if present
   useEffect(() => {
@@ -35,27 +50,28 @@ const Adverts = () => {
     }
   }, [location.search]);
 
-  const filteredProducts = mockProducts.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     const matchesCategory =
-      selectedCategory === "All" || product.category === selectedCategory;
+      selectedCategory === "All" ||
+      product.category?.some((cat) => cat.name === selectedCategory);
 
     const query = searchQuery?.toLowerCase() || "";
     const matchesSearch =
       !query ||
-      product.title.toLowerCase().includes(query.toLowerCase()) ||
+      product.name?.toLowerCase().includes(query) ||
       product.description?.toLowerCase().includes(query) ||
-      product.category?.toLowerCase().includes(query);
+      product.category?.some((cat) => cat.name.toLowerCase().includes(query));
 
     return matchesCategory && matchesSearch;
   });
-
+  
   const getSubText = () => {
     switch (selectedCategory) {
-      case "Healthcare":
+      case "Healthcare Products":
         return "Discover health essentials curated to enhance your well-being.";
-      case "Skincare/Cosmetics":
+      case "Skincare Products":
         return "Unleash your natural beauty with our luxury cosmetics line.";
-      case "Cleaning Agents/Detergents":
+      case "Cleaning Agents":
         return "Make your space sparkle with our effective cleaning solutions.";
       default:
         return "Find the best products tailored just for you.";
@@ -142,7 +158,9 @@ const Adverts = () => {
 
       {/* PRODUCT GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-        {paginatedProducts.length === 0 ? (
+        {isLoading ? (
+          <ProductSkeletonGrid count={9} />
+        ) : paginatedProducts.length === 0 ? (
           <div className="w-full flex justify-center items-center min-h-[300px] text-center text-[#561256] font-[play] col-span-full">
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto">
               {/* Icon and Title */}
@@ -186,9 +204,10 @@ const Adverts = () => {
 
               {/* Product Image */}
               <img
-                src={item.image}
+                src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${item.pictures[0]}`}
                 alt={item.title}
                 className="w-full h-56 object-cover bg-white p-1 rounded-lg"
+                loading="lazy"
               />
 
               {/* Overlay */}
@@ -210,11 +229,20 @@ const Adverts = () => {
 
               {/* Product Title and Price */}
               <div className="p-4 text-center text-[#14245F] font-[play]">
-                <h2 className="text-lg font-bold">{item.title}</h2>
+                <h2 className="text-lg font-bold">{item.name}</h2>
                 <div className="flex items-center justify-center gap-2 mt-2">
                   <span className="text-lg font-semibold">
                     GH{"\u20B5"} {item.price.toFixed(2)}
                   </span>
+                  <div className="ml-8">
+                    <p
+                      className={`text-sm font-medium ${
+                        item.quantity > 0 ? "text-green-600" : "text-red-500"
+                      }`}
+                    >
+                      {item.quantity > 0 ? "In Stock" : "Out of Stock"}
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>

@@ -12,7 +12,7 @@ import {
 import logo from '../assets/logo.png'
 
 const menuItems = [
-  { name: "Dashboard", path: "/dashboard", icon: <FiHome /> },
+  { name: "OverView", path: "/dashboard", icon: <FiHome /> },
   { name: "Add New Product ", path: "/dashboard/createAd", icon: <FiPlus /> },
   { name: "Published Products", path: "/dashboard/vendorAds", icon: <FiBox /> },
   { name: "Orders", path: "/dashboard/orders", icon: <FiFileText /> },
@@ -128,7 +128,7 @@ const SideBar = ({ isOpen, setIsOpen }) => {
               >
                 Cancel
               </motion.button>
-              <Link to={"/"}>
+              
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={handleLogout2}
@@ -136,7 +136,6 @@ const SideBar = ({ isOpen, setIsOpen }) => {
                 >
                   Yes, Log Out
                 </motion.button>
-              </Link>
             </div>
           </motion.div>
         </div>

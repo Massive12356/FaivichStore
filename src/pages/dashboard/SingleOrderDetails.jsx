@@ -1,45 +1,38 @@
-import React, { useState,useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import mockOrders from "../../data/mockOrders"; // Mock data used before backend integration
 import { FiArrowLeft } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { useOrderStore } from "../../store/OrderStore";
 
 const SingleOrderDetails = () => {
-  const { id } = useParams(); // Get order ID from URL
-  const navigate = useNavigate(); // For back navigation
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  // Find the index of the order in mock data
-  const orderIndex = mockOrders.findIndex((o) => o.id === id);
+  const { ProductOrders, isLoading } = useOrderStore();
+  const orderIndex = ProductOrders.findIndex((o) => o.id === id);
+  const [order, setOrder] = useState(ProductOrders[orderIndex]);
+  const printRef = useRef();
 
-  // Store the order in local state for editing
-  const [order, setOrder] = useState(mockOrders[orderIndex]);
-
-  const printRef = useRef(); // 👈 Create ref for the print section
-
-  // Show error if order is not found
   if (!order) {
     return <div className="p-6 text-red-600">Order not found.</div>;
   }
 
-  // Handle dropdown change for Payment Status
   const handlePaymentChange = (e) => {
     const updated = { ...order, paymentStatus: e.target.value };
     setOrder(updated);
   };
 
-  // Handle dropdown change for Order Status
   const handleStatusChange = (e) => {
     const updated = { ...order, orderStatus: e.target.value };
     setOrder(updated);
   };
 
-  // Save changes by simulating DB update (replace with API call later)
   const handleSaveChanges = () => {
-    mockOrders[orderIndex] = order; // Simulate update in mock DB
-    alert("Order updated successfully (simulated)."); // Temporary feedback
+    mockOrders[orderIndex] = order;
+    alert("Order updated successfully (simulated).");
   };
 
-  // Handle printing/downloading the order details
   const handlePrint = () => {
     window.print();
   };
@@ -52,7 +45,6 @@ const SingleOrderDetails = () => {
       transition={{ type: "spring", stiffness: 100, damping: 25 }}
       className="p-4 md:p-6 bg-[#F9F7F7] min-h-screen font-[play]"
     >
-      {/* Back navigation */}
       <button
         onClick={() => navigate(-1)}
         className="flex items-center text-[#67216D] hover:underline mb-4 cursor-pointer"
@@ -61,21 +53,36 @@ const SingleOrderDetails = () => {
         Back to Orders
       </button>
 
-      {/* START of Printable Section */}
       <div ref={printRef} className="print-section">
-        {/* Header */}
         <h1 className="text-2xl font-bold mb-6">Order Details - {order.id}</h1>
-        {/* Order Info Card */}
-        <div className="bg-white rounded-lg shadow-md p-4 md:p-6 space-y-4">
-          {/* Grid layout for order details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Reusable detail block */}
-            <Detail label="Customer" value={order.customer} />
-            <Detail label="Created At" value={order.createdAt} />
-            <Detail label="Payment Method" value={order.paymentMethod} />
-            <Detail label="Total" value={`GH${"\u20B5"} ${order.total}`} />
 
-            {/* Payment status dropdown */}
+        <div className="bg-white rounded-lg shadow-md p-4 md:p-6 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Detail
+              label="Customer Name"
+              value={`${order.firstName} ${order.lastName}`}
+            />
+            <Detail label="Phone Number" value={order.phoneNumber} />
+            <Detail label="Email" value={order.email} />
+            <Detail label="City" value={order.city} />
+            <Detail label="Country" value={order.country} />
+            <Detail label="Address" value={order.fullAddress} />
+            <Detail
+              label="Order Date"
+              value={new Date(order.createdAt).toLocaleString()}
+            />
+            <Detail label="Delivery Method" value={order.deliveryMethod} />
+            <Detail
+              label="Delivery Charge"
+              value={`GH₵ ${order.deliveryCharge}`}
+            />
+            <Detail label="Estimated Tax" value={`GH₵ ${order.estimatedTax}`} />
+            <Detail label="Discount" value={`GH₵ ${order.discount}`} />
+            <Detail label="Subtotal" value={`GH₵ ${order.subTotal}`} />
+            <Detail label="Total" value={`GH₵ ${order.totalAmount}`} />
+            <Detail label="Payment Method" value={order.paymentMethod} />
+
+            {/* Payment status */}
             <div>
               <p className="text-sm text-gray-500 mb-1">Payment Status</p>
               <select
@@ -88,9 +95,7 @@ const SingleOrderDetails = () => {
               </select>
             </div>
 
-            {/* Delivery number */}
-
-            {/* Order status dropdown */}
+            {/* Order status */}
             <div>
               <p className="text-sm text-gray-500 mb-1">Order Status</p>
               <select
@@ -106,37 +111,41 @@ const SingleOrderDetails = () => {
             </div>
           </div>
 
-          {/* List of order items */}
-          <div>
-            <p className="text-sm text-gray-500 mt-6 mb-2">Order Items</p>
-            <ul className="list-disc pl-5 text-sm space-y-1">
-              {order.products?.length > 0 ? (
-                order.products.map((item, index) => (
-                  <li key={index}>
-                    {item.name} — Quantity: {item.quantity} — GH{"\u20B5"} {item.price}
-                  </li>
-                ))
-              ) : (
-                <p className="text-gray-400 italic">No items listed.</p>
-              )}
-            </ul>
-          </div>
-        </div>{" "}
-        {/* END of Printable Section */}
-        {/* Action buttons: Save + Print/Download */}
+          {/* Product Details Section */}
+          {order.product && (
+            <div className="mt-6">
+              <h2 className="text-lg font-semibold mb-2">Product Details</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Detail label="Product Name" value={order.product.name} />
+                <Detail
+                  label="Product Price"
+                  value={`GH₵ ${order.product.price}`}
+                />
+                <Detail label="Quantity" value={order.quantity} />
+                <Detail
+                  label="Product Description"
+                  value={order.product.description}
+                />
+               
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Buttons */}
         <div className="flex flex-col justify-end-safe md:flex-row gap-4 pt-6">
           <motion.button
             title="Save Changes to Update the records in the order table"
             whileTap={{ scale: 0.9 }}
             onClick={handleSaveChanges}
-            className=" btn px-4 py-2 border border-[#4A235A] rounded hover:bg-[#4A235A] hover:text-white cursor-pointer"
+            className="btn px-4 py-2 border border-[#4A235A] rounded hover:bg-[#4A235A] hover:text-white cursor-pointer"
           >
             Save Changes
           </motion.button>
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={handlePrint}
-            className="btn  px-4 py-2 border border-[#4A235A] rounded hover:bg-[#4A235A] hover:text-white cursor-pointer"
+            className="btn px-4 py-2 border border-[#4A235A] rounded hover:bg-[#4A235A] hover:text-white cursor-pointer"
           >
             Print / Download
           </motion.button>
@@ -146,11 +155,10 @@ const SingleOrderDetails = () => {
   );
 };
 
-// Reusable UI block for label-value pairs
 const Detail = ({ label, value }) => (
   <div>
     <p className="text-sm text-gray-500">{label}</p>
-    <p className="font-medium">{value}</p>
+    <p className="font-medium break-words whitespace-pre-line">{value}</p>
   </div>
 );
 

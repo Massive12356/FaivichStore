@@ -13,17 +13,23 @@ import {
   FaHandsWash,
   FaStar,
 } from "react-icons/fa";
-import mockProducts from "../data/mockProducts";
+// import mockProducts from "../data/mockProducts";
 import TestimonialSlider from "./TestimonialSlider";
 import person from "../images/person.jpg";
 import person1 from '../images/person1.jpg';
 import cleaningImage from '../images/cleanPro.jpg'
 import ShopByCategories from "./ShopByCategories";
+import useProductStore from "../store/productStore";
+import ProductSkeletonGrid from "../components/ProductSkeletonGrid";
 
 const LandingContents = () => {
   const [activeCardIndex, setActiveCardIndex] = useState(null);
   const cardRefs = useRef([]);
   const timeoutRef = useRef([]);
+
+  const {products, isLoading} = useProductStore(); // From zustand store
+  const product = products.slice(0,6);
+
 
   // close the over on outside click
   useEffect(()=>{
@@ -197,54 +203,71 @@ const LandingContents = () => {
 
         {/* product  Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {mockProducts.slice(0, 6).map((item, index) => (
-            <motion.div
-              key={item.id || index}
-              ref={(el) => (cardRefs.current[index] = el)}
-              onClick={() => handleCardClick(index)}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="relative bg-white rounded-lg overflow-hidden shadow-lg group cursor-pointer"
-            >
-              <div className="absolute top-3 left-3 z-10 text-xs px-3 py-1 rounded-full shadow text-[#14245F] bg-white font-semibold">
-                {item.description || "Product"}
-              </div>
-
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-72 object-cover bg-white p-1 rounded-lg"
-              />
-
-              {/* Hover/Active Overlay */}
-              <div
-                className={`absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold p-4 transition-all duration-300 ${ activeCardIndex ===index ? "opacity-100" :"opacity-0"} sm:group-hover:opacity-100`}
+          {isLoading ? (
+            <ProductSkeletonGrid count={9} />
+          ) : (
+            product.map((item, index) => (
+              <motion.div
+                key={item.id || index}
+                ref={(el) => (cardRefs.current[index] = el)}
+                onClick={() => handleCardClick(index)}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="relative bg-white rounded-lg overflow-hidden shadow-lg group cursor-pointer"
               >
-                <Link to={`/adverts/${item.id}`}>
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center justify-between py-3 px-5 bg-[#f50056cf] cursor-pointer rounded-lg"
-                  >
-                    <FaShoppingBag className="mr-3" />
-                    Shop Now
-                  </motion.button>
-                </Link>
-              </div>
-
-              <div className="p-4 text-center text-[#14245F] font-[play]">
-                <h2 className="text-lg font-bold">{item.title}</h2>
-                <div className="flex items-center justify-center gap-2 mt-2">
-                  {item.price && (
-                    <span className="text-lg font-semibold">
-                      GH₵ {Number(item.price).toFixed(2)}
-                    </span>
-                  )}
+                <div className="absolute top-3 left-3 z-10 text-xs px-3 py-1 rounded-full shadow text-[#14245F] bg-white font-semibold">
+                  {item.description || "Product"}
                 </div>
-              </div>
-            </motion.div>
-          ))}
+
+                <img
+                  src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${item.pictures[0]}`}
+                  alt={item.name}
+                  loading="lazy"
+                  className="w-full h-72 object-cover bg-white p-1 rounded-lg"
+                />
+
+                {/* Hover/Active Overlay */}
+                <div
+                  className={`absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold p-4 transition-all duration-300 ${
+                    activeCardIndex === index ? "opacity-100" : "opacity-0"
+                  } sm:group-hover:opacity-100`}
+                >
+                  <Link to={`/adverts/${item.id}`}>
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center justify-between py-3 px-5 bg-[#f50056cf] cursor-pointer rounded-lg"
+                    >
+                      <FaShoppingBag className="mr-3" />
+                      Shop Now
+                    </motion.button>
+                  </Link>
+                </div>
+
+                <div className="p-4 text-center text-[#14245F] font-[play]">
+                  <h2 className="text-lg font-bold">{item.name}</h2>
+                  <div className="flex items-center justify-center gap-2 mt-2">
+                    {item.price && (
+                      <span className="text-lg font-semibold">
+                        GH₵ {Number(item.price).toFixed(2)}
+                      </span>
+                    )}
+
+                    <div className="ml-8">
+                      <p
+                        className={`text-sm font-medium ${
+                          item.quantity > 0 ? "text-green-600" : "text-red-500"
+                        }`}
+                      >
+                        {item.quantity > 0 ? "In Stock" : "Out of Stock"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))
+          )}
         </div>
       </motion.section>
 
@@ -326,6 +349,7 @@ const LandingContents = () => {
             <img
               src={cleaningImage}
               alt="Cleaning product showcase"
+              loading="lazy"
               className="w-full h-[600px] rounded-2xl shadow-xl object-cover"
             />
           </motion.div>

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useCartStore from "../../store/cartStore";
 import { useNavigate } from "react-router-dom";
 import { FaMotorcycle, FaShuttleVan, FaLock } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { useOrderStore } from "../../store/OrderStore";
 
 const CheckOut = () => {
   const cartItems = useCartStore((state) => state.cartItems);// get values from zustand store
@@ -11,16 +12,45 @@ const CheckOut = () => {
   const navigate = useNavigate();// for routing
   const [showModal,setShowModal]=useState(false);
 
+
+
+   // for debugging
+ 
+
+  // console.log(user);
+
+  const { postOrder, isLoading, orderData, setOrderField, bulkSetOrderData, fetchOrders} =
+    useOrderStore();
+
   const handlePlaceOrder = () => {
     setShowModal(true);// opens confirmation page
   };
 
-  const confirmOrder=()=>{
-    setShowModal(false);
-    toast.success("Order placed successfully!");
-    clearCart();
-    navigate("/adverts");
-  }
+  const confirmOrder = async () => {
+    try {
+      bulkSetOrderData({
+        subTotal,
+        discount,
+        deliveryCharge,
+        estimatedTax,
+        totalAmount,
+        quantity: cartItems.reduce((acc, item) => acc + item.quantity, 0),
+        product: cartItems[0]?.id || '',
+        // user: id
+      });
+
+      await postOrder();
+      await fetchOrders(true)// refetch 
+      toast.success("Order placed successfully!");
+      setShowModal(false);
+      clearCart();
+      navigate("/adverts");
+    } catch (error) {
+      console.log("Error Message", error);
+      toast.error("Failed to place order.");
+      setShowModal(false);
+    }
+  };
 
   const orderCancelled = ()=>{
     setShowModal(false);
@@ -30,11 +60,11 @@ const CheckOut = () => {
   }
 
   // Calculation breakdowns
-  const subtotal = getTotalCost();
+  const subTotal = getTotalCost();
   const discount = 0; // You can add logic later
   const deliveryCharge = 15;
-  const estimatedTax = parseFloat((subtotal * 0.155).toFixed(2));
-  const total = subtotal - discount + deliveryCharge + estimatedTax;
+  const estimatedTax = parseFloat((subTotal * 0.155).toFixed(2));
+  const totalAmount = subTotal - discount + deliveryCharge + estimatedTax;
 
   return (
     <div className="min-h-screen pt-32 px-6 md:px-20 bg-gray-100/40">
@@ -58,6 +88,8 @@ const CheckOut = () => {
                 <input
                   type="text"
                   placeholder="Kwame"
+                  value={orderData.firstName}
+                  onChange={(e) => setOrderField("firstName", e.target.value)}
                   className="w-full border border-gray-300 rounded px-4 py-2"
                 />
               </div>
@@ -68,6 +100,8 @@ const CheckOut = () => {
                 <input
                   type="text"
                   placeholder="Nkrumah"
+                  value={orderData.lastName}
+                  onChange={(e) => setOrderField("lastName", e.target.value)}
                   className="w-full border border-gray-300 rounded px-4 py-2"
                 />
               </div>
@@ -78,6 +112,8 @@ const CheckOut = () => {
                 <input
                   type="email"
                   placeholder="nkrumah@example.com"
+                  value={orderData.email}
+                  onChange={(e) => setOrderField("email", e.target.value)}
                   className="w-full border border-gray-300 rounded px-4 py-2"
                 />
               </div>
@@ -86,8 +122,10 @@ const CheckOut = () => {
                   Phone Number
                 </label>
                 <input
-                  type="tel"
+                  type="text"
                   placeholder="+233 501234xxxx"
+                  value={orderData.phoneNumber}
+                  onChange={(e) => setOrderField("phoneNumber", e.target.value)}
                   className="w-full border border-gray-300 rounded px-4 py-2"
                 />
               </div>
@@ -104,6 +142,8 @@ const CheckOut = () => {
                 </label>
                 <textarea
                   type="text"
+                  value={orderData.fullAddress}
+                  onChange={(e) => setOrderField("fullAddress", e.target.value)}
                   placeholder="123 Main St, Apartment 4B"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md outline-none h-28 resize-none"
                 />
@@ -113,13 +153,12 @@ const CheckOut = () => {
                   Country
                 </label>
                 <select
-                  name=""
+                  value={orderData.country}
+                  onChange={(e) => setOrderField("country", e.target.value)}
                   className="w-full border border-gray-300 rounded px-4 py-2"
                 >
-                  <option value="" defaultChecked>
-                    {" "}
-                    Ghana
-                  </option>
+                  <option defaultChecked>country of residence</option>
+                  <option> Ghana</option>
                 </select>
               </div>
               <div>
@@ -129,6 +168,8 @@ const CheckOut = () => {
                 <input
                   type="text"
                   placeholder="00233"
+                  value={orderData.zipCode}
+                  onChange={(e) => setOrderField("zipCode", e.target.value)}
                   className="w-full border border-gray-300 rounded px-4 py-2"
                 />
               </div>
@@ -136,7 +177,11 @@ const CheckOut = () => {
                 <label className="block mb-1 text-sm font-medium text-gray-700">
                   City
                 </label>
-                <select className="w-full border border-gray-300 rounded px-4 py-2">
+                <select
+                  value={orderData.city}
+                  onChange={(e) => setOrderField("city", e.target.value)}
+                  className="w-full border border-gray-300 rounded px-4 py-2"
+                >
                   <option>Select a city</option>
                   <option>Accra</option>
                   <option>Kumasi</option>
@@ -166,6 +211,11 @@ const CheckOut = () => {
                 <label className="flex items-center gap-4 cursor-pointer">
                   <input
                     type="radio"
+                    value="Motorcycle"
+                    checked={orderData.deliveryMethod === "Motorcycle"}
+                    onChange={(e) =>
+                      setOrderField("deliveryMethod", "Motorcycle")
+                    }
                     name="shipping"
                     className="accent-[#67216D] w-5 h-5"
                   />
@@ -181,6 +231,11 @@ const CheckOut = () => {
                   <input
                     type="radio"
                     name="shipping"
+                    value="Courier Van"
+                    checked={orderData.deliveryMethod === "Courier Van"}
+                    onChange={(e) =>
+                      setOrderField("deliveryMethod", "Courier Van")
+                    }
                     className="accent-[#67216D] w-5 h-5"
                   />
                   <FaShuttleVan className="text-2xl text-[#67216D]" />
@@ -228,6 +283,11 @@ const CheckOut = () => {
                 <input
                   type="radio"
                   name="payment"
+                  value="Mobile Money"
+                  checked={orderData.paymentMethod === "Mobile Money"}
+                  onChange={(e) =>
+                    setOrderField("paymentMethod", "Mobile Money")
+                  }
                   className="accent-purple-700"
                 />
                 <span>Mobile Money</span>
@@ -236,6 +296,11 @@ const CheckOut = () => {
                 <input
                   type="radio"
                   name="payment"
+                  value="Cash on Delivery"
+                  checked={orderData.paymentMethod === "Cash on Delivery"}
+                  onChange={(e) =>
+                    setOrderField("paymentMethod", "Cash on Delivery")
+                  }
                   className="accent-purple-700"
                 />
                 <span>Cash on Delivery</span>
@@ -259,9 +324,9 @@ const CheckOut = () => {
           <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
           <ul className="divide-y mb-4">
             {cartItems.map((item) => (
-              <li key={item._id} className="py-3 flex justify-between">
+              <li key={item.id} className="py-3 flex justify-between">
                 <span>
-                  {item.title} x {item.quantity}
+                  {item.name} x {item.quantity}
                 </span>
                 <span>GHC{(item.price * item.quantity).toFixed(2)}</span>
               </li>
@@ -270,7 +335,7 @@ const CheckOut = () => {
           <div className="space-y-2 text-sm text-gray-700 mb-6">
             <div className="flex justify-between">
               <span>Sub Total:</span>
-              <span>GHC{subtotal.toFixed(2)}</span>
+              <span>GHC{subTotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span>Discount:</span>
@@ -286,7 +351,7 @@ const CheckOut = () => {
             </div>
             <div className="border-t pt-3 flex justify-between font-bold text-lg">
               <span>Total Amount:</span>
-              <span>GHC{total.toFixed(2)}</span>
+              <span>GHC{totalAmount.toFixed(2)}</span>
             </div>
           </div>
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
@@ -325,9 +390,12 @@ const CheckOut = () => {
               </button>
               <button
                 onClick={confirmOrder}
-                className="px-4 py-2 rounded bg-[#67216D] text-white hover:bg-[#7B2A79] transition-all"
+                className={`px-4 py-2 rounded bg-[#67216D] text-white hover:bg-[#7B2A79] transition-all ${
+                  isLoading ? "opacity-70 cursor-not-allowed" : ""
+                }`}
+                disabled={isLoading}
               >
-                Yes, Place Order
+                {isLoading ? " Processing" : "Yes, Place Order"}
               </button>
             </div>
           </div>

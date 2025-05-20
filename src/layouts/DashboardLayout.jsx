@@ -4,7 +4,7 @@ import SideBar from "../components/SideBar";
 import { useState } from "react";
 
 // DashboardLayout wraps all dashboard-related pages with a consistent Navbar and optional Sidebar
-const DashboardLayout = ({ profileImage, onLogout}) => {
+const DashboardLayout = ({onLogout}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
     <div className="flex h-screen">
@@ -15,9 +15,9 @@ const DashboardLayout = ({ profileImage, onLogout}) => {
       <div className="flex flex-col flex-1">
         {/* Navbar stays at the top of every dashboard page */}
         <DashNavBar
-          profileImage={profileImage}
           onLogout={onLogout}
           setSidebarOpen={setIsSidebarOpen}
+          
         />
 
         {/* Main content area where nested routes will be rendered */}

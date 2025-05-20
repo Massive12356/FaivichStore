@@ -62,6 +62,7 @@ const TestimonialSlider = () => {
             <img
               src={testimonials[index].image}
               alt={testimonials[index].name}
+              loading="lazy"
               className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-[#561256]"
             />
 

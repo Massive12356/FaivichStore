@@ -1,5 +1,5 @@
 // src/data/testimonials.js
-import pic from '../assets/mintah.jpeg'
+import pic from '../assets/lady.jpg'
 import pic2 from '../assets/lady.jpg'
 const testimonials = [
   {

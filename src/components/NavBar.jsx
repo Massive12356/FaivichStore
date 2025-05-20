@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { NavLink} from "react-router-dom";
 import {
   FiSearch,
   FiShoppingCart,
@@ -7,32 +7,68 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
-import img1 from "../images/cosmetics2.jpg";
+import logo from '/logo2.png'
 
 // 🛒 Zustand store for cart state management
 import useCartStore from "../store/cartStore";
+import toast from "react-hot-toast";
 
 const NavBar = ({ setIsBlurred, setSearchQuery }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showCartDropdown, setShowCartDropdown] = useState(false);
-  const [query, setQuery]= useState("");
+  const [query, setQuery] = useState("");
+  const [stockError, setStockError] = useState('')
+
+  // navbar closes when the user click outside
+  const cartRef = useRef(null);
+  const cartIconRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        cartRef.current &&
+        !cartRef.current.contains(event.target) &&
+        cartIconRef.current &&
+        !cartIconRef.current.contains(event.target)
+      ) {
+        setShowCartDropdown(false);
+      }
+    };
+
+    
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+   
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+     
+    };
+  }, []);
+  
+  
+
 
   // function to handling Searching
-  const handleSearchChange = (e) =>{
+  const handleSearchChange = (e) => {
     setQuery(e.target.value);
     setSearchQuery(e.target.value); // Pass search query up to parent component
-  }
+  };
 
   // Zustand store values
   const cart = useCartStore((state) => state.cartItems);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const updateCartItemQuantity = useCartStore(
+    (state) => state.updateCartItemQuantity
+  );
   const cartCount = cart.length;
-  const totalCost = useCartStore((state) => state.getTotalCost());
-
-  // Compute total quantity of items in cart
   const totalItems = useCartStore((state) => state.getTotalQuantity());
+  const totalCost = useCartStore((state) => state.getTotalCost());
+  
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -55,7 +91,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
     });
   };
 
-  // prevent scrolling when the menu is openned
+  // prevent scrolling when the menu is opened
   useEffect(() => {
     if (showMobileMenu) {
       document.body.style.overflow = "hidden";
@@ -63,6 +99,24 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
       document.body.style.overflow = "";
     }
   }, [showMobileMenu]);
+
+  const handleQuantityChange = (id, newQuantity) => {
+    const item = cart.find((item) => item.id === id);
+
+    // Check if quantity exceeds available stock
+    if (newQuantity > item.availableQuantity) {
+      
+      setStockError('cannot exceed quantity');
+      return;
+      //Exit early if quantity is invalid
+    }
+
+    // Proceed with update if quantity is valid
+    updateCartItemQuantity(id, newQuantity);
+  };
+  
+  
+  
 
   return (
     <header
@@ -109,8 +163,15 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
 
         {/* === Brand Logo & Admin Link === */}
         <div className="flex flex-col items-start">
-          <div className="text-lg md:text-[50px] font-bold logo text-[#561256]">
-            Faivich
+          <div className="flex flex-row items-center ">
+            <img
+              src={logo}
+              alt="logo"
+              className=" w-6 h-6 mr-2 md:w-12 md:h-11 rounded-full"
+            />
+            <h1 className="text-lg md:text-[50px] font-bold logo text-[#561256]">
+              Faivich
+            </h1>
           </div>
           <NavLink
             to="/login"
@@ -123,20 +184,19 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
         {/* === Icons Section === */}
         <div className="flex items-center gap-4">
           {/* Search */}
-            
-          <div className="relative flex items-center">
 
+          <div className="relative flex items-center">
             <FiSearch
               onClick={() => setShowSearch((prev) => !prev)}
               className="cursor-pointer text-xl md:text-2xl text-[#14245F]"
-              />
+            />
             <input
               type="text"
               value={query}
               onChange={handleSearchChange}
               placeholder="Search Products..."
               className="hidden md:inline-block ml-2 px-3 py-1 border border-[#561256] rounded-md text-sm text-[#14245F] focus:outline-none"
-              />
+            />
           </div>
 
           {/* === Cart Icon + Badge === */}
@@ -144,6 +204,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
             <div
               onClick={() => setShowCartDropdown((prev) => !prev)}
               className="cursor-pointer relative"
+              ref={cartIconRef}
             >
               <FiShoppingCart className="text-xl md:text-2xl text-[#14245F] mr-8" />
               <span className="absolute w-4 h-4 -top-3 right-7 bg-[#F50057] text-white text-xs text-center font-bold rounded-full border border-[#561256]">
@@ -159,6 +220,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 50 }}
                   transition={{ duration: 0.3 }}
+                  ref={cartRef}
                   className="
         fixed sm:absolute
         bottom-0 sm:top-12
@@ -189,59 +251,52 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
                     ) : (
                       cart.map((item) => (
                         <div
-                          key={item._id}
+                          key={item.id}
                           className="flex items-center gap-3 border-b-[1px] pb-3 border-gray-200"
                         >
                           <img
-                            src={item.imageUrl || img1}
+                            src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${item.pictures[0]}`}
                             alt={item.name}
                             className="w-12 h-12 object-cover rounded"
                           />
                           <div className="flex flex-col flex-1 text-sm sm:text-base">
-                            <span className="font-semibold text-[#14245F] truncate">
-                              {item.title}
-                            </span>
+                            <p className="font-semibold text-[#14245F]  flex flex-wrap">
+                              {item.name}
+                            </p>
 
                             {/* Quantity Controls */}
                             <div className="flex items-center gap-2 mt-1">
                               <button
-                                onClick={() =>
-                                  item.quantity > 1 &&
-                                  useCartStore
-                                    .getState()
-                                    .updateCartItemQuantity(
-                                      item._id,
-                                      item.quantity - 1
-                                    )
-                                }
+                                onClick={() => {
+                                  handleQuantityChange(
+                                    item.id,
+                                    item.quantity - 1
+                                  );
+                                }}
                                 className="w-5 h-5 sm:w-6 sm:h-6 border border-[#561256] text-[#561256] text-center rounded text-sm font-bold cursor-pointer hover:bg-gray-50"
+                                disabled={item.quantity <= 1}
                               >
                                 −
                               </button>
-                              <input
-                                type="number"
-                                min="1"
-                                value={item.quantity}
-                                onChange={(e) =>
-                                  useCartStore
-                                    .getState()
-                                    .updateCartItemQuantity(
-                                      item._id,
-                                      Math.max(1, parseInt(e.target.value) || 1)
-                                    )
-                                }
-                                className="w-12 text-center border border-gray-300 rounded text-sm"
-                              />
+                              <span>{item.quantity}</span>
                               <button
-                                onClick={() =>
-                                  useCartStore
-                                    .getState()
-                                    .updateCartItemQuantity(
-                                      item._id,
-                                      item.quantity + 1
-                                    )
-                                }
+                                onClick={() => {
+                                  const newQuantity = item.quantity + 1;
+                                  if (newQuantity > item.availableQuantity) {
+                                    toast.error(
+                                      `Only ${item.availableQuantity} available in stock`,
+                                      {
+                                        duration: 3000,
+                                      }
+                                    );
+                                    return;
+                                  }
+                                  handleQuantityChange(item.id, newQuantity);
+                                }}
                                 className="w-5 h-5 sm:w-6 sm:h-6 border border-[#561256] text-[#561256] text-center rounded text-sm font-bold cursor-pointer hover:bg-gray-50"
+                                disabled={
+                                  item.quantity >= item.availableQuantity
+                                }
                               >
                                 +
                               </button>
@@ -251,11 +306,18 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
                             <span className="text-gray-600 mt-1 text-xs sm:text-sm">
                               GHC{item.price}
                             </span>
+
+                            {/* 👇 Individual error message */}
+                            {/* {item.error && (
+                              <p className="text-red-500 text-sm mt-1">
+                                {item.error}
+                              </p>
+                            )} */}
                           </div>
 
                           {/* Remove Button */}
                           <button
-                            onClick={() => removeFromCart(item._id)}
+                            onClick={() => removeFromCart(item.id)}
                             className="text-red-600 hover:text-red-800 text-xs flex items-center cursor-pointer"
                           >
                             <FiTrash2 className="mr-1" /> Remove
@@ -267,7 +329,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
 
                   {/* Footer Section */}
                   {cart.length > 0 && (
-                    <div className="border-t p-3 space-y-2 bg-white mt-5">
+                    <div className="border-t p-5 space-y-2 bg-white mt-5">
                       <div className="text-sm text-gray-700 font-medium flex items-center justify-between">
                         <p>
                           Total Quantity:{" "}

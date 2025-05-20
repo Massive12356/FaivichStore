@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {Toaster} from 'react-hot-toast'
 import {BrowserRouter,Routes,Route} from 'react-router-dom';
 import './App.css'
@@ -20,13 +21,28 @@ import SingleAdvert from './pages/user/SingleAdvert';
 import FaqSection from './components/FaqSection';
 import CheckOut from './pages/user/CheckOut';
 import ScrollToTop from './components/ScrollToTop';
+import UpdateProfile from './pages/dashboard/UpdateProfile';
+
+import useProductStore from './store/productStore'; // zustand Product store
+import { useOrderStore } from './store/OrderStore';
 
 function App() {
-  
+  const fetchProducts = useProductStore((state)=>state.fetchProducts);// get my products from my store here
 
+  const fetchOrders = useOrderStore((state) =>state.fetchOrders);
+
+  // run it through useEffect
+  useEffect(()=>{
+    fetchProducts(); // fetch products once when app mounts
+  },[])
+
+  useEffect(()=>{
+    fetchOrders();
+  },[])
+  
   return (
     <>
-    {/* notification management */}
+      {/* notification management */}
       <Toaster
         toastOptions={{
           success: {
@@ -62,40 +78,34 @@ function App() {
 
       {/* routes management */}
       <BrowserRouter>
-      <ScrollToTop/>
+        <ScrollToTop />
         <Routes>
           {/* navigation for users */}
-          <Route path='/' element={<RootLayout/>}>
-            <Route index={true} element={<Landing/>}/>
-            <Route path='/login' element={<Login/>}/>
-            <Route path='/signup' element={<Signup/>}/>
-            <Route path='adverts' element={<Adverts/>}/>
-            <Route path='adverts/:id' element={<SingleAdvert/>}/>
-            <Route path='/faqs' element={<FaqSection/>}/>
-            <Route path='/checkout' element={<CheckOut/>}/>
-            
-            <Route path='contact' element={<Contact/>}/>
-            <Route path='about' element={<About/>}/>
-            
-            
+          <Route path="/" element={<RootLayout />}>
+            <Route index={true} element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="adverts" element={<Adverts />} />
+            <Route path="adverts/:id" element={<SingleAdvert />} />
+            <Route path="/faqs" element={<FaqSection />} />
+            <Route path="/checkout" element={<CheckOut />} />
+
+            <Route path="contact" element={<Contact />} />
+            <Route path="about" element={<About />} />
           </Route>
 
-          
           {/* navigation for vendor */}
-          <Route path='/dashboard' element={<DashboardLayout/>}>
-            <Route index={true} element={<Overview/>}/>
-            <Route path='vendorAds' element={<VendorAds/>}/>
-            <Route path='vendorAds/:id' element={<SingleAd/>}/>
-            <Route path='createAd' element={<CreateAd/>}/>
-            <Route path='updateAd/:id' element={<UpdateAd/>}/>
-            <Route path='vendorAds/:id' element={<SingleAd/>}/>
-            <Route path='orders' element={<Orders/>}/>
-            <Route path='orders/:id' element={<SingleOrderDetails/>}/>
-            <Route path='singleAd/:id' element={<SingleAd/>}/>
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index={true} element={<Overview />} />
+            <Route path="vendorAds" element={<VendorAds />} />
+            <Route path="vendorAds/:id" element={<SingleAd />} />
+            <Route path="createAd" element={<CreateAd />} />
+            <Route path="updateAd/:id" element={<UpdateAd />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="orders/:id" element={<SingleOrderDetails />} />
+            <Route path="updateProfile" element={<UpdateProfile />} />
           </Route>
-
         </Routes>
-      
       </BrowserRouter>
     </>
   );

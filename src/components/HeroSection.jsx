@@ -56,6 +56,7 @@ const HeroSection = () => {
             src={slides[current].image}
             alt={slides[current].title}
             className="w-full h-full object-cover"
+            loading="lazy"
           />
 
           {/* Dark Overlay */}

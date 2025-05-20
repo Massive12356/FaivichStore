@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { FaCog, FaSignOutAlt, FaUserEdit } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { FiSearch } from "react-icons/fi"; // Importing search icon
-import ProfPic from '../assets/mintah.jpeg'
 
-const DashNavBar = ({ profileImage, setSidebarOpen }) => {
+import useUserStore from "../store/userStore";//from zustand
+
+const DashNavBar = ({setSidebarOpen}) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+const {userDetails} = useUserStore(); //from Zustand
+
+const profileImage = userDetails?.pictures?.[0]
+  ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747073664/${userDetails.pictures[0]}`
+  : "/default-avatar.png";
 
   useEffect(() => {
     // time  function 
@@ -31,6 +40,20 @@ const DashNavBar = ({ profileImage, setSidebarOpen }) => {
     return () => clearInterval(interval);
   }, []);
 
+   const cancelLogOut = ()=>{
+    setShowModal(false);
+   }
+
+   const handleLogout = () =>{
+    setShowModal(false);
+    navigate('/');
+   }
+
+   const handleConfirm = ()=>{
+    setShowModal(true);
+    setIsProfileOpen(false)
+   }
+
   return (
     <div className="w-[95%] md:w-[98%] bg-white text-white px-3 py-1 flex justify-between items-center shadow-md m-2 rounded-lg">
       {/* Hamburger menu for mobile */}
@@ -51,7 +74,7 @@ const DashNavBar = ({ profileImage, setSidebarOpen }) => {
         {/* Profile Dropdown */}
         <div className="relative">
           <img
-            src={ProfPic || "/default-avatar.png"}
+            src={profileImage}
             alt="Profile"
             className="w-7 md:w-10 h-7 md:h-10 rounded-full object-cover cursor-pointer border-2 border-white"
             onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -77,20 +100,20 @@ const DashNavBar = ({ profileImage, setSidebarOpen }) => {
                   <Link
                     className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer font-[play]"
                     onClick={() => setIsProfileOpen(false)}
-                    to="/update-profile"
+                    to={`/dashboard/updateProfile`}
                   >
                     <FaUserEdit className="mr-2 " />
-                    Update Picture
+                    Update Profile
                   </Link>
 
-                  <Link to={'/'}>
-                  <div
-                    className="flex items-center px-4 py-2 hover:bg-gray-100 text-red-600 cursor-pointer font-[play]"
-                    >
-                    <FaSignOutAlt className="mr-2" />
-                    Logout
-                  </div>
-                    </Link>
+                  <button
+                  onClick={handleConfirm}
+                  >
+                    <div className="flex items-center px-4 py-2 hover:bg-gray-100 text-red-600 cursor-pointer font-[play]">
+                      <FaSignOutAlt className="mr-2" />
+                      Logout
+                    </div>
+                  </button>
                 </div>
               </motion.div>
             )}
@@ -113,6 +136,40 @@ const DashNavBar = ({ profileImage, setSidebarOpen }) => {
           {currentTime}
         </span>
       </div>
+
+      {/* confirm modal popUp */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-50 p-5">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-lg p-6 max-w-sm w-full"
+          >
+            <h3 className="text-lg font-bold text-[#283144] mb-4">
+              Are you sure you want to Log Out?
+            </h3>
+            <div className="flex justify-end gap-4">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={cancelLogOut}
+                className="bg-gray-300 text-[#283144] px-4 py-2 rounded-lg"
+              >
+                Cancel
+              </motion.button>
+
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={handleLogout}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg"
+              >
+                Yes, Log Out
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

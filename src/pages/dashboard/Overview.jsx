@@ -7,10 +7,18 @@ import {
   FiInfo,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { apiGetUserDetails } from "../../services/getUserDetails";
+import useProductStore from "../../store/productStore";
+import { useOrderStore } from "../../store/OrderStore";
+
 
 const Overview = () => {
-  const [username, setUsername] = useState("Vendor");
-  const [stockCount, setStockCount] = useState(0);
+  const [username, setUsername] = useState("");
+  const {products} =useProductStore();// from zustand store
+  const {ProductOrders} = useOrderStore(); // from zustand store
+
+  console.log(ProductOrders)
+  
 
   // State to track the visibility of tooltips for each card
   const [tooltipVisible, setTooltipVisible] = useState({
@@ -20,10 +28,19 @@ const Overview = () => {
     totalSuccessfulPurchase: false,
   });
 
-  useEffect(() => {
-    setUsername("Edward Mintah");
-    setStockCount(152);
-  }, []);
+  // function for fetching users details 
+  const getUser = async() =>{
+    try {
+      const response = await apiGetUserDetails();
+      setUsername(response.data.username);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+    getUser();
+  },[]);
 
   // Function to toggle the tooltip visibility for each card
   const toggleTooltip = (card) => {
@@ -94,9 +111,9 @@ const Overview = () => {
             <FiBox />
           </div>
           <div>
-            <p className="text-sm text-gray-500 font-[play]">Total Products</p>
+            <p className="text-sm text-gray-500 font-[play]">Total Published Products</p>
             <h3 className="text-xl font-bold text-[#283144] font-[play]">
-              {stockCount}
+              {products.length}
             </h3>
           </div>
 
@@ -139,7 +156,7 @@ const Overview = () => {
           </div>
           <div>
             <p className="text-sm text-gray-500 font-[play]">Total Orders</p>
-            <h3 className="text-xl font-bold text-[#283144] font-[play]">85</h3>
+            <h3 className="text-xl font-bold text-[#283144] font-[play]">{ProductOrders.length}</h3>
           </div>
 
           {/* Info Icon and Tooltip */}

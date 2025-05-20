@@ -1,16 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import {Link} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { apiLogin } from "../../services/auth";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState();
+
+  const handleLogin = async (event) => {
+    event.preventDefault(); // prevents any default behavior by the form
+    setLoading(true);
+    const formData = new FormData(event.target); // the value formdata grabs all the events in the form;
+
+    try {
+      const response = await apiLogin(formData);
+
+      // set the token for authorization with localstorage
+      localStorage.setItem("token", response.data.accessToken);
+      toast.success("Login Successful");
+
+      // navigate the user to the dashboard
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("login Unsuccessful");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="w-full h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="max-w-sm w-full space-y-6 bg-white shadow-xl rounded-xl p-6">
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleLogin}>
           {/* Email Input */}
           <div className="relative">
             <input
               type="email"
+              name="email"
               className="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-[#67216d8c] focus:ring-1 focus:ring-[#67216d8c] disabled:opacity-50 disabled:pointer-events-none outline-none"
               placeholder="Enter email"
             />
@@ -37,6 +65,7 @@ const Login = () => {
           <div className="relative">
             <input
               type="password"
+              name="password"
               className="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-[#67216d8c] focus:ring-1 focus:ring-[#67216d8c] disabled:opacity-50 disabled:pointer-events-none outline-none"
               placeholder="Enter password"
             />
@@ -60,15 +89,43 @@ const Login = () => {
           </div>
 
           {/* Login Button */}
-          <Link to='/dashboard' >
+
           <motion.button
             whileTap={{ scale: 0.95 }}
-            type="button"
-            className="w-full py-3 px-4 flex justify-center items-center text-[15px] font-medium rounded-lg bg-[#67216D] text-white hover:bg-[#561256] focus:outline-none focus:ring-2 focus:ring-[#67216D] transition-all cursor-pointer"
-            >
-            Login
+            type="submit"
+            className={`w-full py-3 px-4 flex justify-center items-center text-[15px] font-medium rounded-lg bg-[#67216D] text-white hover:bg-[#561256] focus:outline-none focus:ring-2 focus:ring-[#67216D] transition-all cursor-pointer ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                Please wait...
+              </>
+            ) : (
+              "Login"
+            )}
           </motion.button>
-            </Link>
         </form>
 
         {/* Divider */}

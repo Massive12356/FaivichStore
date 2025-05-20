@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { FiEdit, FiEye, FiTrash2 } from "react-icons/fi";
 import { motion } from "framer-motion";
-import { Link } from "react-router";
-import cleaningProduct from "../../assets/cleaningProduct.jpg";
-import healthcareProduct from "../../assets/HealthCareProduct.jpg";
-import cosmeticProduct from "../../assets/cosmeticProduct.jpg";
-import mockProducts from "../../data/mockProducts";
+import { Link } from "react-router-dom";
+import useProductStore from "../../store/productStore";
+import toast from "react-hot-toast";
+import Spinner from "../../components/Spinner";
 
 const VendorAds = () => {
   const [view, setView] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [filterCategory, setFilterCategory] = useState("All");
+
+  const {fetchProducts, products, isLoading,deleteProduct } = useProductStore(); // from zustand Store
 
   useEffect(() => {
     const savedView = localStorage.getItem("view");
@@ -35,8 +36,14 @@ const VendorAds = () => {
     setShowModal(true);
   };
 
-  const confirmDelete = () => {
-    alert(`Product ${selectedProduct.name} deleted.`);
+  const confirmDelete = async(id) => {
+   const result = await deleteProduct(id);
+   if (result.success) {
+     await fetchProducts(true); // ⬅️ re-fetch with force=true
+     toast.success("Product deleted successfully");
+   } else {
+     toast.error(result.message || "Failed to delete product");
+   }
     setShowModal(false);
   };
 
@@ -44,34 +51,49 @@ const VendorAds = () => {
     setShowModal(false);
   };
 
+
+  // if (isLoading) return <Spinner/>
+  // if (error) return <p>Error: {error}</p>;
+
   const filteredProducts =
     filterCategory === "All"
-      ? mockProducts
-      : mockProducts.filter((product) => product.category === filterCategory);
+      ? products
+      : products.filter(
+          (product) =>
+            product.category?.[0]?.name?.toLowerCase().trim() ===
+            filterCategory.toLowerCase().trim()
+        );
 
   return (
     <div className="px-4 py-6 bg-[#F9F7F7]">
-      <h1 className=" text-2xl  md:text-3xl font-bold text-[#67216D] mb-4 font-[play]">
+      <h1 className="text-2xl md:text-3xl font-bold text-[#67216D] mb-4 font-[play]">
         Your Published Products
       </h1>
-      <p className=" text-[15px]  md:text-[20px] text-gray-700 mb-4 font-[play]">
+      <p className="text-[15px] md:text-[20px] text-gray-700 mb-4 font-[play]">
         You can VIEW, EDIT and DELETE your published Products here
       </p>
 
       <div className="sticky top-0 z-10 bg-white p-4 shadow-md flex justify-between items-center">
-        <div className=" w-20 md:w-40 flex gap-4">
+        <div className="w-20 md:w-40 flex gap-4">
           <select
-            onChange={(e) => setFilterCategory(e.target.value)}
             value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
             className="border w-40 text-[12px] md:text-[16px] md:w-60 border-[#67216D] text-[#67216D] rounded-lg p-2 shadow-md focus:outline-none focus:ring-2 focus:ring-[#FF6C2F] font-[play] cursor-pointer"
           >
             <option value="All">All Products</option>
-            <option value="Cleaning Agents/Detergents">
-              Cleaning Products
+            <option value="Cleaning Agents">Cleaning Products</option>
+            <option value="Healthcare Products">Healthcare Products</option>
+            <option value="Skincare Products">
+              Cosmetics / Skincare Products
             </option>
-            <option value="Healthcare">Healthcare Products</option>
-            <option value="Skincare/Cosmetics">Cosmetics Products</option>
           </select>
+        </div>
+
+        <div
+          className="hidden md:flex  items-center justify-center md:w-10 w-7 h-7 md:h-10 rounded-full border-2 border-[#67216D] text-[#67216D]"
+          title="Total number of Published Products"
+        >
+          <p className="font-bold">{products.length}</p>
         </div>
         <motion.button
           title="Change the view of products details"
@@ -85,136 +107,151 @@ const VendorAds = () => {
 
       {view === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 font-[play]">
-          {filteredProducts.map((product) => (
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 100 }}
-              transition={{ type: "spring", stiffness: 100, damping: 25 }}
-              whileHover={{ scale: 0.9 }}
-              key={product.id}
-              className="bg-white shadow-md rounded-2xl p-5 flex flex-col items-center "
-            >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-32 object-cover rounded-md mb-4"
-              />
-              <div className="flex-grow text-center">
-                <h3 className="text-lg font-bold text-[#283144]">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-gray-500">{product.description}</p>
-                <p className="text-sm text-[#FF6C2F] mt-2">
-                  GH{"\u20B5"} {product.price}
-                </p>
-              </div>
-              <div className="flex items-center gap-3 mt-4">
-                <Link to={"/dashboard/singleAd/:id"}>
+          {isLoading ? (
+            <div className="col-span-full flex justify-center items-center">
+              <Spinner message="Loading your products..." />
+            </div>
+          ) : (
+            filteredProducts.map((product) => (
+              <motion.div
+                initial={{ opacity: 0, x: -100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 100 }}
+                transition={{ type: "spring", stiffness: 100, damping: 25 }}
+                whileHover={{ scale: 0.9 }}
+                key={product.id}
+                className="bg-white shadow-md rounded-2xl p-5 flex flex-col items-center "
+              >
+                <img
+                  src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${product.pictures[0]}`}
+                  alt={product.name}
+                  className="w-full h-32 object-cover rounded-md mb-4"
+                  loading="lazy"
+                />
+                <div className="flex-grow text-center">
+                  <h3 className="text-lg font-bold text-[#283144]">
+                    {product.name}
+                  </h3>
+                  <p className="text-sm text-gray-500">{product.description}</p>
+                  <div className="ml-8 flex flex-wrap items-center justify-around w-40  mt-2">
+                    <p className="text-sm text-[#FF6C2F] ">
+                      GH{"\u20B5"} {product.price}
+                    </p>
+                    <p
+                      className={`text-sm font-medium ${
+                        product.quantity > 0 ? "text-green-600" : "text-red-500"
+                      }`}
+                    >
+                      {product.quantity > 0 ? "In Stock" : "Out of Stock"}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 mt-4">
+                  <Link to={`/dashboard/vendorAds/${product.id}`}>
+                    <motion.button
+                      title="view Published Product"
+                      whileTap={{ scale: 0.95 }}
+                      className="text-green-500 hover:text-[#67216D] cursor-pointer"
+                    >
+                      <FiEye size={20} />
+                    </motion.button>
+                  </Link>
+                  <Link to={`/dashboard/updateAd/${product.id}`}>
+                    <motion.button
+                      title="Edit Published Product"
+                      whileTap={{ scale: 0.95 }}
+                      className="text-[#FF6C2F] hover:text-[#67216D] cursor-pointer"
+                    >
+                      <FiEdit size={20} />
+                    </motion.button>
+                  </Link>
                   <motion.button
-                    title="view Published Product"
+                    title="Delete Published Product"
                     whileTap={{ scale: 0.95 }}
-                    className="text-green-500 hover:text-[#67216D] cursor-pointer"
+                    onClick={() => handleDelete(product)}
+                    className="text-red-500 hover:text-[#67216D] cursor-pointer"
                   >
-                    <FiEye size={20} />
+                    <FiTrash2 size={20} />
                   </motion.button>
-                </Link>
-                <Link to={"/dashboard/updateAd/:id"}>
-                  <motion.button
-                    title="Edit Published Product"
-                    whileTap={{ scale: 0.95 }}
-                    className="text-[#FF6C2F] hover:text-[#67216D] cursor-pointer"
-                  >
-                    <FiEdit size={20} />
-                  </motion.button>
-                </Link>
-                <motion.button
-                  title="Delete Published Product"
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleDelete(product)}
-                  className="text-red-500 hover:text-[#67216D] cursor-pointer"
-                >
-                  <FiTrash2 size={20} />
-                </motion.button>
-              </div>
-            </motion.div>
-          ))}
+                </div>
+              </motion.div>
+            ))
+          )}
         </div>
       ) : (
-        // ✅ Updated scroll behavior: table scrolls only inside container on small screens
-        <motion.div
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 100 }}
-          transition={{ type: "spring", stiffness: 100, damping: 25 }}
-          className="mt-6 font-[play]"
-        >
-          {/* 🟡 Scroll wrapper only scrolls on small screens, not entire page */}
-          <div className="overflow-x-auto lg:overflow-x-visible">
-            <table className="min-w-full table-auto border-collapse bg-white shadow-md rounded-2xl">
-              <thead className="bg-[#67216D] text-white">
-                <tr>
-                  <th className="p-4 text-left">Product</th>
-                  <th className="p-4 text-left">Description</th>
-                  <th className="p-4 text-left">Price</th>
-                  <th className="p-4 text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredProducts.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="border-b hover:bg-[#FFE2D5] transition-all duration-300"
-                  >
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-16 h-16 object-cover rounded-md"
-                        />
-                        <span className="font-semibold">{product.name}</span>
-                      </div>
-                    </td>
-                    <td className="p-4 text-sm text-gray-500">
-                      {product.description}
-                    </td>
-                    <td className="p-4 text-sm text-[#FF6C2F]">
-                      GH{"\u20B5"} {product.price}
-                    </td>
-                    <td className="p-4 flex gap-3 items-center justify-center mt-5">
-                      <Link to={"/dashboard/singleAd/:id"}>
-                        <motion.button
-                          title="View Published  Product"
-                          whileTap={{ scale: 0.95 }}
-                          className="text-green-500 cursor-pointer hover:text-[#67216D]"
-                        >
-                          <FiEye size={20} />
-                        </motion.button>
-                      </Link>
-                      <Link to={"/dashboard/UpdateAd/:id"}>
-                        <motion.button
-                          title="Edit Published product"
-                          whileTap={{ scale: 0.95 }}
-                          className="text-[#FF6C2F] cursor-pointer hover:text-[#67216D]"
-                        >
-                          <FiEdit size={20} />
-                        </motion.button>
-                      </Link>
-                      <motion.button
-                        title="Delete Published  Product"
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleDelete(product)}
-                        className="text-red-500 hover:text-[#67216D] cursor-pointer"
-                      >
-                        <FiTrash2 size={20} />
-                      </motion.button>
-                    </td>
+        <motion.div className="mt-6 font-[play] min-h-[200px] relative">
+          {isLoading ? (
+            <div className="flex justify-center items-center py-10">
+              <Spinner message="Loading your products..." />
+            </div>
+          ) : (
+            <div className="overflow-x-auto lg:overflow-x-visible">
+              <table className="min-w-full table-auto border-collapse bg-white shadow-md rounded-2xl">
+                <thead className="bg-[#67216D] text-white">
+                  <tr>
+                    <th className="p-4 text-left">Product</th>
+                    <th className="p-4 text-left">Description</th>
+                    <th className="p-4 text-left">Price</th>
+                    <th className="p-4 text-left">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filteredProducts.map((product) => (
+                    <tr
+                      key={product.id}
+                      className="border-b hover:bg-[#FFE2D5] transition-all duration-300"
+                    >
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${product.pictures[0]}`}
+                            loading="lazy"
+                            alt={product.name}
+                            className="w-16 h-16 object-cover rounded-md"
+                          />
+                          <span className="font-semibold">{product.name}</span>
+                        </div>
+                      </td>
+                      <td className="p-4 text-sm text-gray-500">
+                        {product.description}
+                      </td>
+                      <td className="p-4 text-sm text-[#FF6C2F]">
+                        GH{"\u20B5"} {product.price}
+                      </td>
+                      <td className="p-4 flex gap-3 items-center justify-center mt-5">
+                        <Link to={`/dashboard/vendorAds/${product.id}`}>
+                          <motion.button
+                            title="View Published  Product"
+                            whileTap={{ scale: 0.95 }}
+                            className="text-green-500 cursor-pointer hover:text-[#67216D]"
+                          >
+                            <FiEye size={20} />
+                          </motion.button>
+                        </Link>
+                        <Link to={`/dashboard/UpdateAd/${product.id}`}>
+                          <motion.button
+                            title="Edit Published product"
+                            whileTap={{ scale: 0.0 }}
+                            className="text-[#FF6C2F] cursor-pointer hover:text-[#67216D]"
+                          >
+                            <FiEdit size={20} />
+                          </motion.button>
+                        </Link>
+                        <motion.button
+                          title="Delete Published  Product"
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleDelete(product)}
+                          className="text-red-500 hover:text-[#67216D] cursor-pointer"
+                        >
+                          <FiTrash2 size={20} />
+                        </motion.button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </motion.div>
       )}
 
@@ -233,7 +270,7 @@ const VendorAds = () => {
             <p className="text-sm text-gray-500 mb-4 font-[play]">
               Are you sure you want to delete the product{" "}
               <span className="font-bold text-black">
-                {selectedProduct?.title}
+                {selectedProduct?.name}
               </span>
               ?
             </p>
@@ -247,7 +284,7 @@ const VendorAds = () => {
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                onClick={confirmDelete}
+                onClick={()=>confirmDelete(selectedProduct?.id)}
                 className="bg-red-500 text-white px-4 py-2 rounded-lg"
               >
                 Delete

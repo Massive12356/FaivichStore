@@ -1,30 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  FiX,
-  FiUploadCloud,
-  FiXCircle,
-  FiArrowLeft,
-  FiEdit,
-} from "react-icons/fi";
+import { FiX, FiUploadCloud, FiXCircle, FiArrowLeft } from "react-icons/fi";
 import { MdPostAdd } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import useProductStore from "../../store/productStore"; // ✅ import your Zustand store
+import toast from "react-hot-toast";
 
 const UpdateAd = () => {
-  // State for image previews and actual files
-  const [images, setImages] = useState([]);
-  const [files, setFiles] = useState([]);
+  const navigate = useNavigate();
+  const { id } = useParams(); // ✅ get product ID from route params
 
-  // Handles image file selection and preview generation
+  // ✅ Zustand store functions and states
+  const { fetchSingleAd, updateProduct, singleProduct, isLoading } =
+    useProductStore();
+
+    const cloudinaryBaseURL = import.meta.env.VITE_CLOUDINARY_URL;
+      
+
+  // ✅ Local state for form fields
+  const [productName, setProductName] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
+  const [description, setDescription] = useState("");
+  const [ingredients, setIngredients] = useState("");
+  const [usage, setUsage] = useState("");
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [category, setCategory] = useState("");
+  const [images, setImages] = useState([]); // Image preview URLs
+  const [files, setFiles] = useState([]); // Actual image files
+
+  // ✅ Fetch single product data on mount
+  useEffect(() => {
+    if (id) fetchSingleAd(id);
+  }, [id]);
+
+  // ✅ Set form values when product is loaded
+  useEffect(() => {
+    if (singleProduct) {
+      setProductName(singleProduct.name || "");
+      setShortDescription(singleProduct.description || "");
+      setDescription(singleProduct.desDetail || "");
+      setIngredients(singleProduct.ingredients || "");
+      setUsage(singleProduct.usage || "");
+      setPrice(singleProduct.price || "");
+      setQuantity(singleProduct.quantity || 1);
+      setCategory(singleProduct.category || "");
+
+      console.log("pictures" , singleProduct)
+
+      // If images are URLs from server
+      if (singleProduct.pictures?.length) {
+        const imageUrls = singleProduct.pictures.map(
+          (path) => `${cloudinaryBaseURL}${path}`
+        );
+        setImages(imageUrls);
+      }
+    }
+  }, [singleProduct]);
+
+  // ✅ Handle image selection
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     const previewURLs = selectedFiles.map((file) => URL.createObjectURL(file));
-
     setImages((prev) => [...prev, ...previewURLs]);
     setFiles((prev) => [...prev, ...selectedFiles]);
   };
 
-  // Removes an image preview and corresponding file
+  // ✅ Remove image by index
   const removeImage = (index) => {
     const newImages = [...images];
     const newFiles = [...files];
@@ -34,10 +76,37 @@ const UpdateAd = () => {
     setFiles(newFiles);
   };
 
-  // Handles form submission and resets all fields
-  const handleSubmit = (e) => {
+  // ✅ Form submission handler
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", productName);
+    formData.append("description", shortDescription); // Probably you meant this instead of full description
+    formData.append("desDetail", description);
+    formData.append("ingredients", ingredients);
+    formData.append("usage", usage);
+    formData.append("price", price);
+    formData.append("quantity", quantity);
+    formData.append("category", JSON.stringify([category]));
+
+    files.forEach((file) => {
+      formData.append("pictures", file);
+    });
+
+       // for debugging 
+    console.log("Category payload:", JSON.stringify([category]));
+    console.log([...formData.entries()]);
+
+    const result = await updateProduct(id, formData);
+    if (result.success) {
+      toast.success("Product updated successfully!");
+      navigate("/dashboard/vendorAds");
+    } else {
+      toast.error(result.message || "Failed to update product.");
+    }
   };
+  
 
   return (
     <motion.div
@@ -47,14 +116,14 @@ const UpdateAd = () => {
       transition={{ type: "spring", stiffness: 100, damping: 25 }}
       className="p-5 md:p-10 bg-[#F9F7F7] min-h-screen font-[play]"
     >
-      {/* Back Button */}
+      {/* 🔙 Back Button */}
       <Link to={"/dashboard/vendorAds"}>
         <motion.div
           whileTap={{ scale: 0.9 }}
-          className=" flex w-ful justify-end mb-5"
+          className="flex w-ful justify-end mb-5"
         >
           <button
-            title="back to Published Products Page"
+            title="Back to Published Products Page"
             className="text-[#4A235A] hover:text-[#513E5F] transition-colors duration-200 flex items-center gap-2 cursor-pointer"
           >
             <FiArrowLeft size={24} />
@@ -63,7 +132,7 @@ const UpdateAd = () => {
         </motion.div>
       </Link>
 
-      {/* Form Heading */}
+      {/* 📝 Form Heading */}
       <div className="flex items-center gap-3 mb-8">
         <MdPostAdd size={30} className="text-[#FF6C2F]" />
         <h1 className="text-2xl md:text-3xl font-bold text-[#67216D] font-[play]">
@@ -71,20 +140,25 @@ const UpdateAd = () => {
         </h1>
       </div>
 
-      {/* Product Form */}
+      {/* 🧾 Form */}
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-xl p-6 space-y-6"
       >
+        {/* Input fields... (no UI changes, just added value & onChange bindings) */}
+
         {/* Product Name */}
         <div>
           <label className="block text-[#777186] font-semibold mb-1 font-[play]">
             Product Name
           </label>
           <input
+            name="name"
             type="text"
             placeholder="Enter product name"
-            className="w-full border rounded-lg px-4 py-2 placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2"
             required
           />
         </div>
@@ -96,8 +170,11 @@ const UpdateAd = () => {
           </label>
           <input
             type="text"
+            name="description"
             placeholder="A short summary"
-            className="w-full border rounded-lg px-4 py-2 placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
+            value={shortDescription}
+            onChange={(e) => setShortDescription(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2"
             required
           />
         </div>
@@ -108,29 +185,40 @@ const UpdateAd = () => {
             Description
           </label>
           <textarea
+            name="desDetail"
             placeholder="Detailed description"
-            className="w-full border rounded-lg px-4 py-2 h-28 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2 h-28 resize-none"
             required
           />
         </div>
 
+        {/* Ingredients */}
         <div>
           <label className="block text-[#777186] font-semibold mb-1 font-[play]">
             Ingredients
           </label>
           <textarea
-            placeholder="List the key ingredients used in this product"
-            className="w-full border rounded-lg px-4 py-2 h-24 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
+            name="ingredients"
+            placeholder="List the key ingredients"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2 h-24 resize-none"
           />
         </div>
 
+        {/* Usage Instructions */}
         <div>
           <label className="block text-[#777186] font-semibold mb-1 font-[play]">
             Usage Instructions
           </label>
           <textarea
-            placeholder="Explain how the product should be used"
-            className="w-full border rounded-lg px-4 py-2 h-24 resize-none placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
+            name="usage"
+            placeholder="How to use"
+            value={usage}
+            onChange={(e) => setUsage(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2 h-24 resize-none"
           />
         </div>
 
@@ -140,36 +228,57 @@ const UpdateAd = () => {
             Price
           </label>
           <input
-            type="text"
-            placeholder="e.g. GHC45"
-            className="w-full border rounded-lg px-4 py-2 placeholder-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
+            type="number"
+            name="price"
+            placeholder="45"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2"
             required
           />
         </div>
 
-        {/* Category Dropdown */}
+        {/* Quantity */}
+        <div>
+          <label className="block text-[#777186] font-semibold mb-1 font-[play]">
+            Quantity
+          </label>
+          <input
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2"
+            required
+          />
+        </div>
+
+        {/* Category */}
         <div>
           <label className="block text-[#777186] font-semibold mb-1 font-[play]">
             Category
           </label>
           <select
-            className="w-full border rounded-lg px-4 py-2 text-[#777186] font-[play] focus:outline-none focus:ring-1 ring-gray-300"
+            name="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2"
             required
           >
             <option value="">Select a category</option>
-            <option value="Cosmetics">Cosmetics</option>
-            <option value="Healthcare">Healthcare</option>
-            <option value="Cleaning">Cleaning</option>
+            <option value="Skincare Products">Skincare Products</option>
+            <option value="Healthcare Products">Healthcare Products</option>
+            <option value="Cleaning Agents">Cleaning Agents</option>
           </select>
         </div>
 
-        {/* Image Upload Section */}
+        {/* Image Upload + Preview */}
         <div>
           <label className="block text-[#777186] font-semibold mb-2 font-[play]">
             Upload Product Images
           </label>
           <div className="flex items-center gap-4">
             <input
+              name="pictures"
               type="file"
               multiple
               accept="image/*"
@@ -178,9 +287,8 @@ const UpdateAd = () => {
               id="image-upload"
             />
             <label
-              title="Upload an Image or Multiple Images"
               htmlFor="image-upload"
-              className="cursor-pointer inline-flex items-center gap-2 bg-[#4A235A] hover:bg-[#513E5F] text-white px-4 py-2 rounded-lg font-[play]"
+              className="cursor-pointer flex items-center gap-2 bg-[#4A235A] hover:bg-[#513E5F] text-white px-4 py-2 rounded-lg"
             >
               <FiUploadCloud size={18} />
               Upload Images
@@ -190,10 +298,7 @@ const UpdateAd = () => {
           {/* Image Previews */}
           <div className="flex flex-wrap gap-3 mt-4">
             {images.map((img, index) => (
-              <div
-                key={index}
-                className="relative border rounded-lg overflow-hidden w-20 h-20"
-              >
+              <div key={index} className="relative border rounded-lg w-20 h-20">
                 <img
                   src={img}
                   alt="preview"
@@ -211,30 +316,24 @@ const UpdateAd = () => {
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Submit Button */}
         <div className="flex justify-end gap-4 mt-6">
-          {/* Cancel Button */}
-          <Link to={"/dashboard/vendorAds"}>
+          <Link to="/dashboard/vendorAds">
             <motion.button
-              title="Cancel & back to Published Products Page"
               whileTap={{ scale: 0.95 }}
               type="button"
-              className="flex items-center gap-2 bg-red-300 text-[#9d0505] px-7 py-2 rounded-lg font-[play] font-semibold cursor-pointer"
+              className="bg-red-300 text-[#9d0505] px-7 py-2 rounded-lg font-[play]"
             >
-              <FiX size={18} />
               Cancel
             </motion.button>
           </Link>
-
-          {/* Submit Button */}
           <motion.button
-            title="Update Published Product Details"
             whileTap={{ scale: 0.95 }}
             type="submit"
-            className="flex items-center gap-2 bg-[#4A235A] hover:bg-[#513E5F] text-white px-7 py-2 rounded-lg font-[play] font-semibold cursor-pointer"
+            disabled={isLoading}
+            className="bg-[#4A235A] text-white px-7 py-2 rounded-lg font-[play]"
           >
-            <FiEdit size={20} />
-            Update Product
+            {isLoading ? "Updating..." : "Update Product"}
           </motion.button>
         </div>
       </form>

@@ -8,17 +8,17 @@ import clen from "../images/clen.jpg";
 
 const categories = [
   {
-    category: "Skincare/Cosmetics",
+    category: "Skincare Products",
     tagline: "Enhance your natural glow with luxurious care.",
     image: cos,
   },
   {
-    category: "Healthcare",
+    category: "Healthcare Products",
     tagline: "Support your wellness journey with trusted essentials.",
     image: med,
   },
   {
-    category: "Cleaning Agents/Detergents",
+    category: "Cleaning Agents",
     tagline: "Powerful solutions to keep your home fresh and spotless.",
     image: clen,
   },
@@ -113,6 +113,7 @@ export default function ShopByCategories() {
               src={item.image}
               alt={`${item.category} category`}
               className="w-full h-64 object-cover p-1 rounded-lg"
+              loading="lazy"
             />
 
             {/* Text */}

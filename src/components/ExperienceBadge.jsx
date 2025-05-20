@@ -54,7 +54,7 @@ const ExperienceBadge = () => {
             transition={{ duration: 0.3 }}
             className={`whitespace-nowrap font-semibold ${fontSize}`}
           >
-            10+ Years Experience
+            10+ Years of Excellence
           </motion.span>
         )}
       </AnimatePresence>

@@ -1,15 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { apiSignUp } from "../../services/auth";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  // function to handle Sign Up
+
+  const handleSignUp = async (event) => {
+    event.preventDefault(); // prevents any default behavior by the form
+
+    setLoading(true);
+
+    const formData = new FormData(event.target); // grabs the whole form inputs(values)
+
+    try {
+      const response = await apiSignUp(formData); // service grabs the values and send it to the backend
+      console.log("response", response.data);
+
+      toast.success("Successful! Login to continue");
+
+      navigate("/login");
+    } catch (error) {
+      toast.error("Sign Up unsuccessful");
+      console.error("signUp error:", error?.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="w-full h-screen flex items-center justify-center bg-gray-50 px-4 mt-12">
       <div className="max-w-sm w-full space-y-6 bg-white shadow-xl rounded-xl p-6">
-        <form className="space-y-4">
-          {/* Email Input */}
+        <form className="space-y-4" onSubmit={handleSignUp}>
+          {/* User name Input */}
+          <div className="relative">
+            <input
+              type="text"
+              name="username"
+              className="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-[#67216d8c] focus:ring-1 focus:ring-[#67216d8c] disabled:opacity-50 disabled:pointer-events-none outline-none"
+              placeholder="Enter UserName"
+              required
+            />
+            <div className="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none">
+              <svg
+                className="w-5 h-5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="#67216D"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5.121 17.804A9.003 9.003 0 0112 15c2.062 0 3.947.7 5.395 1.873M15 11a3 3 0 11-6 0 3 3 0 016 0zm6 1a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </div>
           <div className="relative">
             <input
               type="email"
+              name="email"
               className="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-[#67216d8c] focus:ring-1 focus:ring-[#67216d8c] disabled:opacity-50 disabled:pointer-events-none outline-none"
               placeholder="Enter email"
               required
@@ -36,6 +91,7 @@ const Signup = () => {
           <div className="relative">
             <input
               type="password"
+              name="password"
               className="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-[#67216d8c] focus:ring-1 focus:ring-[#67216d8c] disabled:opacity-50 disabled:pointer-events-none outline-none"
               placeholder="Enter password"
               required
@@ -63,6 +119,7 @@ const Signup = () => {
           <div className="relative">
             <input
               type="password"
+              name="confirmPassword"
               className="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-[#67216d8c] focus:ring-1 focus:ring-[#67216d8c] disabled:opacity-50 disabled:pointer-events-none outline-none"
               placeholder="Confirm password"
               required
@@ -90,9 +147,38 @@ const Signup = () => {
           <motion.button
             whileTap={{ scale: 0.95 }}
             type="submit"
-            className="w-full py-3 px-4 flex justify-center items-center text-sm font-medium rounded-lg bg-[#67216D] text-white hover:bg-[#561256] focus:outline-none focus:ring-2 focus:ring-[#67216D] transition-all"
+            className={`w-full py-3 px-4 flex justify-center items-center text-sm font-medium rounded-lg bg-[#67216D] text-white hover:bg-[#561256] focus:outline-none focus:ring-2 focus:ring-[#67216D] transition-all cursor-pointer ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
           >
-            Sign Up
+            {loading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                Please wait...
+              </>
+            ) : (
+              "Sign Up"
+            )}
           </motion.button>
         </form>
 
@@ -107,7 +193,7 @@ const Signup = () => {
         <motion.button
           whileTap={{ scale: 0.95 }}
           type="button"
-          className="w-full py-3 px-4 flex items-center justify-center gap-3 text-sm font-medium rounded-lg border border-gray-300 bg-white hover:bg-gray-100 transition-all"
+          className="w-full py-3 px-4 flex items-center justify-center gap-3 text-sm font-medium rounded-lg border border-gray-300 bg-white hover:bg-gray-100 transition-all "
         >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
