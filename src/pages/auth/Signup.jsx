@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { apiSignUp } from "../../services/auth";
+import { useNavigate,Link } from "react-router-dom";
+import { apiSignUp } from "../../services/auth"
+import { FiArrowLeft } from "react-icons/fi";
+
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ const Signup = () => {
 
       toast.success("Successful! Login to continue");
 
-      navigate("/login");
+      navigate("/dashboard");
     } catch (error) {
       toast.error("Sign Up unsuccessful");
       console.error("signUp error:", error?.response?.data || error.message);
@@ -32,7 +34,21 @@ const Signup = () => {
     }
   };
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-gray-50 px-4 mt-12">
+    <div className="w-full h-screen flex items-center justify-center bg-gray-50 px-4 ">
+      <Link to={"/dashboard"}>
+        <motion.div
+          whileTap={{ scale: 0.9 }}
+          className="absolute flex top-25 right-20"
+        >
+          <button
+            title="Back to all Products Page"
+            className="text-[#4A235A] hover:text-[#513E5F] transition-colors duration-200 flex items-center gap-2 cursor-pointer "
+          >
+            <FiArrowLeft size={24} />
+            <span className="hidden md:inline font-[play]">Back</span>
+          </button>
+        </motion.div>
+      </Link>
       <div className="max-w-sm w-full space-y-6 bg-white shadow-xl rounded-xl p-6">
         <form className="space-y-4" onSubmit={handleSignUp}>
           {/* User name Input */}

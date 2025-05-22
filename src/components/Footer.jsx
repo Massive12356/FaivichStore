@@ -1,5 +1,5 @@
 import React,{ useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link,NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   FaFacebook,
@@ -180,6 +180,12 @@ const Footer = () => {
       {/* 🔗 Bottom Notice */}
       <div className="mt-8 flex flex-col sm:flex-row justify-center items-center border-t border-gray-600 pt-4 text-sm text-center">
         <p>&copy; {new Date().getFullYear()} Faivich. All rights reserved.</p>
+        <NavLink
+          to="/login"
+          className="text-[11px] text-[#F50057] font-bold hover:underline  mt-1 block md:ml-10"
+        >
+          Admin
+        </NavLink>
       </div>
 
       {isVisible && (

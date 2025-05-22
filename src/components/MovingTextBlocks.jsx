@@ -49,7 +49,7 @@ const ProductCard = ({ product }) => (
     <div className="flex items-center bg-white rounded-xl shadow-md overflow-hidden border border-[#eee]">
       <div className="w-[40%] aspect-square overflow-hidden">
         <img
-          src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${product.pictures[0]}`}
+          src={`https://res.cloudinary.com/dp0kuhms5/image/upload/f_auto,q_auto/v1747053460/${product.pictures[0]}`}
           alt={product.name}
           loading="lazy"
           className="object-cover w-full h-full"

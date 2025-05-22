@@ -207,7 +207,7 @@ const Orders = () => {
                     <td className="p-4">{order.orderStatus}</td>
                     <td className="p-4">
                       <div className="flex items-center justify-center gap-3">
-                        <Link to={`/dashboard/orders/${order.id}`}>
+                        <Link to={`/faivichRoom/orders/${order.id}`}>
                           <motion.button
                             whileTap={{ scale: 0.95 }}
                             className="text-green-500 hover:text-[#67216D]"

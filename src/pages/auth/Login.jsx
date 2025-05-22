@@ -22,7 +22,7 @@ const Login = () => {
       toast.success("Login Successful");
 
       // navigate the user to the dashboard
-      navigate("/dashboard");
+      navigate("/faivichRoom");
     } catch (error) {
       toast.error("login Unsuccessful");
       console.log(error);

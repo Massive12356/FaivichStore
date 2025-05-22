@@ -12,10 +12,14 @@ import {
 import logo from '../assets/logo.png'
 
 const menuItems = [
-  { name: "OverView", path: "/dashboard", icon: <FiHome /> },
-  { name: "Add New Product ", path: "/dashboard/createAd", icon: <FiPlus /> },
-  { name: "Published Products", path: "/dashboard/vendorAds", icon: <FiBox /> },
-  { name: "Orders", path: "/dashboard/orders", icon: <FiFileText /> },
+  { name: "OverView", path: "/faivichRoom", icon: <FiHome /> },
+  { name: "Add New Product ", path: "/faivichRoom/createAd", icon: <FiPlus /> },
+  {
+    name: "Published Products",
+    path: "/faivichRoom/vendorAds",
+    icon: <FiBox />,
+  },
+  { name: "Orders", path: "/faivichRoom/orders", icon: <FiFileText /> },
 ];
 
 const SideBar = ({ isOpen, setIsOpen }) => {
@@ -32,7 +36,7 @@ const SideBar = ({ isOpen, setIsOpen }) => {
     navigate('/');
   };
   const cancelDelete = ()=>{
-    navigate('/dashboard')
+    navigate("/faivichRoom");
     setShowModal(false);
   }
 

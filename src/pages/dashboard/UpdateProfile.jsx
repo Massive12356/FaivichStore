@@ -30,7 +30,7 @@ const UpdateProfile = () => {
     try {
       const response = await apiGetUserDetails();
       setUserDetails(response.data);// save globally from zustand
-      setUserDetail(response.data);// save globally from zustand
+      setUserDetail(response.data);// save locally from zustand
     } catch (error) {
       console.log('Error', error);
     }
@@ -48,7 +48,7 @@ const UpdateProfile = () => {
       transition={{ type: "spring", stiffness: 100, damping: 25 }}
       className="p-5 md:p-10 bg-[#F9F7F7] min-h-screen font-[play]"
     >
-      <Link to={"/dashboard"}>
+      <Link to={"/faivichRoom"}>
         <motion.div whileTap={{ scale: 0.9 }} className="flex justify-end mb-5">
           <button
             title="Back to Dashboard"
@@ -74,8 +74,10 @@ const UpdateProfile = () => {
         <div className="flex justify-center">
           <div className="relative">
             <img
-              src={ userDetails?.pictures?.[0] ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747073664/${userDetails.pictures[0]}`:
-                "/default-avatar.png"
+              src={
+                userDetails?.pictures?.[0]
+                  ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747073664/${userDetails.pictures[0]}`
+                  : "/default-avatar.png"
               }
               alt="Profile"
               className="w-28 h-28 object-cover rounded-full border shadow"
@@ -129,7 +131,7 @@ const UpdateProfile = () => {
         </div>
 
         <div className="flex justify-end gap-4">
-          <Link to={"/dashboard"}>
+          <Link to={"/faivichRoom"}>
             <motion.button
               title="Cancel"
               whileTap={{ scale: 0.95 }}

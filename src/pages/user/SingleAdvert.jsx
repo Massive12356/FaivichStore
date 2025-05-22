@@ -13,7 +13,7 @@ const SingleAdvert = () => {
   const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
   const { singleProduct, fetchSingleAd, loading } = useProductStore();
-  const [stockError, setStockError] = useState('');
+  const [stockError, setStockError] = useState("");
 
   // const addToCart = () => {
   //   if (quantity > singleProduct.quantity) {
@@ -62,7 +62,6 @@ const SingleAdvert = () => {
     setStockError("");
     toast.success(`${singleProduct.name} added to cart!`);
   };
-  
 
   const handleQty = (type) => {
     const availableStock = singleProduct.quantity;
@@ -82,8 +81,6 @@ const SingleAdvert = () => {
       }
     }
   };
-  
-  
 
   // useEffect(() => {
   //   fetchSingleAd(id);
@@ -107,12 +104,9 @@ const SingleAdvert = () => {
       setSelectedImage(singleProduct.pictures[0]);
     }
   }, [singleProduct]);
-  
 
   if (!singleProduct || loading) {
-    return (
-      <Spinner message="Loading Product Details"/>
-    );
+    return <Spinner message="Loading Product Details" />;
   }
 
   return (
@@ -209,7 +203,9 @@ const SingleAdvert = () => {
             </motion.button>
           </div>
           {stockError && (
-            <p className="text-sm text-red-600 font-bold mt-1 mb-3">{stockError}</p>
+            <p className="text-sm text-red-600 font-bold mt-1 mb-3">
+              {stockError}
+            </p>
           )}
           {/* 📃 Product Full Description */}
           <div className="text-gray-700 leading-relaxed mb-6">

@@ -123,7 +123,7 @@ const VendorAds = () => {
                 className="bg-white shadow-md rounded-2xl p-5 flex flex-col items-center "
               >
                 <img
-                  src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${product.pictures[0]}`}
+                  src={`https://res.cloudinary.com/dp0kuhms5/image/upload/f_auto,q_auto/v1747053460/${product.pictures[0]}`}
                   alt={product.name}
                   className="w-full h-32 object-cover rounded-md mb-4"
                   loading="lazy"
@@ -147,7 +147,7 @@ const VendorAds = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3 mt-4">
-                  <Link to={`/dashboard/vendorAds/${product.id}`}>
+                  <Link to={`/faivichRoom/vendorAds/${product.id}`}>
                     <motion.button
                       title="view Published Product"
                       whileTap={{ scale: 0.95 }}
@@ -156,7 +156,7 @@ const VendorAds = () => {
                       <FiEye size={20} />
                     </motion.button>
                   </Link>
-                  <Link to={`/dashboard/updateAd/${product.id}`}>
+                  <Link to={`/faivichRoom/updateAd/${product.id}`}>
                     <motion.button
                       title="Edit Published Product"
                       whileTap={{ scale: 0.95 }}
@@ -204,7 +204,7 @@ const VendorAds = () => {
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <img
-                            src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${product.pictures[0]}`}
+                            src={`https://res.cloudinary.com/dp0kuhms5/image/upload/f_auto,q_auto/v1747053460/${product.pictures[0]}`}
                             loading="lazy"
                             alt={product.name}
                             className="w-16 h-16 object-cover rounded-md"
@@ -228,7 +228,7 @@ const VendorAds = () => {
                             <FiEye size={20} />
                           </motion.button>
                         </Link>
-                        <Link to={`/dashboard/UpdateAd/${product.id}`}>
+                        <Link to={`/faivichRoom/UpdateAd/${product.id}`}>
                           <motion.button
                             title="Edit Published product"
                             whileTap={{ scale: 0.0 }}
@@ -284,7 +284,7 @@ const VendorAds = () => {
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                onClick={()=>confirmDelete(selectedProduct?.id)}
+                onClick={() => confirmDelete(selectedProduct?.id)}
                 className="bg-red-500 text-white px-4 py-2 rounded-lg"
               >
                 Delete

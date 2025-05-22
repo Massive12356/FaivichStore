@@ -87,8 +87,9 @@ const Overview = () => {
         <h2 className="text-2xl md:text-3xl font-bold font-[play] text-[#F50057]">
           Hello, {username}
         </h2>
-        <p className="text-sm text-[#F50057] font-[play] mt-1">
-          Here's a quick glance at your dashboard performance today.
+        <p className="text-sm md:text-[15px] text-[#F50057] font-[play] mt-1">
+          Welcome back — here’s how <strong>Faivich </strong>is performing
+          today.
         </p>
       </motion.div>
 
@@ -111,7 +112,9 @@ const Overview = () => {
             <FiBox />
           </div>
           <div>
-            <p className="text-sm text-gray-500 font-[play]">Total Published Products</p>
+            <p className="text-sm text-gray-500 font-[play]">
+              Total Published Products
+            </p>
             <h3 className="text-xl font-bold text-[#283144] font-[play]">
               {products.length}
             </h3>
@@ -133,7 +136,8 @@ const Overview = () => {
                 tooltipVisible.totalItems ? "block" : "hidden"
               } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
             >
-              This shows the total number of published products currently in your store.
+              This shows the total number of published products currently in
+              your store.
             </div>
           </div>
         </motion.div>
@@ -156,7 +160,9 @@ const Overview = () => {
           </div>
           <div>
             <p className="text-sm text-gray-500 font-[play]">Total Orders</p>
-            <h3 className="text-xl font-bold text-[#283144] font-[play]">{ProductOrders.length}</h3>
+            <h3 className="text-xl font-bold text-[#283144] font-[play]">
+              {ProductOrders.length}
+            </h3>
           </div>
 
           {/* Info Icon and Tooltip */}

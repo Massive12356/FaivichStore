@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import mockOrders from "../../data/mockOrders"; // Mock data used before backend integration
 import { FiArrowLeft } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { useOrderStore } from "../../store/OrderStore";
+import Spinner from "../../components/Spinner";
 
 const SingleOrderDetails = () => {
   const { id } = useParams();
@@ -14,9 +14,13 @@ const SingleOrderDetails = () => {
   const [order, setOrder] = useState(ProductOrders[orderIndex]);
   const printRef = useRef();
 
-  if (!order) {
-    return <div className="p-6 text-red-600">Order not found.</div>;
-  }
+
+
+if(isLoading) return <Spinner message="Loading Order Details"/>
+
+if (!order) {
+  return <div className="p-6 text-red-600">Order not found.</div>;
+}
 
   const handlePaymentChange = (e) => {
     const updated = { ...order, paymentStatus: e.target.value };
@@ -106,7 +110,6 @@ const SingleOrderDetails = () => {
                 <option value="Processing">Processing</option>
                 <option value="Shipped">Shipped</option>
                 <option value="Delivered">Delivered</option>
-                <option value="Cancelled">Cancelled</option>
               </select>
             </div>
           </div>

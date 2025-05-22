@@ -53,7 +53,7 @@ const SingleAd = () => {
   return (
     <div className="p-4 md:p-10 bg-[#F9F7F7] min-h-screen font-[play]">
       {/* Back Button */}
-      <Link to={"/dashboard/vendorAds"}>
+      <Link to={"/faivichRoom/vendorAds"}>
         <div className="mb-6 flex items-center gap-3">
           <motion.button
             title="back to all products"
@@ -72,7 +72,7 @@ const SingleAd = () => {
         <div className="md:w-1/2 md:sticky top-10 self-start">
           <div className="bg-white rounded-xl shadow-md p-4 mb-4">
             <img
-              src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${selectedImage}`}
+              src={`https://res.cloudinary.com/dp0kuhms5/image/upload/f_auto,q_auto/v1747053460/${selectedImage}`}
               alt="Main product"
               className="w-full h-[350px] object-cover rounded-lg bg-white"
               loading="lazy"
@@ -183,7 +183,7 @@ const SingleAd = () => {
 
           <div className="w-full h-5 flex justify-end text-sm text-[#4A235A] hover:text-[#513E5F] hover:underline">
             <Link
-              to={`/dashboard/updateAd/${singleProduct.id}`}
+              to={`/faivichRoom/updateAd/${singleProduct.id}`}
               title="Edit Published Product"
             >
               Edit Product

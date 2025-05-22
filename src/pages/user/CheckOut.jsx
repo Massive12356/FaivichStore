@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaMotorcycle, FaShuttleVan, FaLock } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useOrderStore } from "../../store/OrderStore";
+import useUserStore from "../../store/userStore";
 
 const CheckOut = () => {
   const cartItems = useCartStore((state) => state.cartItems);// get values from zustand store
@@ -12,7 +13,9 @@ const CheckOut = () => {
   const navigate = useNavigate();// for routing
   const [showModal,setShowModal]=useState(false);
 
+  const id = useUserStore((state) =>state.userId)
 
+console.log(id)
 
    // for debugging
  

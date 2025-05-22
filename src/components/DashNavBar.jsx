@@ -100,15 +100,13 @@ const profileImage = userDetails?.pictures?.[0]
                   <Link
                     className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer font-[play]"
                     onClick={() => setIsProfileOpen(false)}
-                    to={`/dashboard/updateProfile`}
+                    to={`/faivichRoom/updateProfile`}
                   >
                     <FaUserEdit className="mr-2 " />
                     Update Profile
                   </Link>
 
-                  <button
-                  onClick={handleConfirm}
-                  >
+                  <button onClick={handleConfirm}>
                     <div className="flex items-center px-4 py-2 hover:bg-gray-100 text-red-600 cursor-pointer font-[play]">
                       <FaSignOutAlt className="mr-2" />
                       Logout

@@ -163,22 +163,19 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
 
         {/* === Brand Logo & Admin Link === */}
         <div className="flex flex-col items-start">
+          <NavLink to={'/'}>
+          
           <div className="flex flex-row items-center ">
             <img
               src={logo}
               alt="logo"
               className=" w-6 h-6 mr-2 md:w-12 md:h-11 rounded-full"
-            />
+              />
             <h1 className="text-lg md:text-[50px] font-bold logo text-[#561256]">
               Faivich
             </h1>
           </div>
-          <NavLink
-            to="/login"
-            className="text-[11px] text-blue-950 hover:underline italic mt-1 block md:absolute md:top-1 md:right-0 md:p-4 md:mt-0"
-          >
-            Admin
-          </NavLink>
+              </NavLink>
         </div>
 
         {/* === Icons Section === */}
@@ -207,7 +204,9 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
               ref={cartIconRef}
             >
               <FiShoppingCart className="text-xl md:text-2xl text-[#14245F] mr-8" />
-              <span className="absolute w-4 h-4 -top-3 right-7 bg-[#F50057] text-white text-xs text-center font-bold rounded-full border border-[#561256]">
+              <span
+                className={`absolute w-4 h-4 -top-3 right-7 bg-[#F50057] text-white text-xs text-center font-bold rounded-full border border-[#561256] ${cartCount < 1 ? 'hidden': 'block'}`}
+              >
                 {cartCount}
               </span>
             </div>

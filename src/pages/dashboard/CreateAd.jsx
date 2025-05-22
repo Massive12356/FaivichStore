@@ -60,10 +60,10 @@ const CreateAd = () => {
       transition={{ type: "spring", stiffness: 100, damping: 25 }}
       className="p-5 md:p-10 bg-[#F9F7F7] min-h-screen font-[play]"
     >
-      <Link to={"/dashboard/vendorAds"}>
+      <Link to={"/faivichRoom/vendorAds"}>
         <motion.div
           whileTap={{ scale: 0.9 }}
-          className=" flex w-ful justify-end mb-5"
+          className=" flex w-full justify-end mb-5"
         >
           <button
             title="Back to all Products Page"
@@ -169,7 +169,9 @@ const CreateAd = () => {
             required
           >
             <option value="">Select a category</option>
-            <option value="Skincare Products">Cosmetics / Skincare Products</option>
+            <option value="Skincare Products">
+              Cosmetics / Skincare Products
+            </option>
             <option value="Healthcare Products">Healthcare Products</option>
             <option value="Cleaning Agents">Cleaning Agents</option>
           </select>
@@ -237,7 +239,7 @@ const CreateAd = () => {
         </div>
 
         <div className="flex justify-end gap-4 mt-6">
-          <Link to={"/dashboard/vendorAds"}>
+          <Link to={"/faivichRoom/vendorAds"}>
             <motion.button
               title="Cancel & Back to All Products"
               whileTap={{ scale: 0.95 }}

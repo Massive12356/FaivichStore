@@ -101,7 +101,7 @@ const UpdateAd = () => {
     const result = await updateProduct(id, formData);
     if (result.success) {
       toast.success("Product updated successfully!");
-      navigate("/dashboard/vendorAds");
+      navigate("/faivichRoom/vendorAds");
     } else {
       toast.error(result.message || "Failed to update product.");
     }
@@ -117,7 +117,7 @@ const UpdateAd = () => {
       className="p-5 md:p-10 bg-[#F9F7F7] min-h-screen font-[play]"
     >
       {/* 🔙 Back Button */}
-      <Link to={"/dashboard/vendorAds"}>
+      <Link to={"/faivichRoom/vendorAds"}>
         <motion.div
           whileTap={{ scale: 0.9 }}
           className="flex w-ful justify-end mb-5"
@@ -318,7 +318,7 @@ const UpdateAd = () => {
 
         {/* Submit Button */}
         <div className="flex justify-end gap-4 mt-6">
-          <Link to="/dashboard/vendorAds">
+          <Link to="/faivichRoom/vendorAds">
             <motion.button
               whileTap={{ scale: 0.95 }}
               type="button"

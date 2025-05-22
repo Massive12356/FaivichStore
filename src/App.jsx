@@ -25,11 +25,19 @@ import UpdateProfile from './pages/dashboard/UpdateProfile';
 
 import useProductStore from './store/productStore'; // zustand Product store
 import { useOrderStore } from './store/OrderStore';
+import useUserStore from './store/userStore';
 
 function App() {
   const fetchProducts = useProductStore((state)=>state.fetchProducts);// get my products from my store here
 
   const fetchOrders = useOrderStore((state) =>state.fetchOrders);
+
+  const userId = useUserStore((state) =>state.userId);
+
+  useEffect(()=>{
+    // Just a debug log to confirm userId is available
+    console.log("Anonymous User ID:", userId);
+  },[userId]);
 
   // run it through useEffect
   useEffect(()=>{
@@ -84,7 +92,6 @@ function App() {
           <Route path="/" element={<RootLayout />}>
             <Route index={true} element={<Landing />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
             <Route path="adverts" element={<Adverts />} />
             <Route path="adverts/:id" element={<SingleAdvert />} />
             <Route path="/faqs" element={<FaqSection />} />
@@ -95,7 +102,7 @@ function App() {
           </Route>
 
           {/* navigation for vendor */}
-          <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route path="/faivichRoom" element={<DashboardLayout />}>
             <Route index={true} element={<Overview />} />
             <Route path="vendorAds" element={<VendorAds />} />
             <Route path="vendorAds/:id" element={<SingleAd />} />
@@ -104,6 +111,7 @@ function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="orders/:id" element={<SingleOrderDetails />} />
             <Route path="updateProfile" element={<UpdateProfile />} />
+            <Route path="signup" element={<Signup />} />
           </Route>
         </Routes>
       </BrowserRouter>
