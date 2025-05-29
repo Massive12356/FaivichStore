@@ -1,53 +1,60 @@
-import { useEffect } from 'react';
-import {Toaster} from 'react-hot-toast'
-import {BrowserRouter,Routes,Route} from 'react-router-dom';
-import './App.css'
-import RootLayout from './layouts/RootLayout';
-import Landing from './pages/user/Landing';
-import SingleAd from './pages/dashboard/SingleAd';
-import DashboardLayout from './layouts/DashboardLayout';
-import Overview from './pages/dashboard/Overview';
-import Adverts from './pages/user/Adverts';
-import VendorAds from './pages/dashboard/VendorAds';
-import CreateAd from './pages/dashboard/CreateAd';
-import UpdateAd from './pages/dashboard/UpdateAd';
-import Orders from './pages/dashboard/Orders';
-import Login from './pages/auth/Login';
-import Signup from './pages/auth/Signup';
-import SingleOrderDetails from './pages/dashboard/SingleOrderDetails';
-import Contact from './pages/user/Contact';
-import About from './pages/user/About';
-import SingleAdvert from './pages/user/SingleAdvert';
-import FaqSection from './components/FaqSection';
-import CheckOut from './pages/user/CheckOut';
-import ScrollToTop from './components/ScrollToTop';
-import UpdateProfile from './pages/dashboard/UpdateProfile';
+import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+import RootLayout from "./layouts/RootLayout";
+import Landing from "./pages/user/Landing";
+import SingleAd from "./pages/dashboard/SingleAd";
+import DashboardLayout from "./layouts/DashboardLayout";
+import Overview from "./pages/dashboard/Overview";
+import Adverts from "./pages/user/Adverts";
+import VendorAds from "./pages/dashboard/VendorAds";
+import CreateAd from "./pages/dashboard/CreateAd";
+import UpdateAd from "./pages/dashboard/UpdateAd";
+import Orders from "./pages/dashboard/Orders";
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import SingleOrderDetails from "./pages/dashboard/SingleOrderDetails";
+import Contact from "./pages/user/Contact";
+import About from "./pages/user/About";
+import SingleAdvert from "./pages/user/SingleAdvert";
+import FaqSection from "./components/FaqSection";
+import CheckOut from "./pages/user/CheckOut";
+import ScrollToTop from "./components/ScrollToTop";
+import UpdateProfile from "./pages/dashboard/UpdateProfile";
 
-import useProductStore from './store/productStore'; // zustand Product store
-import { useOrderStore } from './store/OrderStore';
-import useUserStore from './store/userStore';
+import useProductStore from "./store/productStore"; // zustand Product store
+import { useOrderStore } from "./store/OrderStore";
+import useUserStore from "./store/userStore";
+import MaintenancePage from "./components/MaintenancePage";
 
 function App() {
-  const fetchProducts = useProductStore((state)=>state.fetchProducts);// get my products from my store here
+  const isMaintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE === "true";
 
-  const fetchOrders = useOrderStore((state) =>state.fetchOrders);
+  const fetchProducts = useProductStore((state) => state.fetchProducts); // get my products from my store here
 
-  const userId = useUserStore((state) =>state.userId);
+  const fetchOrders = useOrderStore((state) => state.fetchOrders);
 
-  useEffect(()=>{
+  const userId = useUserStore((state) => state.userId);
+
+  useEffect(() => {
     // Just a debug log to confirm userId is available
     console.log("Anonymous User ID:", userId);
-  },[userId]);
+  }, [userId]);
 
   // run it through useEffect
-  useEffect(()=>{
+  useEffect(() => {
     fetchProducts(); // fetch products once when app mounts
-  },[])
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchOrders();
-  },[])
-  
+  }, []);
+
+  if(isMaintenanceMode) {
+    return <MaintenancePage />;
+  }
+
   return (
     <>
       {/* notification management */}
@@ -119,4 +126,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
