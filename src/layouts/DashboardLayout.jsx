@@ -15,7 +15,6 @@ const DashboardLayout = ({onLogout}) => {
     try {
       const response = await apiGetUserDetails();
       setUserDetails(response.data); // save globally from zustand
-      setUserDetail(response.data); // save locally from zustand
     } catch (error) {
       console.log("Error", error);
     }

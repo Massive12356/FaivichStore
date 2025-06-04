@@ -43,7 +43,7 @@ const CreateAd = () => {
     if (result.success) {
       await fetchProducts(true);
       toast.success("Product Published Successfully", { duration: 3000 });
-      navigate("/dashboard/vendorAds");
+      navigate("/faivichRoom/vendorAds");
     } else {
       toast.error("Failed to create product. Please try again.");
     }
