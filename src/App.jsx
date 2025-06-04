@@ -29,7 +29,7 @@ import useUserStore from "./store/userStore";
 import MaintenancePage from "./components/MaintenancePage";
 
 function App() {
-  const isMaintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE === "false";
+  const isMaintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE === "true";
 
   const fetchProducts = useProductStore((state) => state.fetchProducts); // get my products from my store here
 
