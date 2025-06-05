@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { FiEdit, FiEye, FiTrash2 } from "react-icons/fi";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useProductStore from "../../store/productStore";
 import toast from "react-hot-toast";
 import Spinner from "../../components/Spinner";
+import useSearchStore from "../../store/searchStore";
+import { FaRegSadTear } from "react-icons/fa";
 
 const VendorAds = () => {
   const [view, setView] = useState("");
@@ -12,7 +14,9 @@ const VendorAds = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [filterCategory, setFilterCategory] = useState("All");
 
-  const {fetchProducts, products, isLoading,deleteProduct } = useProductStore(); // from zustand Store
+  const { fetchProducts, products, isLoading, deleteProduct } =
+    useProductStore();
+  const { query, setQuery } = useSearchStore();
 
   useEffect(() => {
     const savedView = localStorage.getItem("view");
@@ -36,14 +40,14 @@ const VendorAds = () => {
     setShowModal(true);
   };
 
-  const confirmDelete = async(id) => {
-   const result = await deleteProduct(id);
-   if (result.success) {
-     await fetchProducts(true); // ⬅️ re-fetch with force=true
-     toast.success("Product deleted successfully");
-   } else {
-     toast.error(result.message || "Failed to delete product");
-   }
+  const confirmDelete = async (id) => {
+    const result = await deleteProduct(id);
+    if (result.success) {
+      await fetchProducts(true);
+      toast.success("Product deleted successfully");
+    } else {
+      toast.error(result.message || "Failed to delete product");
+    }
     setShowModal(false);
   };
 
@@ -51,18 +55,23 @@ const VendorAds = () => {
     setShowModal(false);
   };
 
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory =
+      filterCategory === "All" ||
+      product.category?.[0]?.name?.toLowerCase().trim() ===
+        filterCategory.toLowerCase().trim();
 
-  // if (isLoading) return <Spinner/>
-  // if (error) return <p>Error: {error}</p>;
+    const matchesQuery =
+      query.trim() === "" ||
+      product.name?.toLowerCase().includes(query.toLowerCase());
 
-  const filteredProducts =
-    filterCategory === "All"
-      ? products
-      : products.filter(
-          (product) =>
-            product.category?.[0]?.name?.toLowerCase().trim() ===
-            filterCategory.toLowerCase().trim()
-        );
+    return matchesCategory && matchesQuery;
+  });
+
+  const searchAgain = () => {
+    setQuery("");
+    navigate("/faivichRoom/vendorAds");
+  };
 
   return (
     <div className="px-4 py-6 bg-[#F9F7F7]">
@@ -73,8 +82,10 @@ const VendorAds = () => {
         You can VIEW, EDIT and DELETE your published Products here
       </p>
 
-      <div className="sticky top-0 z-10 bg-white p-4 shadow-md flex justify-between items-center">
-        <div className="w-20 md:w-40 flex gap-4">
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-10 bg-white p-4 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+        {/* Filters */}
+        <div className="flex gap-4 flex-wrap items-center">
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
@@ -89,12 +100,15 @@ const VendorAds = () => {
           </select>
         </div>
 
+        {/* Product count */}
         <div
-          className="hidden md:flex  items-center justify-center md:w-10 w-7 h-7 md:h-10 rounded-full border-2 border-[#67216D] text-[#67216D]"
+          className="hidden md:flex items-center justify-center md:w-10 w-7 h-7 md:h-10 rounded-full border-2 border-[#67216D] text-[#67216D]"
           title="Total number of Published Products"
         >
-          <p className="font-bold">{products.length}</p>
+          <p className="font-bold">{filteredProducts.length}</p>
         </div>
+
+        {/* View Toggle */}
         <motion.button
           title="Change the view of products details"
           whileTap={{ scale: 0.95 }}
@@ -105,11 +119,34 @@ const VendorAds = () => {
         </motion.button>
       </div>
 
+      {/* Grid View */}
       {view === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 font-[play]">
           {isLoading ? (
             <div className="col-span-full flex justify-center items-center">
               <Spinner message="Loading your products..." />
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="w-full flex justify-center items-center min-h-[300px] text-center text-[#561256] font-[play] col-span-full">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto">
+                <div className="mb-4">
+                  <FaRegSadTear className="mx-auto text-4xl text-[#561256]" />
+                  <h2 className="text-2xl md:text-4xl font-semibold text-[#561256] mt-4 mb-2">
+                    No results found
+                  </h2>
+                </div>
+                <p className="text-md text-gray-700 mb-6">
+                  Sorry, we couldn’t find any products that match your search or
+                  selected category. Try refining your search or explore our
+                  other collections.
+                </p>
+                <Link
+                  onClick={searchAgain}
+                  className="inline-block py-2 px-6 text-white bg-[#561256] rounded-lg shadow-md hover:bg-[#4a103d] transition-all duration-300"
+                >
+                  Search Again
+                </Link>
+              </div>
             </div>
           ) : (
             filteredProducts.map((product) => (
@@ -133,8 +170,8 @@ const VendorAds = () => {
                     {product.name}
                   </h3>
                   <p className="text-sm text-gray-500">{product.description}</p>
-                  <div className="ml-8 flex flex-wrap items-center justify-around w-40  mt-2">
-                    <p className="text-sm text-[#FF6C2F] ">
+                  <div className="ml-8 flex flex-wrap items-center justify-around w-40 mt-2">
+                    <p className="text-sm text-[#FF6C2F]">
                       GH{"\u20B5"} {product.price}
                     </p>
                     <p
@@ -178,7 +215,30 @@ const VendorAds = () => {
             ))
           )}
         </div>
+      ) : filteredProducts.length === 0 ? (
+        <div className="w-full flex justify-center items-center min-h-[300px] text-center text-[#561256] font-[play] col-span-full">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto">
+            <div className="mb-4">
+              <FaRegSadTear className="mx-auto text-4xl text-[#561256]" />
+              <h2 className="text-2xl md:text-4xl font-semibold text-[#561256] mt-4 mb-2">
+                No results found
+              </h2>
+            </div>
+            <p className="text-md text-gray-700 mb-6">
+              Sorry, we couldn’t find any products that match your search or
+              selected category. Try refining your search or explore our other
+              collections.
+            </p>
+            <Link
+              onClick={searchAgain}
+              className="inline-block py-2 px-6 text-white bg-[#561256] rounded-lg shadow-md hover:bg-[#4a103d] transition-all duration-300"
+            >
+              Search Again
+            </Link>
+          </div>
+        </div>
       ) : (
+        // List/Table View
         <motion.div className="mt-6 font-[play] min-h-[200px] relative">
           {isLoading ? (
             <div className="flex justify-center items-center py-10">
@@ -221,7 +281,7 @@ const VendorAds = () => {
                       <td className="p-4 flex gap-3 items-center justify-center mt-5">
                         <Link to={`/dashboard/vendorAds/${product.id}`}>
                           <motion.button
-                            title="View Published  Product"
+                            title="View Published Product"
                             whileTap={{ scale: 0.95 }}
                             className="text-green-500 cursor-pointer hover:text-[#67216D]"
                           >
@@ -231,14 +291,14 @@ const VendorAds = () => {
                         <Link to={`/faivichRoom/UpdateAd/${product.id}`}>
                           <motion.button
                             title="Edit Published product"
-                            whileTap={{ scale: 0.0 }}
+                            whileTap={{ scale: 0.95 }}
                             className="text-[#FF6C2F] cursor-pointer hover:text-[#67216D]"
                           >
                             <FiEdit size={20} />
                           </motion.button>
                         </Link>
                         <motion.button
-                          title="Delete Published  Product"
+                          title="Delete Published Product"
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleDelete(product)}
                           className="text-red-500 hover:text-[#67216D] cursor-pointer"
@@ -253,45 +313,6 @@ const VendorAds = () => {
             </div>
           )}
         </motion.div>
-      )}
-
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-50 p-5">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            transition={{ duration: 0.5 }}
-            className="bg-white rounded-lg p-6 max-w-sm w-full"
-          >
-            <h3 className="text-lg font-bold text-[#283144] mb-4">
-              Delete Product?
-            </h3>
-            <p className="text-sm text-gray-500 mb-4 font-[play]">
-              Are you sure you want to delete the product{" "}
-              <span className="font-bold text-black">
-                {selectedProduct?.name}
-              </span>
-              ?
-            </p>
-            <div className="flex justify-end gap-4">
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={cancelDelete}
-                className="bg-gray-300 text-[#283144] px-4 py-2 rounded-lg"
-              >
-                Cancel
-              </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => confirmDelete(selectedProduct?.id)}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg"
-              >
-                Delete
-              </motion.button>
-            </div>
-          </motion.div>
-        </div>
       )}
     </div>
   );

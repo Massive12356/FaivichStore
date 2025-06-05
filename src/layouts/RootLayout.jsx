@@ -5,11 +5,10 @@ import Footer from '../components/Footer'
 
 const RootLayout = () => {
   const [isBlurred, setIsBlurred] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // Add state for search query
   return (
     <div>
       {/* Pass setSearchQuery to NavBar */}
-      <NavBar setIsBlurred={setIsBlurred} setSearchQuery={setSearchQuery} />
+      <NavBar setIsBlurred={setIsBlurred}/>
 
       <div
         className={`transition-all duration-300 ${
@@ -17,7 +16,7 @@ const RootLayout = () => {
         }`}
       >
         {/* Pass searchQuery as context to Outlet */}
-        <Outlet context={{ searchQuery }} />
+        <Outlet />
         <Footer />
       </div>
     </div>

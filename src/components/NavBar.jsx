@@ -8,6 +8,8 @@ import {
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from '/logo2.png'
+import { useNavigate, useLocation } from "react-router-dom";
+import useSearchStore from "../store/searchStore";
 
 // 🛒 Zustand store for cart state management
 import useCartStore from "../store/cartStore";
@@ -18,8 +20,10 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showCartDropdown, setShowCartDropdown] = useState(false);
-  const [query, setQuery] = useState("");
-  const [stockError, setStockError] = useState('')
+  const { query, setQuery } = useSearchStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [stockError, setStockError] = useState("");
 
   // navbar closes when the user click outside
   const cartRef = useRef(null);
@@ -37,27 +41,32 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
       }
     };
 
-    
-
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("touchstart", handleClickOutside);
-   
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
-     
     };
   }, []);
-  
-  
 
+  // When user types, update URL and optionally navigate to /adverts
+  useEffect(()=>{
+    if (!query) return;
 
-  // function to handling Searching
-  const handleSearchChange = (e) => {
-    setQuery(e.target.value);
-    setSearchQuery(e.target.value); // Pass search query up to parent component
-  };
+    // if not already on /adverts, navigate
+    if (location.pathname !== "/adverts") {
+      navigate(`/adverts?q=${encodeURIComponent(query)}`);
+    }
+
+    // If already on /shop, just update the URL without reloading
+    if (location.pathname === '/adverts'){
+      const params = new URLSearchParams(location.search);
+      params.set('q', query);
+      const newUrl = `/adverts?${params.toString()}`;
+      window.history.replaceState(null,'',newUrl);
+    }
+  },[query]);
 
   // Zustand store values
   const cart = useCartStore((state) => state.cartItems);
@@ -68,7 +77,6 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
   const cartCount = cart.length;
   const totalItems = useCartStore((state) => state.getTotalQuantity());
   const totalCost = useCartStore((state) => state.getTotalCost());
-  
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -105,8 +113,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
 
     // Check if quantity exceeds available stock
     if (newQuantity > item.availableQuantity) {
-      
-      setStockError('cannot exceed quantity');
+      setStockError("cannot exceed quantity");
       return;
       //Exit early if quantity is invalid
     }
@@ -114,9 +121,6 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
     // Proceed with update if quantity is valid
     updateCartItemQuantity(id, newQuantity);
   };
-  
-  
-  
 
   return (
     <header
@@ -163,19 +167,18 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
 
         {/* === Brand Logo & Admin Link === */}
         <div className="flex flex-col items-start">
-          <NavLink to={'/'}>
-          
-          <div className="flex flex-row items-center ">
-            <img
-              src={logo}
-              alt="logo"
-              className=" w-6 h-6 mr-2 md:w-12 md:h-11 rounded-full"
+          <NavLink to={"/"}>
+            <div className="flex flex-row items-center ">
+              <img
+                src={logo}
+                alt="logo"
+                className=" w-6 h-6 mr-2 md:w-12 md:h-11 rounded-full"
               />
-            <h1 className="text-lg md:text-[50px] font-bold logo text-[#561256]">
-              Faivich
-            </h1>
-          </div>
-              </NavLink>
+              <h1 className="text-lg md:text-[50px] font-bold logo text-[#561256]">
+                Faivich
+              </h1>
+            </div>
+          </NavLink>
         </div>
 
         {/* === Icons Section === */}
@@ -190,7 +193,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
             <input
               type="text"
               value={query}
-              onChange={handleSearchChange}
+              onChange={(e) =>setQuery(e.target.value)}
               placeholder="Search Products..."
               className="hidden md:inline-block ml-2 px-3 py-1 border border-[#561256] rounded-md text-sm text-[#14245F] focus:outline-none"
             />
@@ -205,7 +208,9 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
             >
               <FiShoppingCart className="text-xl md:text-2xl text-[#14245F] mr-8" />
               <span
-                className={`absolute w-4 h-4 -top-3 right-7 bg-[#F50057] text-white text-xs text-center font-bold rounded-full border border-[#561256] ${cartCount < 1 ? 'hidden': 'block'}`}
+                className={`absolute w-4 h-4 -top-3 right-7 bg-[#F50057] text-white text-xs text-center font-bold rounded-full border border-[#561256] ${
+                  cartCount < 1 ? "hidden" : "block"
+                }`}
               >
                 {cartCount}
               </span>
@@ -436,7 +441,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
             <input
               type="text"
               value={query}
-              onChange={handleSearchChange}
+              onChange={(e)=>setQuery(e.target.value)}
               placeholder="Search products..."
               className="w-full h-full px-4 py-3 border border-[#561256] rounded-md text-[#14245F] focus:outline-none"
             />

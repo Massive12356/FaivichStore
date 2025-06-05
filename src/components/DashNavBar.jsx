@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { FaCog, FaSignOutAlt, FaUserEdit } from "react-icons/fa";
+import { FaSignOutAlt, FaUserEdit } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useLocation } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { FiSearch } from "react-icons/fi"; // Importing search icon
+import useSearchStore from "../store/searchStore"; // from zustand
 
 import useUserStore from "../store/userStore";//from zustand
 
@@ -12,15 +13,18 @@ const DashNavBar = ({setSidebarOpen}) => {
   const [currentTime, setCurrentTime] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-const {userDetails} = useUserStore(); //from Zustand
 
-const profileImage = userDetails?.pictures?.[0]
-  ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747073664/${userDetails.pictures[0]}`
-  : "/default-avatar.png";
+  const { userDetails } = useUserStore(); //from Zustand
+  const {query,setQuery} = useSearchStore(); // from zustand
+
+  const profileImage = userDetails?.pictures?.[0]
+    ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747073664/${userDetails.pictures[0]}`
+    : "/default-avatar.png";
 
   useEffect(() => {
-    // time  function 
+    // time  function
     const updateClock = () => {
       const now = new Date();
       const options = {
@@ -36,23 +40,41 @@ const profileImage = userDetails?.pictures?.[0]
     };
 
     updateClock();
-    const interval = setInterval(updateClock, 60000);//function that updates the time
+    const interval = setInterval(updateClock, 60000); //function that updates the time
     return () => clearInterval(interval);
   }, []);
 
-   const cancelLogOut = ()=>{
+  const cancelLogOut = () => {
     setShowModal(false);
-   }
+  };
 
-   const handleLogout = () =>{
+  const handleLogout = () => {
     setShowModal(false);
-    navigate('/');
-   }
+    navigate("/");
+  };
 
-   const handleConfirm = ()=>{
+  const handleConfirm = () => {
     setShowModal(true);
-    setIsProfileOpen(false)
-   }
+    setIsProfileOpen(false);
+  };
+
+  // When user types, update URL and optionally navigate to /faivichRoom/vendorAds
+  useEffect(()=>{
+    if (!query) return;
+
+    // if not already on  /faivichRoom/vendorAds, navigate
+    if (location.pathname !=="/faivichRoom/vendorAds"){
+      navigate(`/faivichRoom/vendorAds?q=${encodeURIComponent(query)}`);
+    }
+
+     // If already on /faivichRoom/vendorAds, just update the URL without reloading
+     if(location.pathname === "/faivichRoom/vendorAds"){
+      const params = new URLSearchParams(location.search);
+      params.set('q',query);
+      const newUrl = `/faivichRoom/vendorAds?${params.toString()}`;
+      window.history.replaceState(null,'',newUrl);
+     }
+  },[query])
 
   return (
     <div className="w-[95%] md:w-[98%] bg-white text-white px-3 py-1 flex justify-between items-center shadow-md m-2 rounded-lg">
@@ -124,6 +146,8 @@ const profileImage = userDetails?.pictures?.[0]
           {/* Search Icon */}
           <input
             type="text"
+            value={query}
+            onChange={(e)=>setQuery(e.target.value)}
             placeholder="Search Products"
             className="bg-transparent text-[#283144] w-full font-[play] text-[15px] focus:outline-none placeholder-gray-600"
           />

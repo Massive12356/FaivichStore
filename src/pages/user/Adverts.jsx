@@ -1,34 +1,23 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { FaShoppingBag, FaRegSadTear } from "react-icons/fa";
-import { Link, useLocation, useOutletContext,useNavigate } from "react-router-dom";
-// import mockProducts from "../../data/mockProducts";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Features from "../../components/Features";
-import useProductStore from '../../store/productStore' // zustand Product store
-import ProductSkeletonGrid from '../../components/ProductSkeletonGrid'
-
-// const categories = [
-//   "All",
-//   "Healthcare",
-//   "Cleaning Agents/Detergents", //
-//   "Skincare/Cosmetics",
-// ];
-
-
+import useProductStore from "../../store/productStore"; // Zustand product store
+import useSearchStore from "../../store/searchStore";
+import ProductSkeletonGrid from "../../components/ProductSkeletonGrid";
 
 const PRODUCTS_PER_PAGE = 30;
 
 const Adverts = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCardId, setSelectedCardId] = useState(null); // Track clicked card
+  const [selectedCardId, setSelectedCardId] = useState(null);
+
   const location = useLocation();
   const navigate = useNavigate();
-
-  const {products, isLoading} = useProductStore();
-  console.log(products)
-
-  const { searchQuery, setSearchQuery } = useOutletContext(); // Access searchQuery passed from RootLayout
+  const { query, setQuery } = useSearchStore();
+  const { products, isLoading } = useProductStore();
 
   const categories = useMemo(() => {
     const allCategories = products.flatMap((product) =>
@@ -38,33 +27,44 @@ const Adverts = () => {
     return ["All", ...uniqueCategories];
   }, [products]);
 
-  // Read initial category from query param if present
+  // Read category from query param
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const categoryFromURL = params.get("category");
-
     if (categoryFromURL && categories.includes(categoryFromURL)) {
       setSelectedCategory(categoryFromURL);
       setCurrentPage(1);
       setSelectedCardId(null);
     }
+  }, [location.search, categories]);
+
+  // Read search query from URL on load
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const urlQuery = params.get("q") || "";
+    setQuery(urlQuery);
   }, [location.search]);
 
-  const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      selectedCategory === "All" ||
-      product.category?.some((cat) => cat.name === selectedCategory);
+  // Final filtered products
+  const filteredProducts = useMemo(() => {
+    const lowerQuery = query.toLowerCase();
+    return products.filter((product) => {
+      const matchesCategory =
+        selectedCategory === "All" ||
+        product.category?.some((cat) => cat.name === selectedCategory);
 
-    const query = searchQuery?.toLowerCase() || "";
-    const matchesSearch =
-      !query ||
-      product.name?.toLowerCase().includes(query) ||
-      product.description?.toLowerCase().includes(query) ||
-      product.category?.some((cat) => cat.name.toLowerCase().includes(query));
+      const matchesSearch =
+        !lowerQuery ||
+        product.name?.toLowerCase().includes(lowerQuery) ||
+        product.description?.toLowerCase().includes(lowerQuery) ||
+        product.category?.some((cat) =>
+          cat.name.toLowerCase().includes(lowerQuery)
+        );
 
-    return matchesCategory && matchesSearch;
-  });
-  
+      return matchesCategory && matchesSearch;
+    });
+  }, [products, selectedCategory, query]);
+
   const getSubText = () => {
     switch (selectedCategory) {
       case "Healthcare Products":
@@ -105,13 +105,13 @@ const Adverts = () => {
   };
 
   const handleCardClick = (id) => {
-    setSelectedCardId((prev) => (prev === id ? null : id)); // Toggle on/off
+    setSelectedCardId((prev) => (prev === id ? null : id));
   };
 
-  const searchAgain = ()=>{
-    setSearchQuery('');
-    navigate('/adverts');
-  }
+  const searchAgain = () => {
+    setQuery("");
+    navigate("/adverts");
+  };
 
   return (
     <div
@@ -125,7 +125,7 @@ const Adverts = () => {
       <div className="text-center text-[#561256] font-[play] mb-10">
         <h1 className="text-[25px] md:text-6xl font-bold mb-4">
           {selectedCategory === "All"
-            ? "Explore Our Product "
+            ? "Explore Our Product"
             : selectedCategory}
         </h1>
         <p className="text-[18px] md:text-lg max-w-xl mx-auto text-gray-700">
@@ -163,22 +163,17 @@ const Adverts = () => {
         ) : paginatedProducts.length === 0 ? (
           <div className="w-full flex justify-center items-center min-h-[300px] text-center text-[#561256] font-[play] col-span-full">
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto">
-              {/* Icon and Title */}
               <div className="mb-4">
                 <FaRegSadTear className="mx-auto text-4xl text-[#561256]" />
                 <h2 className="text-2xl md:text-4xl font-semibold text-[#561256] mt-4 mb-2">
                   No results found
                 </h2>
               </div>
-
-              {/* Description */}
               <p className="text-md text-gray-700 mb-6">
                 Sorry, we couldn’t find any products that match your search or
                 selected category. Try refining your search or explore our other
                 collections.
               </p>
-
-              {/* Action Button */}
               <Link
                 onClick={searchAgain}
                 className="inline-block py-2 px-6 text-white bg-[#561256] rounded-lg shadow-md hover:bg-[#4a103d] transition-all duration-300"
@@ -197,20 +192,15 @@ const Adverts = () => {
               onClick={() => handleCardClick(item.id)}
               className="relative bg-white rounded-lg overflow-hidden shadow-lg group cursor-pointer"
             >
-              {/* Description Badge */}
               <div className="absolute top-3 left-3 z-10 text-xs px-3 py-1 rounded-full shadow text-[#14245F] bg-white font-semibold">
                 {item.description}
               </div>
-
-              {/* Product Image */}
               <img
                 src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${item.pictures[0]}`}
                 alt={item.title}
                 className="w-full h-56 object-cover bg-white p-1 rounded-lg"
                 loading="lazy"
               />
-
-              {/* Overlay */}
               <div
                 className={`absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold p-4 transition-all duration-300 ${
                   selectedCardId === item.id ? "opacity-100" : "opacity-0"
@@ -226,8 +216,6 @@ const Adverts = () => {
                   </motion.button>
                 </Link>
               </div>
-
-              {/* Product Title and Price */}
               <div className="p-4 text-center text-[#14245F] font-[play]">
                 <h2 className="text-lg font-bold">{item.name}</h2>
                 <div className="flex items-center justify-center gap-2 mt-2">
@@ -254,37 +242,36 @@ const Adverts = () => {
       {totalPages > 1 && (
         <div className="flex justify-center items-center mt-10">
           <button
-            className="mx-2 px-4 py-2 text-sm rounded-full font-semibold bg-white text-[#14245F] border"
+            className="mx-2 px-4 py-2 bg-[#561256] text-white rounded-full"
             onClick={() => handleArrowNavigation("prev")}
+            disabled={currentPage === 1}
           >
-            &lt; Prev
+            Previous
           </button>
-          <div className="flex gap-2">
-            {[...Array(totalPages)].map((_, index) => (
-              <button
-                key={index}
-                className={`mx-1 px-4 py-2 text-sm rounded-full font-semibold ${
-                  currentPage === index + 1
-                    ? "bg-[#14245F] text-white"
-                    : "bg-white text-[#14245F] border"
-                }`}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => handlePageChange(i + 1)}
+              className={`mx-1 px-4 py-2 rounded-full ${
+                currentPage === i + 1
+                  ? "bg-[#f50056cf] text-white"
+                  : "bg-white text-[#561256]"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
           <button
-            className="mx-2 px-4 py-2 text-sm rounded-full font-semibold bg-white text-[#14245F] border"
+            className="mx-2 px-4 py-2 bg-[#561256] text-white rounded-full"
             onClick={() => handleArrowNavigation("next")}
+            disabled={currentPage === totalPages}
           >
-            Next &gt;
+            Next
           </button>
         </div>
       )}
 
-      {/* FEATURES */}
-      <Features />
+      <Features/>
     </div>
   );
 };
