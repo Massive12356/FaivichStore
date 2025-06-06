@@ -15,9 +15,9 @@ import {
 } from "react-icons/fa";
 // import mockProducts from "../data/mockProducts";
 import TestimonialSlider from "./TestimonialSlider";
-import person from "../images/person.jpg";
-import person1 from '../images/person1.jpg';
-import cleaningImage from '../images/cleanPro.jpg'
+import person from "../images/person.webp";
+import person1 from "../images/person1.webp";
+import cleaningImage from "../images/cleanPro.webp";
 import ShopByCategories from "./ShopByCategories";
 import useProductStore from "../store/productStore";
 import ProductSkeletonGrid from "../components/ProductSkeletonGrid";
@@ -27,14 +27,14 @@ const LandingContents = () => {
   const cardRefs = useRef([]);
   const timeoutRef = useRef([]);
 
-  const {products, isLoading} = useProductStore(); // From zustand store
-  const product = products.slice(0,6);
-
+  const { products, isLoading } = useProductStore(); // From zustand store
+  const product = products.slice(0, 6);
 
   // close the over on outside click
-  useEffect(()=>{
-    const handleClickOutside = (event)=>{
-      if ( activeCardIndex !== null && 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        activeCardIndex !== null &&
         cardRefs.current[activeCardIndex] &&
         !cardRefs.current[activeCardIndex].contains(event.target)
       ) {
@@ -43,34 +43,33 @@ const LandingContents = () => {
       }
     };
 
-    document.addEventListener("mousedown",handleClickOutside);
-    return () => document.removeEventListener("mousedown",handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeCardIndex]);
 
-  // clean up timeout on unmount 
-  useEffect(() =>{
+  // clean up timeout on unmount
+  useEffect(() => {
     return () => clearTimeout(timeoutRef.current);
   }, []);
 
-  const handleCardClick = (index) =>{
+  const handleCardClick = (index) => {
     const isMobile = window.innerWidth < 768;
 
     // toggle logic
-    if(index === activeCardIndex) {
+    if (index === activeCardIndex) {
       setActiveCardIndex(null);
       clearTimeout(timeoutRef.current);
-    }else {
+    } else {
       setActiveCardIndex(index);
       clearTimeout(timeoutRef.current);
 
       // Auto hide after 5s on mobile
       if (isMobile) {
-        timeoutRef.current = setTimeout(()=>{
+        timeoutRef.current = setTimeout(() => {
           setActiveCardIndex(null);
-        },5000);
+        }, 5000);
       }
     }
-    
   };
 
   return (

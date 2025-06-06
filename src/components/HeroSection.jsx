@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-import lavender from "../images/lavender.jpg";
-import cleaning from "../images/cleaning6.jpg";
-import health6 from "../images/health6.jpg";
+import lavender from "../images/lavender.webp";
+import cleaning from "../images/cleaning6.webp";
+import health6 from "../images/health6.webp";
 
 const slides = [
   {

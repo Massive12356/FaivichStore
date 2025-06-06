@@ -1,10 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion";
-import health1 from "../../images/essentialOil1.jpg";
-import health2 from "../../images/essentialOils2.jpg";
-import cleaning7 from "../../images/cleaning7.jpg";
-import cosmetic1 from "../../images/cosmetic1.jpg";
-import cosmetic2 from "../../images/cosmetics2.jpg";
+import health1 from "../../images/essentialOil1.webp";
+import health2 from "../../images/essentialOils2.webp";
+import cleaning7 from "../../images/cleaning7.webp";
+import cosmetic1 from "../../images/cosmetic1.webp";
+import cosmetic2 from "../../images/cosmetics2.webp";
 import {
   FaPumpSoap,
   FaHeart,

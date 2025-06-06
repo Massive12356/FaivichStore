@@ -193,7 +193,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
             <input
               type="text"
               value={query}
-              onChange={(e) =>setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search Products..."
               className="hidden md:inline-block ml-2 px-3 py-1 border border-[#561256] rounded-md text-sm text-[#14245F] focus:outline-none"
             />
@@ -208,7 +208,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
             >
               <FiShoppingCart className="text-xl md:text-2xl text-[#14245F] mr-8" />
               <span
-                className={`absolute w-4 h-4 -top-3 right-7 bg-[#F50057] text-white text-xs text-center font-bold rounded-full border border-[#561256] ${
+                className={`absolute w-4 h-4 -top-1 right-7 bg-[#FF6C2F] text-white text-xs text-center font-bold rounded-full  ${
                   cartCount < 1 ? "hidden" : "block"
                 }`}
               >
@@ -441,7 +441,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
             <input
               type="text"
               value={query}
-              onChange={(e)=>setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search products..."
               className="w-full h-full px-4 py-3 border border-[#561256] rounded-md text-[#14245F] focus:outline-none"
             />

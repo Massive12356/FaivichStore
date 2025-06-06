@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaFolderOpen } from "react-icons/fa";
-import med from "../images/med1.jpg";
-import cos from "../images/cos.jpg";
-import clen from "../images/clen.jpg";
+import med from "../images/med1.webp";
+import cos from "../images/cos.webp";
+import clen from "../images/clen.webp";
 
 const categories = [
   {
