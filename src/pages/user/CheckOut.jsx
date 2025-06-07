@@ -31,19 +31,28 @@ console.log(id)
 
   const confirmOrder = async () => {
     try {
+      // Prepare order data from cartItems
+      const products = cartItems.map((item) => ({
+        productId: item.id, // Or item._id depending on your cart structure
+        quantity: item.quantity,
+      }));
+
+      // Collect all other order fields
       bulkSetOrderData({
+        products, // <-- use this instead of single product
         subTotal,
         discount,
         deliveryCharge,
         estimatedTax,
         totalAmount,
         quantity: cartItems.reduce((acc, item) => acc + item.quantity, 0),
-        product: cartItems[0]?.id || '',
-        // user: id
+        user: id // id generated from the frontend
       });
 
+      console.log('Final Payload::', useOrderStore.getState().orderData);
+
       await postOrder();
-      await fetchOrders(true)// refetch 
+      await fetchOrders(true); // refetch orders
       toast.success("Order placed successfully!");
       setShowModal(false);
       clearCart();
@@ -54,6 +63,7 @@ console.log(id)
       setShowModal(false);
     }
   };
+  
 
   const orderCancelled = ()=>{
     setShowModal(false);

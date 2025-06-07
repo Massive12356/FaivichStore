@@ -15,7 +15,7 @@ export const useOrderStore = create(
     error: null,
     // Initial state for the orderData object
     orderData: {
-      product: "", // Product ID (or can be an array if handling multiple items)
+      products: [], // Product ID (or can be an array if handling multiple items)
       user: "", // User ID placing the order
       quantity: 0, // Quantity of the product ordered
 
@@ -134,7 +134,7 @@ export const useOrderStore = create(
     clearOrderData: () => {
       set({
         orderData: {
-          product: "",
+          products: [],
           user: "",
           quantity: 1,
           firstName: "",

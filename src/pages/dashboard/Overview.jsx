@@ -10,6 +10,8 @@ import { motion } from "framer-motion";
 import { apiGetUserDetails } from "../../services/getUserDetails";
 import useProductStore from "../../store/productStore";
 import { useOrderStore } from "../../store/OrderStore";
+import { Link } from "react-router";
+import { MdPersonAdd } from "react-icons/md";
 
 
 const Overview = () => {
@@ -273,6 +275,32 @@ const Overview = () => {
             </div>
           </div>
         </motion.div>
+      </div>
+
+      <div className="w-full mt-3 px-4">
+        <p className="text-2xl md:text-3xl text-[#283144] font-bold mb-4">
+          Quick Links
+        </p>
+
+        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 items-center sm:items-stretch justify-center sm:justify-start">
+          {/* Quick Link 1 */}
+          <Link to="/faivichRoom/signup">
+            <motion.div
+              whileTap={{ scale: 0.95 }}
+              className="w-[200px] h-[100px] rounded-lg bg-green-100 flex flex-col items-center justify-center shadow-sm hover:shadow-md transition duration-300"
+            >
+              <MdPersonAdd className="text-green-900 text-4xl" />
+              <p className="text-green-900 font-bold text-base">New User</p>
+            </motion.div>
+          </Link>
+
+          {/* Future quick links go here (duplicate structure) */}
+          {/* Example:
+     <Link to="/faivichRoom/login">
+      <motion.div ...>...</motion.div>
+    </Link>
+    */}
+        </div>
       </div>
     </div>
   );

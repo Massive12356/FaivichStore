@@ -44,7 +44,7 @@ const UpdateAd = () => {
       setUsage(singleProduct.usage || "");
       setPrice(singleProduct.price || "");
       setQuantity(singleProduct.quantity || 1);
-      setCategory(singleProduct.category || "");
+    setCategory(singleProduct.category || "");
 
       console.log("pictures" , singleProduct)
 
