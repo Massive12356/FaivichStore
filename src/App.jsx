@@ -27,6 +27,7 @@ import useProductStore from "./store/productStore"; // zustand Product store
 import { useOrderStore } from "./store/OrderStore";
 import useUserStore from "./store/userStore";
 import MaintenancePage from "./components/MaintenancePage";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function App() {
   const isMaintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE === "false";
@@ -122,6 +123,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <SpeedInsights/>
     </>
   );
 }

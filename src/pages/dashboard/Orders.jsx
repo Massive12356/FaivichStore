@@ -17,7 +17,12 @@ const Orders = () => {
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const itemsPerPage = 10;
 
-  const { ProductOrders = [], isLoading, fetchOrders,deleteOrder } = useOrderStore();
+  const {
+    ProductOrders = [],
+    isLoading,
+    fetchOrders,
+    deleteOrder,
+  } = useOrderStore();
 
   useEffect(() => {
     const mappedOrders = Array.isArray(ProductOrders)
@@ -73,16 +78,13 @@ const Orders = () => {
   );
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
 
-  
-
   const handleDelete = async () => {
     if (!selectedOrderId) return;
     try {
-       await deleteOrder(selectedOrderId);
-        await fetchOrders(true); // re-fetch
-        toast.success("Order deleted successfully");
-        setOrders((prev) => prev.filter((o) => o.id !== selectedOrderId));  
-      
+      await deleteOrder(selectedOrderId);
+      await fetchOrders(true); // re-fetch
+      toast.success("Order deleted successfully");
+      setOrders((prev) => prev.filter((o) => o.id !== selectedOrderId));
     } catch (error) {
       toast.error("Failed to delete order");
     } finally {
