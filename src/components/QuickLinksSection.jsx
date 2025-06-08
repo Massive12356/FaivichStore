@@ -31,7 +31,6 @@ const QuickLinksSection = () => {
         {quickLinks.map((link, idx) => (
           <Link to={link.path} key={idx}>
             <motion.div
-              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className={`rounded-xl shadow-md hover:shadow-lg transition duration-300 flex flex-col items-center justify-center p-4 ${link.bg}`}
             >
