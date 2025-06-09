@@ -177,7 +177,7 @@ const SingleAd = () => {
           <div>
             <h3 className="text-lg font-semibold text-[#777186]">Category</h3>
             <p className="text-md text-[#555]">
-              {singleProduct.category?.[0]?.name || "No Category"}
+              {singleProduct.category[0]?.name || "No Category"}
             </p>
           </div>
 

@@ -155,7 +155,7 @@ const VendorAds = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 100 }}
                 transition={{ type: "spring", stiffness: 100, damping: 25 }}
-                whileHover={{ scale: 0.9 }}
+                whileHover={{ scale: 0.97 }}
                 key={product.id}
                 className="bg-white shadow-md rounded-2xl p-5 flex flex-col items-center "
               >
@@ -313,6 +313,45 @@ const VendorAds = () => {
             </div>
           )}
         </motion.div>
+      )}
+
+      {showModal && selectedProduct && (
+        <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)] z-50 p-5">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-lg p-6 max-w-sm w-full"
+          >
+            <h3 className="text-lg font-bold text-[#283144] mb-4">
+              Delete Product?
+            </h3>
+            <p className="text-sm text-gray-500 mb-4 font-[play]">
+              Are you sure you want to delete the product{" "}
+              <span className="font-bold text-black">
+                {selectedProduct.name}
+              </span>
+              ?
+            </p>
+            <div className="flex justify-end gap-4">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={cancelDelete}
+                className="bg-gray-300 text-[#283144] px-4 py-2 rounded-lg"
+              >
+                Cancel
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => confirmDelete(selectedProduct.id)}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg"
+              >
+                Delete
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
       )}
     </div>
   );
