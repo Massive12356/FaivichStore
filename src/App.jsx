@@ -22,7 +22,6 @@ import FaqSection from "./components/FaqSection";
 import CheckOut from "./pages/user/CheckOut";
 import ScrollToTop from "./components/ScrollToTop";
 import UpdateProfile from "./pages/dashboard/UpdateProfile";
-
 import useProductStore from "./store/productStore"; // zustand Product store
 import { useOrderStore } from "./store/OrderStore";
 import useUserStore from "./store/userStore";

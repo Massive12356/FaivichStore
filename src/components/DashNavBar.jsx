@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaSignOutAlt, FaUserEdit } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate,useLocation } from "react-router-dom";
@@ -14,6 +14,8 @@ const DashNavBar = ({setSidebarOpen}) => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const profileRef = useRef(null);
+  const profileRefIcon = useRef(null)
 
 
   const { userDetails } = useUserStore(); //from Zustand
@@ -76,6 +78,25 @@ const DashNavBar = ({setSidebarOpen}) => {
      }
   },[query])
 
+
+  useEffect(()=>{
+    const handleClickOutside = (event)=>{
+      if(
+        profileRef.current && !profileRef.current.contains(event.target) && profileRefIcon.current && !profileRefIcon.current.contains(event.target)
+      ){
+        setIsProfileOpen(false)
+      }
+    };
+
+    document.addEventListener("mousedown",handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () =>{
+      document.removeEventListener("mousedown",handleClickOutside);
+      document.removeEventListener("touchstart",handleClickOutside);
+    }
+  },[])
+
   return (
     <div className="w-[95%] md:w-[98%] bg-white text-white px-3 py-1 flex justify-between items-center shadow-md m-2 rounded-lg">
       {/* Hamburger menu for mobile */}
@@ -100,6 +121,7 @@ const DashNavBar = ({setSidebarOpen}) => {
             alt="Profile"
             className="w-7 md:w-10 h-7 md:h-10 rounded-full object-cover cursor-pointer border-2 border-white"
             onClick={() => setIsProfileOpen(!isProfileOpen)}
+            ref={profileRefIcon}
           />
 
           <AnimatePresence>
@@ -109,6 +131,7 @@ const DashNavBar = ({setSidebarOpen}) => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50"
+                ref={profileRef}
               >
                 <div className="flex flex-col py-2">
                   {/* <Link
