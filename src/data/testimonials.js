@@ -1,6 +1,6 @@
 // src/data/testimonials.js
-import pic from '../assets/lady.jpg'
-import pic2 from '../assets/lady.jpg'
+import pic from '../assets/lady.webp'
+import pic2 from '../assets/lady.webp'
 const testimonials = [
   {
     id: 1,

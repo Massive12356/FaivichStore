@@ -6,7 +6,7 @@ const Loader = () => {
     <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center">
       {/* Logo */}
       <motion.img
-        src="/logo1.png" // or use import if in assets
+        src="/logo1.webp" // or use import if in assets
         alt="Faivich Logo"
         className="w-24 h-24 mb-6"
         transition={{ repeat: Infinity, duration: 2, ease: "linear" }}

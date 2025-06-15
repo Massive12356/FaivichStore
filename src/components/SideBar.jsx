@@ -9,7 +9,7 @@ import {
   FiLogOut,
   FiX,
 } from "react-icons/fi";
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.webp'
 
 const menuItems = [
   { name: "OverView", path: "/faivichRoom", icon: <FiHome /> },
