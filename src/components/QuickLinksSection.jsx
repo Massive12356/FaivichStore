@@ -7,7 +7,7 @@ const quickLinks = [
     title: "New User",
     icon: <MdPersonAdd className="text-green-900 text-4xl mb-2" />,
     path: "/faivichRoom/signup",
-    bg: "bg-green-100",
+    bg: "bg-green-100 hover:bg-green-700/40",
     textColor: "text-green-900",
   },
   // Future links can be added here
