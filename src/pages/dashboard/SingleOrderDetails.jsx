@@ -3,24 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { useOrderStore } from "../../store/OrderStore";
-import Spinner from "../../components/Spinner";
 
 const SingleOrderDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { ProductOrders, isLoading } = useOrderStore();
+  const { ProductOrders} = useOrderStore();
   const orderIndex = ProductOrders.findIndex((o) => o.id === id);
   const [order, setOrder] = useState(ProductOrders[orderIndex]);
   const printRef = useRef();
-
-
-
-if(isLoading) return <Spinner message="Loading Order Details"/>
-
-if (!order) {
-  return <div className="p-6 text-red-600">Order not found.</div>;
-}
 
   const handlePaymentChange = (e) => {
     const updated = { ...order, paymentStatus: e.target.value };
@@ -31,16 +22,6 @@ if (!order) {
     const updated = { ...order, orderStatus: e.target.value };
     setOrder(updated);
   };
-
-  const handleSaveChanges = () => {
-    mockOrders[orderIndex] = order;
-    alert("Order updated successfully (simulated).");
-  };
-
-  const handlePrint = () => {
-    window.print();
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, x: -100 }}
@@ -58,13 +39,13 @@ if (!order) {
       </button>
 
       <div ref={printRef} className="print-section">
-        <h1 className="text-2xl font-bold mb-6">Order Details - {order.id}</h1>
+        <h1 className="text-2xl font-bold mb-6">Order Details - </h1>
 
         <div className="bg-white rounded-lg shadow-md p-4 md:p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Detail
               label="Customer Name"
-              value={`${order.firstName} ${order.lastName}`}
+              value={''}
             />
             <Detail label="Phone Number" value={order.phoneNumber} />
             <Detail label="Email" value={order.email} />
@@ -134,35 +115,9 @@ if (!order) {
             </div>
           )}
         </div>
-
-        {/* Buttons */}
-        <div className="flex flex-col justify-end-safe md:flex-row gap-4 pt-6">
-          <motion.button
-            title="Save Changes to Update the records in the order table"
-            whileTap={{ scale: 0.9 }}
-            onClick={handleSaveChanges}
-            className="btn px-4 py-2 border border-[#4A235A] rounded hover:bg-[#4A235A] hover:text-white cursor-pointer"
-          >
-            Save Changes
-          </motion.button>
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={handlePrint}
-            className="btn px-4 py-2 border border-[#4A235A] rounded hover:bg-[#4A235A] hover:text-white cursor-pointer"
-          >
-            Print / Download
-          </motion.button>
-        </div>
       </div>
     </motion.div>
   );
 };
-
-const Detail = ({ label, value }) => (
-  <div>
-    <p className="text-sm text-gray-500">{label}</p>
-    <p className="font-medium break-words whitespace-pre-line">{value}</p>
-  </div>
-);
 
 export default SingleOrderDetails;
