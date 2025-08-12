@@ -8,10 +8,9 @@ import {
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from '/logo2.png'
-import { useNavigate, useLocation } from "react-router-dom";
-import useSearchStore from "../store/searchStore";
 
-// 🛒 Zustand store for cart state management
+
+
 import useCartStore from "../store/cartStore";
 import toast from "react-hot-toast";
 
@@ -20,9 +19,6 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showCartDropdown, setShowCartDropdown] = useState(false);
-  const { query, setQuery } = useSearchStore();
-  const navigate = useNavigate();
-  const location = useLocation();
   const [stockError, setStockError] = useState("");
 
   // navbar closes when the user click outside
@@ -43,30 +39,8 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
 
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("touchstart", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
-    };
   }, []);
 
-  // When user types, update URL and optionally navigate to /adverts
-  useEffect(()=>{
-    if (!query) return;
-
-    // if not already on /adverts, navigate
-    if (location.pathname !== "/adverts") {
-      navigate(`/adverts?q=${encodeURIComponent(query)}`);
-    }
-
-    // If already on /shop, just update the URL without reloading
-    if (location.pathname === '/adverts'){
-      const params = new URLSearchParams(location.search);
-      params.set('q', query);
-      const newUrl = `/adverts?${params.toString()}`;
-      window.history.replaceState(null,'',newUrl);
-    }
-  },[query]);
 
   // Zustand store values
   const cart = useCartStore((state) => state.cartItems);
@@ -192,7 +166,6 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
             />
             <input
               type="text"
-              value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search Products..."
               className="hidden md:inline-block ml-2 px-3 py-1 border border-[#561256] rounded-md text-sm text-[#14245F] focus:outline-none"
@@ -440,7 +413,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
           >
             <input
               type="text"
-              value={query}
+
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search products..."
               className="w-full h-full px-4 py-3 border border-[#561256] rounded-md text-[#14245F] focus:outline-none"

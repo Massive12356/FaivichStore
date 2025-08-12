@@ -3,10 +3,8 @@ import { FaSignOutAlt, FaUserEdit } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate,useLocation } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
-import { FiSearch } from "react-icons/fi"; // Importing search icon
-import useSearchStore from "../store/searchStore"; // from zustand
+import { FiSearch } from "react-icons/fi"; 
 
-import useUserStore from "../store/userStore";//from zustand
 
 const DashNavBar = ({setSidebarOpen}) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);

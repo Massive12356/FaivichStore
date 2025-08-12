@@ -13,7 +13,6 @@ import DashboardLayout from "./layouts/DashboardLayout";
 // Zustand Stores
 import useProductStore from "./store/productStore";
 import { useOrderStore } from "./store/OrderStore";
-import useUserStore from "./store/userStore";
 import Loader from "./components/Loader";
 
 // Lazy-loaded page components
@@ -42,11 +41,7 @@ function App() {
 
   const fetchProducts = useProductStore((state) => state.fetchProducts);
   const fetchOrders = useOrderStore((state) => state.fetchOrders);
-  const userId = useUserStore((state) => state.userId);
 
-  useEffect(() => {
-    console.log("Anonymous User ID:", userId);
-  }, [userId]);
 
   useEffect(() => {
     fetchProducts();

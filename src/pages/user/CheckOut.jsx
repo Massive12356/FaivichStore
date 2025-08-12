@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { FaMotorcycle, FaShuttleVan, FaLock } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useOrderStore } from "../../store/OrderStore";
-import useUserStore from "../../store/userStore";
 
 const CheckOut = () => {
   const cartItems = useCartStore((state) => state.cartItems);// get values from zustand store
@@ -13,46 +12,32 @@ const CheckOut = () => {
   const navigate = useNavigate();// for routing
   const [showModal,setShowModal]=useState(false);
 
-  const id = useUserStore((state) =>state.userId)
-
-console.log(id)
-
-   // for debugging
- 
-
-  // console.log(user);
-
   const { postOrder, isLoading, orderData, setOrderField, bulkSetOrderData, fetchOrders} =
     useOrderStore();
 
   const handlePlaceOrder = () => {
-    setShowModal(true);// opens confirmation page
+    setShowModal(true);
   };
 
   const confirmOrder = async () => {
     try {
-      // Prepare order data from cartItems
+      
       const products = cartItems.map((item) => ({
-        productId: item.id, // Or item._id depending on your cart structure
         quantity: item.quantity,
       }));
 
-      // Collect all other order fields
+
       bulkSetOrderData({
-        products, // <-- use this instead of single product
+        products, 
         subTotal,
-        discount,
         deliveryCharge,
         estimatedTax,
-        totalAmount,
-        quantity: cartItems.reduce((acc, item) => acc + item.quantity, 0),
-        user: id // id generated from the frontend
+        quantity: cartItems.reduce((acc, item) => acc + item.quantity, 2)
       });
 
       console.log('Final Payload::', useOrderStore.getState().orderData);
 
       await postOrder();
-      await fetchOrders(true); // refetch orders
       toast.success("Order placed successfully!");
       setShowModal(false);
       clearCart();
@@ -69,15 +54,13 @@ console.log(id)
     setShowModal(false);
     toast.success('Order cancelled')
     clearCart();
-    navigate('/adverts');
+
   }
 
-  // Calculation breakdowns
+  
   const subTotal = getTotalCost();
-  const discount = 0; // You can add logic later
-  const deliveryCharge = 15;
+
   const estimatedTax = parseFloat((subTotal * 0.155).toFixed(2));
-  const totalAmount = subTotal - discount + deliveryCharge + estimatedTax;
 
   return (
     <div className="min-h-screen pt-32 px-6 md:px-20 bg-gray-100/40">
@@ -85,12 +68,9 @@ console.log(id)
         Checkout
       </h2>
 
-      <div className="flex flex-col lg:flex-row gap-10">
-        {/* ==========================
-            📝 LEFT SIDE: FORM
-        =========================== */}
+      <div className="flex  lg:flex-row gap-10">
+       
         <form className="w-full lg:w-2/3 space-y-8 bg-white p-4 rounded-lg">
-          {/* Personal Details */}
           <div>
             <h3 className="text-xl font-semibold mb-4">Personal Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -350,21 +330,10 @@ console.log(id)
               <span>Sub Total:</span>
               <span>GHC{subTotal.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between">
-              <span>Discount:</span>
-              <span>GHC{discount.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Delivery Charge:</span>
-              <span>GHC{deliveryCharge.toFixed(2)}</span>
-            </div>
+           
             <div className="flex justify-between">
               <span>Estimated Tax (15.5%):</span>
               <span>GHC{estimatedTax.toFixed(2)}</span>
-            </div>
-            <div className="border-t pt-3 flex justify-between font-bold text-lg">
-              <span>Total Amount:</span>
-              <span>GHC{totalAmount.toFixed(2)}</span>
             </div>
           </div>
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">

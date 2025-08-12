@@ -16,11 +16,7 @@ import QuickLinksSection from "../../components/QuickLinksSection";
 
 
 const Overview = () => {
-  const [username, setUsername] = useState("");
-  const {products} =useProductStore();// from zustand store
-  const {ProductOrders} = useOrderStore(); // from zustand store
 
-  console.log(ProductOrders)
   
 
   // State to track the visibility of tooltips for each card

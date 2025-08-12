@@ -4,7 +4,6 @@ import { FiArrowLeft, FiCamera } from "react-icons/fi";
 import { MdPostAdd } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { apiGetUserDetails } from "../../services/getUserDetails";
-import useUserStore from "../../store/userStore";
 
 const UpdateProfile = () => {
   const [preview, setPreview] = useState(null);

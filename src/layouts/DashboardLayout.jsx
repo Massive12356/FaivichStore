@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom"; // Used to render nested routes withi
 import DashNavBar from "../components/DashNavBar";
 import SideBar from "../components/SideBar";
 import { useState,useEffect } from "react";
-import useUserStore from "../store/userStore";
 import { apiGetUserDetails } from "../services/getUserDetails";
 
 // DashboardLayout wraps all dashboard-related pages with a consistent Navbar and optional Sidebar

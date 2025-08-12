@@ -1,46 +1,39 @@
-// Import the `create` function from Zustand to create a custom store
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-// Import the API service that handles posting the order to the backend
 import { apiDeleteOrder, apiGetOrders, apiPostOrder } from "../services/orders";
 
 
-
-// Create the Zustand store for order management
 export const useOrderStore = create(
   persist((set, get) => ({
     ProductOrders: [],
     isLoading: false,
     error: null,
-    // Initial state for the orderData object
     orderData: {
-      products: [], // Product ID (or can be an array if handling multiple items)
-      user: "", // User ID placing the order
-      quantity: 0, // Quantity of the product ordered
+      products: [], 
+      user: "", 
+      quantity: 0, 
 
-      // Customer details
       firstName: "",
       lastName: "",
       email: "",
       phoneNumber: "",
 
-      // Address and location
+   
       fullAddress: "",
       country: "",
       zipCode: "",
       city: "",
 
-      // Order method preferences
-      deliveryMethod: "", // e.g., 'Motorcycle'
-      paymentMethod: "", // e.g., 'Cash on Delivery'
+      deliveryMethod: "", 
+      paymentMethod: "", 
 
-      // Pricing breakdown
-      subTotal: 0, // Total before discounts and taxes
-      discount: 0, // Discount amount
-      deliveryCharge: 0, // Delivery fee
-      estimatedTax: 0, // Estimated tax
-      totalAmount: 0, // Final total = subTotal - discount + deliveryCharge + tax
+      subTotal: 0, 
+      discount: 0, 
+      deliveryCharge: 0, 
+      estimatedTax: 0, 
+      totalAmount: 0, 
     },
 
     isLoading: false,
@@ -79,16 +72,16 @@ export const useOrderStore = create(
      * Send the order to the backend using the `apiPostOrder` service
      * Reads the complete `orderData` from the store and submits it
      *
-     * @returns {Promise<object>} - The response from the backend
+     * @returns {Promise<object>} 
      */
     postOrder: async () => {
-      const payload = get().orderData; // Get current order data from state
+      const payload = get().orderData; 
       set({ isLoading: true, error: null });
       try {
-        const res = await apiPostOrder(payload); // Send POST request
-        return res.data; // Return API response
+        const res = await apiPostOrder(payload);
+        return res.data; 
       } catch (err) {
-        throw err; // Forward error to be handled in the component
+        throw err; 
       } finally {
         set({ isLoading: false });
       }
@@ -104,18 +97,16 @@ export const useOrderStore = create(
         const res = await apiGetOrders();
         set({ ProductOrders: res.data });
       } catch (err) {
-        throw err; // Forward error to be handled in the component
+        throw err; 
       } finally {
         set({ isLoading: false });
       }
     },
 
-    // ✅ Delete order and update local state
+  
     deleteOrder: async (id) => {
       try {
         await apiDeleteOrder(id);
-
-        // Remove the deleted order from ProductOrders state
         set((state) => ({
           ProductOrders: state.ProductOrders.filter((order) => order.id !== id),
         }));
@@ -127,10 +118,6 @@ export const useOrderStore = create(
       }
     },
 
-    /**
-     * Reset the entire `orderData` object back to its initial values
-     * Useful after successful submission or when user cancels
-     */
     clearOrderData: () => {
       set({
         orderData: {
