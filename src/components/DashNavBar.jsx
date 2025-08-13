@@ -16,15 +16,13 @@ const DashNavBar = ({setSidebarOpen}) => {
   const profileRefIcon = useRef(null)
 
 
-  const { userDetails } = useUserStore(); //from Zustand
-  const {query,setQuery} = useSearchStore(); // from zustand
+  const { userDetails } = useUserStore(); 
 
   const profileImage = userDetails?.pictures?.[0]
     ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747073664/${userDetails.pictures[0]}`
     : "/default-avatar.png";
 
   useEffect(() => {
-    // time  function
     const updateClock = () => {
       const now = new Date();
       const options = {
@@ -40,7 +38,7 @@ const DashNavBar = ({setSidebarOpen}) => {
     };
 
     updateClock();
-    const interval = setInterval(updateClock, 60000); //function that updates the time
+    const interval = setInterval(updateClock, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -58,11 +56,10 @@ const DashNavBar = ({setSidebarOpen}) => {
     setIsProfileOpen(false);
   };
 
-  // When user types, update URL and optionally navigate to /faivichRoom/vendorAds
+
   useEffect(()=>{
     if (!query) return;
 
-    // if not already on  /faivichRoom/vendorAds, navigate
     if (location.pathname !=="/faivichRoom/vendorAds"){
       navigate(`/faivichRoom/vendorAds?q=${encodeURIComponent(query)}`);
     }
