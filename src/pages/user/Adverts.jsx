@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import { FaShoppingBag, FaRegSadTear } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Features from "../../components/Features";
-import useProductStore from "../../store/productStore"; // Zustand product store
-import useSearchStore from "../../store/searchStore";
+import useProductStore from "../../store/productStore";
 import ProductSkeletonGrid from "../../components/ProductSkeletonGrid";
 
 const PRODUCTS_PER_PAGE = 30;
@@ -16,7 +15,6 @@ const Adverts = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { query, setQuery } = useSearchStore();
   const { products, isLoading } = useProductStore();
 
   const categories = useMemo(() => {
@@ -26,44 +24,6 @@ const Adverts = () => {
     const uniqueCategories = [...new Set(allCategories)];
     return ["All", ...uniqueCategories];
   }, [products]);
-
-  // Read category from query param
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const categoryFromURL = params.get("category");
-    if (categoryFromURL && categories.includes(categoryFromURL)) {
-      setSelectedCategory(categoryFromURL);
-      setCurrentPage(1);
-      setSelectedCardId(null);
-    }
-  }, [location.search, categories]);
-
-  // Read search query from URL on load
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const urlQuery = params.get("q") || "";
-    setQuery(urlQuery);
-  }, [location.search]);
-
-  // Final filtered products
-  const filteredProducts = useMemo(() => {
-    const lowerQuery = query.toLowerCase();
-    return products.filter((product) => {
-      const matchesCategory =
-        selectedCategory === "All" ||
-        product.category?.some((cat) => cat.name === selectedCategory);
-
-      const matchesSearch =
-        !lowerQuery ||
-        product.name?.toLowerCase().includes(lowerQuery) ||
-        product.description?.toLowerCase().includes(lowerQuery) ||
-        product.category?.some((cat) =>
-          cat.name.toLowerCase().includes(lowerQuery)
-        );
-
-      return matchesCategory && matchesSearch;
-    });
-  }, [products, selectedCategory, query]);
 
   const getSubText = () => {
     switch (selectedCategory) {

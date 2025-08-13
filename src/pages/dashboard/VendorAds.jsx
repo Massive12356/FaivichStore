@@ -5,7 +5,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import useProductStore from "../../store/productStore";
 import toast from "react-hot-toast";
 import Spinner from "../../components/Spinner";
-import useSearchStore from "../../store/searchStore";
 import { FaRegSadTear } from "react-icons/fa";
 
 const VendorAds = () => {
@@ -16,7 +15,6 @@ const VendorAds = () => {
 
   const { fetchProducts, products, isLoading, deleteProduct } =
     useProductStore();
-  const { query, setQuery } = useSearchStore();
 
   useEffect(() => {
     const savedView = localStorage.getItem("view");
@@ -82,9 +80,7 @@ const VendorAds = () => {
         You can VIEW, EDIT and DELETE your published Products here
       </p>
 
-      {/* Sticky Header */}
       <div className="sticky top-0 z-10 bg-white p-4 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
-        {/* Filters */}
         <div className="flex gap-4 flex-wrap items-center">
           <select
             value={filterCategory}
@@ -100,15 +96,12 @@ const VendorAds = () => {
           </select>
         </div>
 
-        {/* Product count */}
         <div
           className="hidden md:flex items-center justify-center md:w-10 w-7 h-7 md:h-10 rounded-full border-2 border-[#67216D] text-[#67216D]"
           title="Total number of Published Products"
         >
           <p className="font-bold">{filteredProducts.length}</p>
         </div>
-
-        {/* View Toggle */}
         <motion.button
           title="Change the view of products details"
           whileTap={{ scale: 0.95 }}
@@ -119,7 +112,6 @@ const VendorAds = () => {
         </motion.button>
       </div>
 
-      {/* Grid View */}
       {view === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 font-[play]">
           {isLoading ? (
@@ -238,7 +230,6 @@ const VendorAds = () => {
           </div>
         </div>
       ) : (
-        // List/Table View
         <motion.div className="mt-6 font-[play] min-h-[200px] relative">
           {isLoading ? (
             <div className="flex justify-center items-center py-10">
