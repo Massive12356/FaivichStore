@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { FaShoppingBag, FaRegSadTear } from "react-icons/fa";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Features from "../../components/Features";
 import useProductStore from "../../store/productStore";
 import ProductSkeletonGrid from "../../components/ProductSkeletonGrid";
@@ -13,7 +13,6 @@ const Adverts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCardId, setSelectedCardId] = useState(null);
 
-  const location = useLocation();
   const navigate = useNavigate();
   const { products, isLoading } = useProductStore();
 
@@ -38,7 +37,17 @@ const Adverts = () => {
     }
   };
 
+  const filteredProducts = useMemo(() => {
+    if (selectedCategory === "All") {
+      return products;
+    }
+    return products.filter((product) =>
+      product.category.some((cat) => cat.name === selectedCategory)
+    );
+  }, [products, selectedCategory]);
+
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+
   const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * PRODUCTS_PER_PAGE,
     currentPage * PRODUCTS_PER_PAGE
@@ -69,7 +78,6 @@ const Adverts = () => {
   };
 
   const searchAgain = () => {
-    setQuery("");
     navigate("/adverts");
   };
 
@@ -231,7 +239,7 @@ const Adverts = () => {
         </div>
       )}
 
-      <Features/>
+      <Features />
     </div>
   );
 };
