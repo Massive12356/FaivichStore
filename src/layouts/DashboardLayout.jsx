@@ -8,20 +8,20 @@ import { apiGetUserDetails } from "../services/getUserDetails";
 const DashboardLayout = ({onLogout}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const { setUserDetails } = useUserStore(); // from zustand
+  // const { setUserDetails } = useUserStore(); // from zustand
 
-  const fetchDetails = async () => {
-    try {
-      const response = await apiGetUserDetails();
-      setUserDetails(response.data); // save globally from zustand
-    } catch (error) {
-      console.log("Error", error);
-    }
-  };
+  // const fetchDetails = async () => {
+  //   try {
+  //     const response = await apiGetUserDetails();
+  //     setUserDetails(response.data); // save globally from zustand
+  //   } catch (error) {
+  //     console.log("Error", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchDetails();
-  }, []);
+  // useEffect(() => {
+  //   fetchDetails();
+  // }, []);
   return (
     <div className="flex h-screen">
       {/* Sidebar component on the left side of the dashboard */}

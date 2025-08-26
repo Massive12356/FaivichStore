@@ -8,6 +8,7 @@ import { FiSearch } from "react-icons/fi";
 
 const DashNavBar = ({setSidebarOpen}) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const [currentTime, setCurrentTime] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
@@ -16,11 +17,11 @@ const DashNavBar = ({setSidebarOpen}) => {
   const profileRefIcon = useRef(null)
 
 
-  const { userDetails } = useUserStore(); 
+  // const { userDetails } = useUserStore(); 
 
-  const profileImage = userDetails?.pictures?.[0]
-    ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747073664/${userDetails.pictures[0]}`
-    : "/default-avatar.png";
+  // const profileImage = userDetails?.pictures?.[0]
+  //   ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747073664/${userDetails.pictures[0]}`
+  //   : "/default-avatar.png";
 
   useEffect(() => {
     const updateClock = () => {
@@ -112,7 +113,7 @@ const DashNavBar = ({setSidebarOpen}) => {
         {/* Profile Dropdown */}
         <div className="relative">
           <img
-            src={profileImage}
+            src={'https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740&q=80'}
             alt="Profile"
             className="w-7 md:w-10 h-7 md:h-10 rounded-full object-cover cursor-pointer border-2 border-white"
             onClick={() => setIsProfileOpen(!isProfileOpen)}

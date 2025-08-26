@@ -16,8 +16,9 @@ import QuickLinksSection from "../../components/QuickLinksSection";
 
 
 const Overview = () => {
+  const [username, setUsername] = useState("");
+  const { products } = useProductStore();
 
-  
 
   // State to track the visibility of tooltips for each card
   const [tooltipVisible, setTooltipVisible] = useState({
@@ -28,7 +29,7 @@ const Overview = () => {
   });
 
   // function for fetching users details 
-  const getUser = async() =>{
+  const getUser = async () => {
     try {
       const response = await apiGetUserDetails();
       setUsername(response.data.username);
@@ -37,9 +38,9 @@ const Overview = () => {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getUser();
-  },[]);
+  }, []);
 
   // Function to toggle the tooltip visibility for each card
   const toggleTooltip = (card) => {
@@ -131,9 +132,8 @@ const Overview = () => {
             />
             {/* Tooltip for Total Items in Stock */}
             <div
-              className={`absolute ${
-                tooltipVisible.totalItems ? "block" : "hidden"
-              } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
+              className={`absolute ${tooltipVisible.totalItems ? "block" : "hidden"
+                } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
             >
               This shows the total number of published products currently in
               your store.
@@ -160,7 +160,7 @@ const Overview = () => {
           <div>
             <p className="text-sm text-gray-500 font-[play]">Total Orders</p>
             <h3 className="text-xl font-bold text-[#283144] font-[play]">
-              {ProductOrders.length}
+              {/* {ProductOrders.length} */}
             </h3>
           </div>
 
@@ -176,9 +176,8 @@ const Overview = () => {
             />
             {/* Tooltip for Total Orders */}
             <div
-              className={`absolute ${
-                tooltipVisible.totalOrders ? "block" : "hidden"
-              } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
+              className={`absolute ${tooltipVisible.totalOrders ? "block" : "hidden"
+                } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
             >
               This shows the total number of orders placed today.
             </div>
@@ -220,9 +219,8 @@ const Overview = () => {
             />
             {/* Tooltip for Daily Purchases */}
             <div
-              className={`absolute ${
-                tooltipVisible.dailyPurchases ? "block" : "hidden"
-              } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
+              className={`absolute ${tooltipVisible.dailyPurchases ? "block" : "hidden"
+                } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
             >
               This shows the number of successful purchases made Daily.
             </div>
@@ -264,9 +262,8 @@ const Overview = () => {
             />
             {/* Tooltip for Total Successful Purchase */}
             <div
-              className={`absolute ${
-                tooltipVisible.totalSuccessfulPurchase ? "block" : "hidden"
-              } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
+              className={`absolute ${tooltipVisible.totalSuccessfulPurchase ? "block" : "hidden"
+                } w-44 text-[13px] text-white bg-[#67216D] p-2 rounded shadow-lg z-10 -top-2 right-10`}
             >
               This shows the total successful purchases made in your store.
             </div>
@@ -274,8 +271,8 @@ const Overview = () => {
         </motion.div>
       </div>
 
-        <QuickLinksSection/>
-      
+      <QuickLinksSection />
+
     </div>
   );
 };

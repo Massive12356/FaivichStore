@@ -4,15 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { FaMotorcycle, FaShuttleVan, FaLock } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useOrderStore } from "../../store/OrderStore";
+import PaystackPop from '@paystack/inline-js';
 
 const CheckOut = () => {
   const cartItems = useCartStore((state) => state.cartItems);// get values from zustand store
   const getTotalCost = useCartStore((state) => state.getTotalCost); // get values from zustand store
-  const clearCart = useCartStore((state)=> state.clearCart); // clear cart
+  const clearCart = useCartStore((state) => state.clearCart); // clear cart
   const navigate = useNavigate();// for routing
-  const [showModal,setShowModal]=useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  const { postOrder, isLoading, orderData, setOrderField, bulkSetOrderData, fetchOrders} =
+  const { postOrder, isLoading, orderData, setOrderField, bulkSetOrderData, fetchOrders } =
     useOrderStore();
 
   const handlePlaceOrder = () => {
@@ -21,14 +22,14 @@ const CheckOut = () => {
 
   const confirmOrder = async () => {
     try {
-      
+
       const products = cartItems.map((item) => ({
         quantity: item.quantity,
       }));
 
 
       bulkSetOrderData({
-        products, 
+        products,
         subTotal,
         deliveryCharge,
         estimatedTax,
@@ -48,16 +49,16 @@ const CheckOut = () => {
       setShowModal(false);
     }
   };
-  
 
-  const orderCancelled = ()=>{
+
+  const orderCancelled = () => {
     setShowModal(false);
     toast.success('Order cancelled')
     clearCart();
 
   }
 
-  
+
   const subTotal = getTotalCost();
 
   const estimatedTax = parseFloat((subTotal * 0.155).toFixed(2));
@@ -69,7 +70,7 @@ const CheckOut = () => {
       </h2>
 
       <div className="flex  lg:flex-row gap-10">
-       
+
         <form className="w-full lg:w-2/3 space-y-8 bg-white p-4 rounded-lg">
           <div>
             <h3 className="text-xl font-semibold mb-4">Personal Details</h3>
@@ -330,7 +331,7 @@ const CheckOut = () => {
               <span>Sub Total:</span>
               <span>GHC{subTotal.toFixed(2)}</span>
             </div>
-           
+
             <div className="flex justify-between">
               <span>Estimated Tax (15.5%):</span>
               <span>GHC{estimatedTax.toFixed(2)}</span>
@@ -371,10 +372,13 @@ const CheckOut = () => {
                 Cancel
               </button>
               <button
-                onClick={confirmOrder}
-                className={`px-4 py-2 rounded bg-[#67216D] text-white hover:bg-[#7B2A79] transition-all ${
-                  isLoading ? "opacity-70 cursor-not-allowed" : ""
-                }`}
+                onClick={() => {
+
+                  const popup = new PaystackPop();
+                  popup.resumeTransaction("4kt9qo85xxsbo20");
+                }}
+                className={`px-4 py-2 rounded bg-[#67216D] text-white hover:bg-[#7B2A79] transition-all ${isLoading ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
                 disabled={isLoading}
               >
                 {isLoading ? " Processing" : "Yes, Place Order"}
