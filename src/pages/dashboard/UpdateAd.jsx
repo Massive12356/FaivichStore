@@ -19,7 +19,6 @@ const UpdateAd = () => {
   const { id } = useParams();
   const { fetchSingleAd, updateProduct, singleProduct, isLoading } =
     useProductStore();
-  const cloudinaryBaseURL = import.meta.env.VITE_CLOUDINARY_URL;
 
   const [productName, setProductName] = useState("");
   const [shortDescription, setShortDescription] = useState("");
@@ -49,7 +48,7 @@ const UpdateAd = () => {
     
 
     const previews = singleProduct.pictures.map(
-      (path) => `${cloudinaryBaseURL}${path}`
+      (path) => `${import.meta.env.VITE_CLOUDINARY_URL}${path}`
     );
     setImages(previews);
 

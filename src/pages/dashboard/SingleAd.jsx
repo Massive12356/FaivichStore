@@ -72,7 +72,7 @@ const SingleAd = () => {
         <div className="md:w-1/2 md:sticky top-10 self-start">
           <div className="bg-white rounded-xl shadow-md p-4 mb-4">
             <img
-              src={`https://res.cloudinary.com/dp0kuhms5/image/upload/f_auto,q_auto/v1747053460/${selectedImage}`}
+              src={`${import.meta.env.VITE_CLOUDINARY_URL}${selectedImage}`}
               alt="Main product"
               className="w-full h-[350px] object-cover rounded-lg bg-white"
               loading="lazy"
@@ -94,7 +94,7 @@ const SingleAd = () => {
                   <img
                     key={index}
                     loading="lazy"
-                    src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${img}`}
+                    src={`${import.meta.env.VITE_CLOUDINARY_URL}v1747053460/${img}`}
                     onClick={() => {
                       setSelectedImage(img);
                       setCurrentIndex(index);
@@ -102,8 +102,8 @@ const SingleAd = () => {
                     alt={`Thumbnail ${index + 1}`}
                     className={`w-16 h-16 object-cover rounded cursor-pointer bg-white border ${
                       selectedImage === img
-                        ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${selectedImage}`
-                        : `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${singleProduct.pictures[0]}`
+                        ? `${import.meta.env.VITE_CLOUDINARY_URL}v1747053460/${selectedImage}`
+                        : `${import.meta.env.VITE_CLOUDINARY_URL}v1747053460/${singleProduct.pictures[0]}`
                     }`}
                   />
                 ))}

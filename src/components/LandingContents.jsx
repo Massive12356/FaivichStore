@@ -221,7 +221,7 @@ const LandingContents = () => {
                 </div>
 
                 <img
-                  src={`https://res.cloudinary.com/dp0kuhms5/image/upload/f_auto,q_auto/v1747053460/${item.pictures[0]}`}
+                  src={`${import.meta.env.VITE_CLOUDINARY_URL}${item.pictures[0]}`}
                   alt={item.name}
                   loading="lazy"
                   className="w-full h-72 object-cover bg-white p-1 rounded-lg"

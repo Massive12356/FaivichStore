@@ -128,7 +128,7 @@ const SingleAdvert = () => {
             {singleProduct.pictures?.map((img, index) => (
               <img
                 key={index}
-                src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${img}`}
+                src={`${import.meta.env.VITE_CLOUDINARY_URL}v1747053460/${img}`}
                 alt={`Thumbnail ${index + 1}`}
                 loading="lazy"
                 onClick={() => setSelectedImage(img)}
@@ -146,8 +146,8 @@ const SingleAdvert = () => {
               <img
                 src={
                   selectedImage
-                    ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${selectedImage}`
-                    : `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${singleProduct.pictures[0]}`
+                    ? `${import.meta.env.VITE_CLOUDINARY_URL}v1747053460/${selectedImage}`
+                    : `${import.meta.env.VITE_CLOUDINARY_URL}v1747053460/${singleProduct.pictures[0]}`
                 }
                 alt="Selected Product"
                 className="w-full h-full object-cover rounded-lg"

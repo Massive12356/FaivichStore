@@ -232,7 +232,7 @@ const NavBar = ({ setIsBlurred, setSearchQuery }) => {
                           className="flex items-center gap-3 border-b-[1px] pb-3 border-gray-200"
                         >
                           <img
-                            src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${item.pictures[0]}`}
+                            src={`${import.meta.env.VITE_CLOUDINARY_URL}v1747053460/${item.pictures[0]}`}
                             alt={item.name}
                             className="w-12 h-12 object-cover rounded"
                           />
