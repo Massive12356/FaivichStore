@@ -13,7 +13,7 @@ const CheckOut = () => {
   const navigate = useNavigate();// for routing
   const [showModal, setShowModal] = useState(false);
 
-  const { postOrder, isLoading, orderData, setOrderField, bulkSetOrderData, fetchOrders } =
+  const { postOrder, isLoading, orderData, setOrderField, bulkSetOrderData } =
     useOrderStore();
 
   const handlePlaceOrder = () => {
@@ -24,6 +24,7 @@ const CheckOut = () => {
     try {
 
       const products = cartItems.map((item) => ({
+        id: item.id,
         quantity: item.quantity,
       }));
 
@@ -31,18 +32,24 @@ const CheckOut = () => {
       bulkSetOrderData({
         products,
         subTotal,
-        deliveryCharge,
+        deliveryCharge: 10,
         estimatedTax,
         quantity: cartItems.reduce((acc, item) => acc + item.quantity, 2)
       });
 
       console.log('Final Payload::', useOrderStore.getState().orderData);
 
-      await postOrder();
-      toast.success("Order placed successfully!");
+      const response = await postOrder();
+      console.log(response)
       setShowModal(false);
-      clearCart();
-      navigate("/adverts");
+      const popup = new PaystackPop();
+      popup.resumeTransaction(response.access_code, {
+        onSuccess: () => {
+          toast.success("Order placed successfully!");
+          clearCart();
+          navigate("/adverts");
+        }
+      });
     } catch (error) {
       console.log("Error Message", error);
       toast.error("Failed to place order.");
@@ -207,7 +214,7 @@ const CheckOut = () => {
                     type="radio"
                     value="Motorcycle"
                     checked={orderData.deliveryMethod === "Motorcycle"}
-                    onChange={(e) =>
+                    onChange={() =>
                       setOrderField("deliveryMethod", "Motorcycle")
                     }
                     name="shipping"
@@ -227,7 +234,7 @@ const CheckOut = () => {
                     name="shipping"
                     value="Courier Van"
                     checked={orderData.deliveryMethod === "Courier Van"}
-                    onChange={(e) =>
+                    onChange={() =>
                       setOrderField("deliveryMethod", "Courier Van")
                     }
                     className="accent-[#67216D] w-5 h-5"
@@ -279,7 +286,7 @@ const CheckOut = () => {
                   name="payment"
                   value="Mobile Money"
                   checked={orderData.paymentMethod === "Mobile Money"}
-                  onChange={(e) =>
+                  onChange={() =>
                     setOrderField("paymentMethod", "Mobile Money")
                   }
                   className="accent-purple-700"
@@ -292,7 +299,7 @@ const CheckOut = () => {
                   name="payment"
                   value="Cash on Delivery"
                   checked={orderData.paymentMethod === "Cash on Delivery"}
-                  onChange={(e) =>
+                  onChange={() =>
                     setOrderField("paymentMethod", "Cash on Delivery")
                   }
                   className="accent-purple-700"
@@ -372,11 +379,7 @@ const CheckOut = () => {
                 Cancel
               </button>
               <button
-                onClick={() => {
-
-                  const popup = new PaystackPop();
-                  popup.resumeTransaction("4kt9qo85xxsbo20");
-                }}
+                onClick={confirmOrder}
                 className={`px-4 py-2 rounded bg-[#67216D] text-white hover:bg-[#7B2A79] transition-all ${isLoading ? "opacity-70 cursor-not-allowed" : ""
                   }`}
                 disabled={isLoading}
