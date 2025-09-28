@@ -8,6 +8,7 @@ import Spinner from "../../components/Spinner";
 import { FaRegSadTear } from "react-icons/fa";
 
 const VendorAds = () => {
+  const [query, setQuery] = useState("");
   const [view, setView] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -152,7 +153,7 @@ const VendorAds = () => {
                 className="bg-white shadow-md rounded-2xl p-5 flex flex-col items-center "
               >
                 <img
-                  src={`https://res.cloudinary.com/dp0kuhms5/image/upload/f_auto,q_auto/v1747053460/${product.pictures[0]}`}
+                  src={`${import.meta.env.VITE_CLOUDINARY_URL}${product.pictures[0]}`}
                   alt={product.name}
                   className="w-full h-32 object-cover rounded-md mb-4"
                   loading="lazy"
@@ -255,7 +256,7 @@ const VendorAds = () => {
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <img
-                            src={`https://res.cloudinary.com/dp0kuhms5/image/upload/f_auto,q_auto/v1747053460/${product.pictures[0]}`}
+                            src={`${import.meta.env.VITE_CLOUDINARY_URL}${product.pictures[0]}`}
                             loading="lazy"
                             alt={product.name}
                             className="w-16 h-16 object-cover rounded-md"

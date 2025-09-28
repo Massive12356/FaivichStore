@@ -20,7 +20,7 @@ const DashNavBar = ({setSidebarOpen}) => {
   // const { userDetails } = useUserStore(); 
 
   // const profileImage = userDetails?.pictures?.[0]
-  //   ? `https://res.cloudinary.com/dp0kuhms5/image/upload/v1747073664/${userDetails.pictures[0]}`
+  //   ? `${import.meta.env.VITE_CLOUDINARY_URL}v1747073664/${userDetails.pictures[0]}`
   //   : "/default-avatar.png";
 
   useEffect(() => {

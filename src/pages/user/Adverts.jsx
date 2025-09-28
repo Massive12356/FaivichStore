@@ -164,7 +164,7 @@ const Adverts = () => {
                 {item.description}
               </div>
               <img
-                src={`https://res.cloudinary.com/dp0kuhms5/image/upload/v1747053460/${item.pictures[0]}`}
+                src={`${import.meta.env.VITE_CLOUDINARY_URL}v1747053460/${item.pictures[0]}`}
                 alt={item.title}
                 className="w-full h-56 object-cover bg-white p-1 rounded-lg"
                 loading="lazy"
